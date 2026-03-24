@@ -80,6 +80,13 @@ async function initSynachat() {
 
     // Update TTS toggle button state
     updateTTSToggleUI();
+
+    // Check for proactive AI Chat trigger (Gap 6)
+    const proactiveTrigger = sessionStorage.getItem('synachat_proactive_trigger');
+    if (proactiveTrigger) {
+        sessionStorage.removeItem('synachat_proactive_trigger');
+        setTimeout(() => triggerProactiveAIChat(proactiveTrigger), 1500);
+    }
 }
 
 /**
@@ -665,6 +672,62 @@ function updateHealthContext(data) {
     document.getElementById('contextStress').textContent = data.stress;
     document.getElementById('contextGsr').textContent = data.gsr;
     document.getElementById('contextTemp').textContent = data.bt ? data.bt.toFixed(1) : '--';
+
+    // Gap 6: Proactive AI Chat Triggers - check realtime inside chat
+    checkRealtimeProactiveTriggers(data);
+}
+
+// Global variable for debounce to prevent spamming proactive triggers during chat
+let lastProactiveTriggerTime = 0;
+
+/**
+ * Check for real-time proactive triggers while the user is actively in the chat view
+ */
+function checkRealtimeProactiveTriggers(data) {
+    if (!data.finger) return;
+    
+    const now = Date.now();
+    // 5 minute cooldown for in-chat interruptions
+    if (now - lastProactiveTriggerTime < 5 * 60 * 1000) return;
+
+    if (data.stress > 85 && data.gsr > 80 && data.act === 0) {
+        lastProactiveTriggerTime = now;
+        triggerProactiveAIChat('acute_stress_spike');
+    }
+}
+
+/**
+ * Trigger Proactive AI Chat Message internally
+ */
+async function triggerProactiveAIChat(triggerReason) {
+    if (isWaitingForResponse) return;
+
+    hideWelcomeMessage();
+    showTypingIndicator();
+
+    try {
+        let triggerPrompt = "";
+        
+        switch (triggerReason) {
+            case 'high_stress_resting':
+                triggerPrompt = "[SYSTEM COMMAND: You are initiating this conversation. The user was resting but their stress and heart rate suddenly spiked consistently. Act proactively by asking if they are okay, mentioning their sudden stress spike gently without alarming them, and offering a quick relaxation tip.]";
+                break;
+            case 'acute_stress_spike':
+                triggerPrompt = "[SYSTEM COMMAND: The user is currently in chat. Their biometric data just detected an acute stress/panic level spike right now. Interrupt gently, acknowledge their physical reaction, and provide immediate calming grounding techniques (like 5-4-3-2-1) with empathetic support.]";
+                break;
+            default:
+                triggerPrompt = "[SYSTEM COMMAND: Hello, initiate a gentle check-in with the user based on their high biometric stress.]";
+        }
+
+        const response = await sendToGemini(triggerPrompt);
+        hideTypingIndicator();
+        addMessage('assistant', response);
+        await saveMessageToHistory('assistant', response);
+        speakResponse(response);
+    } catch (error) {
+        console.error('Proactive AI error:', error);
+        hideTypingIndicator();
+    }
 }
 
 /**

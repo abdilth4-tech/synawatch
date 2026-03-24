@@ -9,7 +9,8 @@ const InterventionEngine = {
     cooldowns: {
         breathing: 0,
         synachat: 0,
-        music: 0
+        music: 0,
+        support: 0
     },
     COOLDOWN_PERIOD: 5 * 60 * 1000, // 5 minutes between automatic interventions
     SIMULATION_MODE: true, // Set to true to allow easier trigger during dev
@@ -63,6 +64,14 @@ const InterventionEngine = {
                 this.cooldowns.synachat = now;
             }
         }
+
+        // Gap 7: Bio-signal Safety Planning - Extreme psychological distress
+        if (stress > 90 && gsr > 85 && hr > 110 && data.act === 0) {
+            if (now - this.cooldowns.support > this.COOLDOWN_PERIOD * 3) {
+                this.triggerIntervention('support');
+                this.cooldowns.support = now;
+            }
+        }
     },
 
     /**
@@ -79,11 +88,12 @@ const InterventionEngine = {
                 this.showAlert("Detak jantung dan stres terdeteksi tinggi. Mari istirahat sejenak dengan latihan pernapasan 4-7-8.", () => {
                     // Navigate to mindful module (Batch 05)
                     Utils.showToast("Diarahkan ke Modul Mindfulness...", "info");
-                    // Router.navigate('mindful'); 
+                    Router.navigate('mindful'); 
                 });
                 break;
             case 'synachat':
                 this.showAlert("AI mendeteksi pola stres saat Anda sedang rileks. Mau ngobrol sebentar dengan Dr. Synachat?", () => {
+                    sessionStorage.setItem('synachat_proactive_trigger', 'high_stress_resting');
                     Router.navigate('synachat');
                 });
                 break;
@@ -91,6 +101,12 @@ const InterventionEngine = {
                 this.showAlert("Mood Booster yang menenangkan disiapkan untuk Anda berdasarkan metrik vital Anda.", () => {
                     // Navigate to moodbooster module (Batch 04)
                     Utils.showToast("Membuka Modul Mood Booster...", "info");
+                });
+                break;
+            case 'support':
+                this.showAlert("Sistem mendeteksi beban emosional yang sangat tinggi. Keselamatan Anda adalah prioritas. Mari terhubung dengan layanan darurat atau profesional.", () => {
+                    sessionStorage.setItem('support_emergency_trigger', 'true');
+                    Router.navigate('support');
                 });
                 break;
         }
