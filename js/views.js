@@ -870,6 +870,22 @@ const Views = {
                 </div>
             </div>
         `;
+    },
+
+    /**
+     * Research Foundation View
+     */
+    research() {
+        return `
+            <div class="view-container" style="max-width: 800px; margin: 0 auto;">
+                <div id="researchContent">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: var(--text-tertiary);">Memuat Dasar Penelitian...</p>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 };
 
