@@ -59,6 +59,11 @@ const App = {
                             setTimeout(() => {
                                 Router.navigate('assessment', true);
                             }, 100);
+                        } else {
+                            // Init Intervention Engine if onboarding is done
+                            if (typeof InterventionEngine !== 'undefined') {
+                                InterventionEngine.init(userDoc.data());
+                            }
                         }
                     } catch (e) {
                         console.error('Failed to get user data:', e);
@@ -248,6 +253,11 @@ const App = {
         this.updateElementText('contextSpo2', data.finger ? data.spo2 : '--');
         this.updateElementText('contextStress', data.stress);
         this.updateElementText('contextGsr', data.gsr);
+
+        // Process data through Closed-loop Intervention Engine
+        if (typeof InterventionEngine !== 'undefined') {
+            InterventionEngine.processTelemetry(data);
+        }
 
         // Call handleDataUpdate from dashboard.js to update charts (if on dashboard)
         if (typeof handleDataUpdate === 'function') {
