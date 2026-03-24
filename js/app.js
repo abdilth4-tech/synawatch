@@ -48,8 +48,23 @@ const App = {
                 return;
             }
 
-            const unsubscribe = auth.onAuthStateChanged((user) => {
+            const unsubscribe = auth.onAuthStateChanged(async (user) => {
                 this.currentUser = user;
+                
+                // Check onboarding status
+                if (user && typeof db !== 'undefined') {
+                    try {
+                        const userDoc = await db.collection('users').doc(user.uid).get();
+                        if (!userDoc.exists || !userDoc.data().onboardingCompleted) {
+                            setTimeout(() => {
+                                Router.navigate('assessment', true);
+                            }, 100);
+                        }
+                    } catch (e) {
+                        console.error('Failed to get user data:', e);
+                    }
+                }
+                
                 unsubscribe();
                 resolve();
             });
@@ -61,27 +76,43 @@ const App = {
      */
     setupRouter() {
         // Register routes
+        Router.register('assessment', () => {
+            Router.render(Views.assessment());
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'none'; // Hide nav during assessment
+        });
+
         Router.register('dashboard', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
             Router.render(Views.dashboard());
             this.initDashboardView();
         });
 
         Router.register('health', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
             Router.render(Views.health());
             this.initHealthView();
         });
 
         Router.register('analytics', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
             Router.render(Views.analytics());
             this.initAnalyticsView();
         });
 
         Router.register('profile', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
             Router.render(Views.profile());
             this.initProfileView();
         });
 
         Router.register('synachat', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
             Router.render(Views.synachat());
             this.initSynachatView();
         });

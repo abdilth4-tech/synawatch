@@ -5,6 +5,35 @@
 
 const Views = {
     /**
+     * Assessment View (PHQ-9 & UCLA)
+     */
+    assessment() {
+        return `
+            <div class="view-container" style="max-width: 600px; margin: 0 auto; padding-top: 40px;">
+                <div id="assessmentProgressWrapper" style="margin-bottom: 32px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Progres Evaluasi</span>
+                    </div>
+                    <div class="progress-bar" style="height: 8px; background: rgba(139, 92, 246, 0.1);">
+                        <div id="assessmentProgress" class="progress-fill" style="width: 0%; background: var(--primary-500); transition: width 0.4s ease;"></div>
+                    </div>
+                </div>
+
+                <div id="assessmentContent">
+                    <div style="text-align: center; animation: fadeIn 0.5s;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: white; font-size: 2.5rem; box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h2 style="font-size: var(--text-2xl); color: var(--text-primary); margin-bottom: 12px;">Selamat Datang!</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 32px; line-height: 1.6;">Untuk mempersonalisasi SYNAWATCH sesuai dengan kondisi Anda, kami perlu menanyakan beberapa hal (PHQ-9 & UCLA Loneliness Scale). Data ini dijamin kerahasiaannya.</p>
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 16px; font-size: 1.1rem;" onclick="Assessment.start()">Mulai Evaluasi</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
      * Dashboard View
      */
     dashboard() {
