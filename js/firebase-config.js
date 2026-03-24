@@ -307,6 +307,132 @@ const FirebaseService = {
             daysActive: uniqueDays.size,
             avgHealthScore
         };
+    },
+
+    // ===== Assessment =====
+
+    /**
+     * Save assessment result
+     */
+    async saveAssessment(userId, data) {
+        return await db.collection('assessments').add({
+            userId,
+            ...data,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    },
+
+    /**
+     * Get latest assessment for user
+     */
+    async getLatestAssessment(userId) {
+        const snapshot = await db.collection('assessments')
+            .where('userId', '==', userId)
+            .orderBy('timestamp', 'desc')
+            .limit(1)
+            .get();
+        return snapshot.empty ? null : { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+    },
+
+    /**
+     * Get all assessments for user
+     */
+    async getAssessmentHistory(userId, limit = 10) {
+        const snapshot = await db.collection('assessments')
+            .where('userId', '==', userId)
+            .orderBy('timestamp', 'desc')
+            .limit(limit)
+            .get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    },
+
+    // ===== Intervention Logs =====
+
+    /**
+     * Log an intervention event
+     */
+    async logIntervention(userId, data) {
+        return await db.collection('interventionLogs').add({
+            userId,
+            ...data,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    },
+
+    /**
+     * Get intervention logs
+     */
+    async getInterventionLogs(userId, limit = 50) {
+        const snapshot = await db.collection('interventionLogs')
+            .where('userId', '==', userId)
+            .orderBy('timestamp', 'desc')
+            .limit(limit)
+            .get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    },
+
+    // ===== Emergency Plans =====
+
+    /**
+     * Save or update emergency plan
+     */
+    async saveEmergencyPlan(userId, data) {
+        const docRef = db.collection('emergencyPlans').doc(userId);
+        await docRef.set({
+            userId,
+            ...data,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+        return docRef;
+    },
+
+    /**
+     * Get emergency plan
+     */
+    async getEmergencyPlan(userId) {
+        const snapshot = await db.collection('emergencyPlans').doc(userId).get();
+        return snapshot.exists ? { id: snapshot.id, ...snapshot.data() } : null;
+    },
+
+    // ===== Academy Progress =====
+
+    /**
+     * Mark lesson as complete
+     */
+    async markLessonComplete(userId, courseId, lessonId) {
+        const docId = `${userId}_${courseId}`;
+        const docRef = db.collection('academyProgress').doc(docId);
+        const snapshot = await docRef.get();
+
+        if (snapshot.exists) {
+            await docRef.update({
+                completedLessons: firebase.firestore.FieldValue.arrayUnion(lessonId),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        } else {
+            await docRef.set({
+                userId,
+                courseId,
+                completedLessons: [lessonId],
+                startedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+    },
+
+    /**
+     * Get academy progress for all courses
+     */
+    async getAcademyProgress(userId) {
+        const snapshot = await db.collection('academyProgress')
+            .where('userId', '==', userId)
+            .get();
+        const progress = {};
+        snapshot.docs.forEach(doc => {
+            const data = doc.data();
+            progress[data.courseId] = data.completedLessons || [];
+        });
+        return progress;
     }
 };
 

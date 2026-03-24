@@ -3525,3 +3525,201 @@ img, video, canvas {
         font-size: 4rem;
     }
 }
+
+/* ===== More Menu Overlay ===== */
+.more-menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.more-menu-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.25s ease;
+}
+
+.more-menu-overlay.show .more-menu-backdrop {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.more-menu-panel {
+    position: relative;
+    z-index: 401;
+    background: white;
+    border-radius: 24px 24px 0 0;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px 20px calc(var(--nav-height) + 20px);
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.more-menu-overlay.show .more-menu-panel {
+    transform: translateY(0);
+}
+
+.more-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.more-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.more-menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.more-menu-item:active {
+    transform: scale(0.92);
+}
+
+.more-menu-item .more-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.more-menu-item:hover .more-icon {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.more-menu-item span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* ===== Intervention Floating Card ===== */
+.intervention-card-container {
+    position: fixed;
+    bottom: calc(var(--nav-height) + 16px);
+    left: 16px;
+    right: 16px;
+    z-index: 350;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.intervention-card {
+    max-width: 400px;
+    width: 100%;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(139, 92, 246, 0.15);
+    overflow: hidden;
+    pointer-events: auto;
+    animation: slideUpIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.intervention-card-header {
+    background: var(--gradient-primary);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+}
+
+.intervention-card-header i {
+    font-size: 1.1rem;
+}
+
+.intervention-card-header span {
+    font-weight: 600;
+    font-size: 0.875rem;
+    flex: 1;
+}
+
+.intervention-card-body {
+    padding: 16px;
+}
+
+.intervention-card-body p {
+    font-size: 0.825rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.intervention-card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.intervention-card-actions button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.intervention-card-actions .btn-action {
+    background: var(--primary-500);
+    color: white;
+}
+
+.intervention-card-actions .btn-action:hover {
+    background: var(--primary-600);
+}
+
+.intervention-card-actions .btn-dismiss {
+    background: var(--bg-primary);
+    color: var(--text-tertiary);
+}
+
+@keyframes slideUpIn {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDownOut {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(100px); opacity: 0; }
+}
+
+/* Responsive More Menu */
+@media (max-width: 360px) {
+    .more-menu-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .more-menu-panel {
+        border-radius: 24px;
+        margin-bottom: 16px;
+        padding-bottom: 20px;
+    }
+}

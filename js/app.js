@@ -122,12 +122,88 @@ const App = {
             this.initSynachatView();
         });
 
+        Router.register('support', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views.support());
+            if (typeof SupportHub !== 'undefined') SupportHub.initSupportHub();
+        });
+
+        Router.register('academy', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views.academy());
+            if (typeof Academy !== 'undefined') Academy.initAcademy();
+        });
+
+        Router.register('sleep', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views.sleep());
+            if (typeof SleepLab !== 'undefined') SleepLab.init();
+        });
+
+        Router.register('moodbooster', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views.moodbooster());
+            if (typeof MoodBooster !== 'undefined') MoodBooster.init();
+        });
+
+        Router.register('mindful', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views.mindful());
+            if (typeof Mindful !== 'undefined') Mindful.init();
+        });
+
+        Router.register('journal', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views.journal());
+            if (typeof Journal !== 'undefined') Journal.init();
+        });
+
         // Initialize router
         Router.init();
+
+        // Intervention Engine is initialized via waitForAuth() → InterventionEngine.init()
     },
 
     /**
-     * Setup navigation
+     * Get current user state for intervention engine
+     */
+    getInterventionState() {
+        const state = {
+            stress: 0, gsr: 0, hr: 0, spo2: 0, activity: 'resting',
+            phq9Score: 0, phq9Category: 'Minimal',
+            uclaScore: 20, uclaCategory: 'Low'
+        };
+        // Read latest sensor data from DOM
+        const stressEl = document.getElementById('stressValue');
+        if (stressEl) state.stress = parseInt(stressEl.textContent) || 0;
+        const gsrEl = document.getElementById('gsrValue');
+        if (gsrEl) state.gsr = parseInt(gsrEl.textContent) || 0;
+        const hrEl = document.getElementById('hrValue');
+        if (hrEl) state.hr = parseInt(hrEl.textContent) || 0;
+        const spo2El = document.getElementById('spo2Value');
+        if (spo2El) state.spo2 = parseInt(spo2El.textContent) || 0;
+        // Read cached assessment from localStorage
+        try {
+            const cached = localStorage.getItem('synawatch_assessment');
+            if (cached) {
+                const a = JSON.parse(cached);
+                state.phq9Score = a.phq9Score || 0;
+                state.phq9Category = a.phq9Category || 'Minimal';
+                state.uclaScore = a.uclaScore || 20;
+                state.uclaCategory = a.uclaCategory || 'Low';
+            }
+        } catch (e) {}
+        return state;
+    },
+
+    /**
+     * Setup navigation with More menu
      */
     setupNavigation() {
         // Create bottom navigation
@@ -146,29 +222,104 @@ const App = {
                 </div>
                 <span class="nav-label">Health</span>
             </a>
-            <a class="nav-item" data-route="analytics">
-                <div class="nav-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <span class="nav-label">Analytics</span>
-            </a>
             <a class="nav-item" data-route="synachat">
                 <div class="nav-icon">
                     <i class="fas fa-comments"></i>
                 </div>
                 <span class="nav-label">AI Chat</span>
             </a>
-            <a class="nav-item" data-route="profile">
+            <a class="nav-item" data-route="analytics">
                 <div class="nav-icon">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-chart-line"></i>
                 </div>
-                <span class="nav-label">Profile</span>
+                <span class="nav-label">Analytics</span>
+            </a>
+            <a class="nav-item nav-more-trigger" onclick="App.toggleMoreMenu(event)">
+                <div class="nav-icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <span class="nav-label">More</span>
             </a>
         `;
         document.body.appendChild(nav);
 
+        // Create More menu overlay
+        const moreMenu = document.createElement('div');
+        moreMenu.id = 'moreMenu';
+        moreMenu.className = 'more-menu-overlay';
+        moreMenu.style.display = 'none';
+        moreMenu.innerHTML = `
+            <div class="more-menu-backdrop" onclick="App.closeMoreMenu()"></div>
+            <div class="more-menu-panel">
+                <div class="more-menu-header">
+                    <span style="font-weight: 700; font-size: 1rem; color: var(--text-primary);">Menu Lainnya</span>
+                    <button onclick="App.closeMoreMenu()" style="background: none; border: none; font-size: 1.2rem; color: var(--text-tertiary); cursor: pointer;"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="more-menu-grid">
+                    <a class="more-menu-item" data-route="sleep" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(49, 46, 129, 0.12); color: #312e81;"><i class="fas fa-moon"></i></div>
+                        <span>Sleep Lab</span>
+                    </a>
+                    <a class="more-menu-item" data-route="moodbooster" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(234, 179, 8, 0.12); color: #eab308;"><i class="fas fa-music"></i></div>
+                        <span>Mood Booster</span>
+                    </a>
+                    <a class="more-menu-item" data-route="mindful" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;"><i class="fas fa-leaf"></i></div>
+                        <span>Mindful Moment</span>
+                    </a>
+                    <a class="more-menu-item" data-route="journal" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(249, 115, 22, 0.12); color: #f97316;"><i class="fas fa-book-open"></i></div>
+                        <span>Daily Journal</span>
+                    </a>
+                    <a class="more-menu-item" data-route="support" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(239, 68, 68, 0.12); color: var(--danger-500);"><i class="fas fa-hands-holding-heart"></i></div>
+                        <span>Support Hub</span>
+                    </a>
+                    <a class="more-menu-item" data-route="academy" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(139, 92, 246, 0.12); color: var(--primary-500);"><i class="fas fa-graduation-cap"></i></div>
+                        <span>Syna Academy</span>
+                    </a>
+                    <a class="more-menu-item" data-route="profile" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(99, 102, 241, 0.12); color: var(--info-500);"><i class="fas fa-user"></i></div>
+                        <span>Profile</span>
+                    </a>
+                    <a class="more-menu-item" data-route="assessment" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(16, 185, 129, 0.12); color: var(--success-500);"><i class="fas fa-clipboard-list"></i></div>
+                        <span>Re-Assessment</span>
+                    </a>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(moreMenu);
+
         // Update active state based on current route
         Router.updateNavigation();
+    },
+
+    /**
+     * Toggle More menu
+     */
+    toggleMoreMenu(e) {
+        if (e) e.preventDefault();
+        const menu = document.getElementById('moreMenu');
+        if (!menu) return;
+        if (menu.style.display === 'none') {
+            menu.style.display = 'flex';
+            requestAnimationFrame(() => menu.classList.add('show'));
+        } else {
+            this.closeMoreMenu();
+        }
+    },
+
+    /**
+     * Close More menu
+     */
+    closeMoreMenu() {
+        const menu = document.getElementById('moreMenu');
+        if (!menu) return;
+        menu.classList.remove('show');
+        setTimeout(() => { menu.style.display = 'none'; }, 250);
     },
 
     /**

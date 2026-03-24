@@ -691,6 +691,185 @@ const Views = {
                 </div>
             </div>
         `;
+    },
+
+    /**
+     * Sleep Lab View
+     */
+    sleep() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto; padding-bottom: 80px;">
+                <!-- Header -->
+                <div class="health-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);">
+                    <i class="fas fa-moon" style="font-size: 2.5rem; margin-bottom: 12px; color: #a5b4fc;"></i>
+                    <div class="big-value" style="color: white; font-size: 3rem;"><span id="sleepScoreValue">--</span></div>
+                    <div class="label" style="color: #c7d2fe;">Est. Sleep Readiness</div>
+                </div>
+
+                <!-- Relaxation Audio -->
+                <h3 class="section-title">Audio Relaksasi</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
+                    <div class="card" style="text-align: center; cursor: pointer; padding: 16px;" onclick="SleepLab.playSound('rain')">
+                        <i class="fas fa-cloud-rain" style="font-size: 1.5rem; color: var(--info-500); margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.8rem; font-weight: 600;">Hujan</div>
+                    </div>
+                    <div class="card" style="text-align: center; cursor: pointer; padding: 16px;" onclick="SleepLab.playSound('forest')">
+                        <i class="fas fa-tree" style="font-size: 1.5rem; color: var(--success-500); margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.8rem; font-weight: 600;">Hutan</div>
+                    </div>
+                    <div class="card" style="text-align: center; cursor: pointer; padding: 16px;" onclick="SleepLab.playSound('noise')">
+                        <i class="fas fa-water" style="font-size: 1.5rem; color: var(--primary-500); margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.8rem; font-weight: 600;">Ombak</div>
+                    </div>
+                </div>
+
+                <!-- Bedtime Checklist -->
+                <h3 class="section-title">Rutinitas Malam</h3>
+                <div class="card" style="padding: 0; overflow: hidden;">
+                    <div class="list-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
+                        <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">Mandi Air Hangat</div>
+                        </div>
+                    </div>
+                    <div class="list-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
+                        <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">Matikan Layar (30m sblm tidur)</div>
+                        </div>
+                    </div>
+                    <div class="list-item" style="cursor: pointer; border-bottom: none;" onclick="SleepLab.toggleChecklist(this)">
+                        <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">Minum Air Susu/Teh Kamomil</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Mood Booster View
+     */
+    moodbooster() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto;">
+                <div style="text-align: center; padding: 32px 16px;">
+                    <i class="fas fa-music" style="font-size: 4rem; color: var(--primary-500); margin-bottom: 16px; animation: pulse 2s infinite;"></i>
+                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">Mood Booster</h2>
+                    <p style="color: var(--text-tertiary); margin-bottom: 32px;">Pilih musik atau frekuensi suara untuk meredakan emosi negatif Anda saat ini.</p>
+                </div>
+
+                <h3 class="section-title">Bagaimana Perasaan Anda Saat Ini?</h3>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 32px;">
+                    <button class="btn btn-outline mood-btn" style="flex: 1; margin: 0 4px; border-radius: 20px; font-size: 1.5rem;" onclick="MoodBooster.setMood('bad')">😢</button>
+                    <button class="btn btn-outline mood-btn" style="flex: 1; margin: 0 4px; border-radius: 20px; font-size: 1.5rem;" onclick="MoodBooster.setMood('neutral')">😐</button>
+                    <button class="btn btn-outline mood-btn" style="flex: 1; margin: 0 4px; border-radius: 20px; font-size: 1.5rem;" onclick="MoodBooster.setMood('good')">😃</button>
+                </div>
+
+                <div class="card" style="padding: 0; overflow: hidden;">
+                    <div class="list-item" onclick="MoodBooster.playTherapy('Binaural Beats (Alpha)')">
+                        <div class="list-item-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--primary-500);"><i class="fas fa-headphones"></i></div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">Binaural Beats (Fokus & Tenang)</div>
+                            <div class="list-item-subtitle">15 Menit · Alpha Wave</div>
+                        </div>
+                        <i class="fas fa-play" style="color: var(--text-tertiary);"></i>
+                    </div>
+                    <div class="list-item" onclick="MoodBooster.playTherapy('Acoustic Uplift')" style="border-bottom: none;">
+                        <div class="list-item-icon" style="background: rgba(251, 191, 36, 0.15); color: var(--warning-500);"><i class="fas fa-guitar"></i></div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">Acoustic Uplift</div>
+                            <div class="list-item-subtitle">10 Menit · Menambah Energi Positif</div>
+                        </div>
+                        <i class="fas fa-play" style="color: var(--text-tertiary);"></i>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Mindful Moment View
+     */
+    mindful() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-primary);">
+                <div style="text-align: center; margin-bottom: 60px;">
+                    <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">Mindful Moment</h2>
+                    <p style="color: var(--text-secondary);">Ikuti ritme pernapasan 4-7-8 untuk rileks total.</p>
+                </div>
+                
+                <div style="position: relative; width: 250px; height: 250px; display: flex; align-items: center; justify-content: center; margin-bottom: 60px;">
+                    <div id="breathingCircle" style="position: absolute; width: 100px; height: 100px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; border: 2px solid var(--success-500); box-shadow: 0 0 30px rgba(16, 185, 129, 0.4); z-index: 1;"></div>
+                    <div id="breathingText" style="z-index: 2; font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">Mulai Latihan</div>
+                </div>
+
+                <button class="btn btn-primary" style="padding: 16px 32px; border-radius: 30px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);" onclick="Mindful.start()">
+                    <i class="fas fa-play"></i> Mulai Pernapasan
+                </button>
+            </div>
+        `;
+    },
+
+    /**
+     * Journal View
+     */
+    journal() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto;">
+                <div style="margin-bottom: 24px;">
+                    <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;"><i class="fas fa-book-open" style="color: var(--primary-500);"></i> Jurnal Refleksi</h2>
+                    <p style="color: var(--text-tertiary);">Tuliskan apa yang membebani pikiranmu hari ini.</p>
+                </div>
+                
+                <div class="card" style="margin-bottom: 24px;">
+                    <textarea id="journalInput" rows="5" placeholder="Hari ini saya merasa..." style="width: 100%; border: none; background: #f8fafc; padding: 16px; border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 1rem; color: var(--text-primary); resize: vertical; margin-bottom: 16px; outline: none;"></textarea>
+                    <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="Journal.save()">
+                        <i class="fas fa-save"></i> Simpan Jurnal
+                    </button>
+                </div>
+
+                <h3 class="section-title">Catatan Sebelumnya</h3>
+                <div id="journalList">
+                    <!-- Loaded dynamically -->
+                    <div style="text-align: center; padding: 20px;"><div class="loading-spinner"></div></div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Support Hub View
+     */
+    support() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto;">
+                <div id="supportContent">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: var(--text-tertiary);">Memuat Support Hub...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Academy View
+     */
+    academy() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto;">
+                <div id="academyContent">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: var(--text-tertiary);">Memuat Syna Academy...</p>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 };
 
