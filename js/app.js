@@ -295,10 +295,6 @@ const App = {
                         <div class="more-icon" style="background: rgba(99, 102, 241, 0.12); color: var(--info-500);"><i class="fas fa-user"></i></div>
                         <span>Profile</span>
                     </a>
-                    <a class="more-menu-item" data-route="research" onclick="App.closeMoreMenu()">
-                        <div class="more-icon" style="background: rgba(245, 158, 11, 0.12); color: var(--warning-500);"><i class="fas fa-flask"></i></div>
-                        <span>Research</span>
-                    </a>
                     <a class="more-menu-item" data-route="assessment" onclick="App.closeMoreMenu()">
                         <div class="more-icon" style="background: rgba(16, 185, 129, 0.12); color: var(--success-500);"><i class="fas fa-clipboard-list"></i></div>
                         <span>Re-Assessment</span>
