@@ -499,17 +499,31 @@ const App = {
             userNameEl.textContent = this.currentUser.displayName || this.currentUser.email?.split('@')[0] || 'User';
         }
 
-        // Check if user is admin and show admin card
-        if (this.currentUser && typeof db !== 'undefined') {
-            db.collection('users').doc(this.currentUser.uid).get()
-                .then(doc => {
-                    const userData = doc.data() || {};
-                    const adminCardContainer = document.getElementById('adminCardContainer');
-                    if (adminCardContainer && userData.role === 'admin') {
-                        adminCardContainer.style.display = 'block';
-                    }
-                })
-                .catch(e => console.log('Could not check admin status:', e));
+        // Check if user is admin and show/hide admin card
+        const adminCardContainer = document.getElementById('adminCardContainer');
+        if (adminCardContainer) {
+            // Default: hide admin card
+            adminCardContainer.style.display = 'none';
+
+            // Check user role only if authenticated
+            if (this.currentUser && typeof db !== 'undefined') {
+                db.collection('users').doc(this.currentUser.uid).get()
+                    .then(doc => {
+                        const userData = doc.data();
+                        // Only show if user role is explicitly 'admin'
+                        if (userData && userData.role === 'admin') {
+                            adminCardContainer.style.display = 'block';
+                            console.log('✅ Admin panel visible');
+                        } else {
+                            adminCardContainer.style.display = 'none';
+                            console.log('🔒 Admin panel hidden - user is not admin');
+                        }
+                    })
+                    .catch(e => {
+                        adminCardContainer.style.display = 'none';
+                        console.log('Could not check admin status:', e);
+                    });
+            }
         }
 
         // Initialize charts from dashboard.js
