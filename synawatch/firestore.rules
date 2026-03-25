@@ -203,6 +203,46 @@ service cloud.firestore {
       allow read: if isAdmin();
     }
 
+    // ===== YOGA FEATURE =====
+    // Yoga Poses (Public read, admin write)
+    match /yoga_poses/{poseId} {
+      // All authenticated users can read poses
+      allow read: if isAuthenticated();
+
+      // Only admins can write
+      allow write: if isAdmin();
+    }
+
+    // Yoga Protocols (Public read, admin write)
+    match /yoga_protocols/{protocolId} {
+      // All authenticated users can read protocols
+      allow read: if isAuthenticated();
+
+      // Only admins can write
+      allow write: if isAdmin();
+    }
+
+    // Mental Health Yoga Map (Public read, admin write)
+    match /mental_health_yoga_map/{mapId} {
+      // All authenticated users can read mappings
+      allow read: if isAuthenticated();
+
+      // Only admins can write
+      allow write: if isAdmin();
+    }
+
+    // Yoga Sessions (User read/write own, admin read all)
+    match /yoga_sessions/{sessionId} {
+      // Users can read their own sessions
+      allow read: if isAuthenticated() && isOwner(resource.data.user_id);
+
+      // Users can create their own sessions
+      allow create: if isAuthenticated() && isOwner(request.resource.data.user_id);
+
+      // Admins have full access
+      allow read, write: if isAdmin();
+    }
+
     // ===== DENY ALL OTHER COLLECTIONS =====
     match /{document=**} {
       allow read, write, delete: if false;
