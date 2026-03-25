@@ -124,6 +124,75 @@ const Views = {
                     </div>
                 </div>
 
+                <!-- Quick Feature Shortcuts -->
+                <h3 class="section-title">Quick Features</h3>
+                <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px;">
+                    <!-- Admin Panel (if admin) -->
+                    <div id="adminCardContainer" style="display: none;">
+                        <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('admin')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">⚙️</div>
+                            <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Admin Panel</div>
+                            <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Keys & Users</div>
+                        </div>
+                    </div>
+
+                    <!-- Assessment -->
+                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('assessment')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">📋</div>
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Assessment</div>
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">PHQ-9 & UCLA</div>
+                    </div>
+
+                    <!-- AI Chat -->
+                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('synachat')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">💬</div>
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">AI Chat</div>
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Talk to Dr. Synachat</div>
+                    </div>
+
+                    <!-- Crisis Support -->
+                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s; border: 2px solid rgba(239,68,68,0.3);" onclick="Router.navigate('support')" onmouseover="this.style.boxShadow='0 8px 20px rgba(239,68,68,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">🆘</div>
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--danger-500);">Crisis Support</div>
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Get Help Now</div>
+                    </div>
+
+                    <!-- Sleep Lab -->
+                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('sleep')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">😴</div>
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Sleep Lab</div>
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Track & Improve</div>
+                    </div>
+
+                    <!-- Journal -->
+                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('journal')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">📝</div>
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Journal</div>
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Daily Thoughts</div>
+                    </div>
+
+                    <!-- Mindfulness -->
+                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('mindful')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">🧘</div>
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Mindful</div>
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Meditate</div>
+                    </div>
+
+                    <!-- Mood Booster -->
+                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('moodbooster')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">🎵</div>
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Mood Booster</div>
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Music Therapy</div>
+                    </div>
+
+                    <!-- Academy -->
+                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('academy')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">🎓</div>
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Academy</div>
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Learn & Grow</div>
+                    </div>
+                </div>
+
                 <!-- Real-time Charts -->
                 <h3 class="section-title">
                     Real-time Charts

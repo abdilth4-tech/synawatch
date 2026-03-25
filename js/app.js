@@ -473,6 +473,19 @@ const App = {
             userNameEl.textContent = this.currentUser.displayName || this.currentUser.email?.split('@')[0] || 'User';
         }
 
+        // Check if user is admin and show admin card
+        if (this.currentUser && typeof db !== 'undefined') {
+            db.collection('users').doc(this.currentUser.uid).get()
+                .then(doc => {
+                    const userData = doc.data() || {};
+                    const adminCardContainer = document.getElementById('adminCardContainer');
+                    if (adminCardContainer && userData.role === 'admin') {
+                        adminCardContainer.style.display = 'block';
+                    }
+                })
+                .catch(e => console.log('Could not check admin status:', e));
+        }
+
         // Initialize charts from dashboard.js
         if (typeof initCharts === 'function') {
             initCharts();
