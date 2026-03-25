@@ -442,10 +442,10 @@ function updateCurrentValues(data) {
 
     // Temperature
     const btElement = document.getElementById('btValue');
-    if (btElement) btElement.textContent = data.bt ? data.bt.toFixed(1) : '--';
+    if (btElement) btElement.textContent = data.bt ? data.bt.toFixed(2) : '--';
 
     const atElement = document.getElementById('atValue');
-    if (atElement) atElement.textContent = data.at ? data.at.toFixed(1) : '--';
+    if (atElement) atElement.textContent = data.at ? data.at.toFixed(2) : '--';
 
     // Activity
     const actElement = document.getElementById('actValue');
