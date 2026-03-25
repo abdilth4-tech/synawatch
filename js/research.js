@@ -454,6 +454,123 @@ const ResearchFoundation = {
     if (papersSection) {
       papersSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  },
+
+  /**
+   * Initialize Research Materials - Load comprehensive HTML page
+   */
+  initResearch: async function() {
+    const contentDiv = document.getElementById('researchContent');
+    const frame = document.getElementById('researchFrame');
+
+    if (!contentDiv || !frame) {
+      console.warn('Research content elements not found');
+      return;
+    }
+
+    try {
+      // Try to load the comprehensive research materials HTML
+      const researchPath = '../../../research-materials.html';
+
+      const response = await fetch(researchPath);
+      if (!response.ok) {
+        throw new Error(`Failed to load: ${response.status}`);
+      }
+
+      const html = await response.text();
+
+      // Inject into iframe for isolation
+      frame.style.display = 'block';
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      doc.open();
+      doc.write(html);
+      doc.close();
+
+      // Hide loading spinner
+      contentDiv.innerHTML = '';
+      contentDiv.style.display = 'none';
+
+      console.log('✅ Research materials loaded successfully');
+    } catch (error) {
+      console.error('Error loading research materials:', error);
+
+      // Fallback: Display basic research summary from existing data
+      this.renderBasicResearch(contentDiv);
+    }
+  },
+
+  /**
+   * Fallback: Render basic research summary if HTML load fails
+   */
+  renderBasicResearch: function(container) {
+    let html = `
+      <div style="padding: 40px 20px; max-width: 1000px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 40px;">
+          <h1 style="font-size: 2.5em; color: #667eea; margin-bottom: 10px;">🧠 SynaWatch Research Materials</h1>
+          <p style="font-size: 1.1em; color: #666; margin-bottom: 20px;">Systematic Literature Review - 50 Peer-Reviewed Papers</p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+            <div style="background: #f0f4ff; padding: 20px; border-radius: 10px;">
+              <div style="font-size: 2.5em; font-weight: bold; color: #667eea;">50</div>
+              <div style="color: #666; font-size: 0.9em;">Papers</div>
+            </div>
+            <div style="background: #f0f4ff; padding: 20px; border-radius: 10px;">
+              <div style="font-size: 2.5em; font-weight: bold; color: #667eea;">10</div>
+              <div style="color: #666; font-size: 0.9em;">Domains</div>
+            </div>
+            <div style="background: #f0f4ff; padding: 20px; border-radius: 10px;">
+              <div style="font-size: 2.5em; font-weight: bold; color: #667eea;">7</div>
+              <div style="color: #666; font-size: 0.9em;">Gaps</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px;">📊 Research Domains</h2>
+    `;
+
+    for (let [key, domain] of Object.entries(this.domains)) {
+      const gapCount = this.papers.filter(p => p.domain == domain.id).length;
+      html += `
+        <div style="background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #667eea;">
+          <div style="font-weight: 600; color: #333;">${domain.icon} ${domain.label}</div>
+          <div style="color: #666; font-size: 0.9em; margin-top: 5px;">${gapCount} papers | Features: ${domain.features.join(', ')}</div>
+        </div>
+      `;
+    }
+
+    html += `
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px;">🔍 Research Gaps</h2>
+    `;
+
+    this.gaps.forEach((gap, idx) => {
+      const priorityColor = gap.priority === 'CRITICAL' ? '#ef4444' : gap.priority === 'HIGH' ? '#f59e0b' : '#3b82f6';
+      html += `
+        <div style="background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid ${priorityColor};">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="font-weight: 600; color: #333;">Gap ${gap.id}: ${gap.title}</div>
+            <span style="background: ${priorityColor}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 600;">${gap.priority}</span>
+          </div>
+          <p style="color: #666; font-size: 0.95em; margin: 5px 0;">${gap.description}</p>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+
+        <div style="background: #f0f4ff; padding: 30px; border-radius: 10px; text-align: center;">
+          <p style="color: #666; margin-bottom: 20px;">For comprehensive research materials with detailed diagrams, conceptual frameworks, and DOI-linked references:</p>
+          <a href="../../../research-materials.html" target="_blank" style="background: #667eea; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
+            📖 Open Full Research Materials Page
+          </a>
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = html;
   }
 };
 
