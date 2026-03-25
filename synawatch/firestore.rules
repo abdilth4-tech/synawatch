@@ -208,6 +208,31 @@ service cloud.firestore {
       allow read: if isAdmin();
     }
 
+    // ===== HEALTH DATA & SESSIONS =====
+    match /healthData/{dataId} {
+      // Users can read/write their own health data
+      allow read, write: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      // Admins have full access
+      allow read, write: if isAdmin();
+    }
+
+    match /sessions/{sessionId} {
+      // Users can read/write their own sessions
+      allow read, write: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      // Admins have full access
+      allow read, write: if isAdmin();
+    }
+
+    match /dailySummary/{summaryId} {
+      // Users can read/write their own summaries
+      allow read, write: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      // Admins have full access
+      allow read, write: if isAdmin();
+    }
+
     // ===== YOGA FEATURE =====
     // Yoga Poses (Public read, admin write)
     match /yoga_poses/{poseId} {
