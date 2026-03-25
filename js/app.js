@@ -171,6 +171,13 @@ const App = {
             if (typeof ResearchFoundation !== 'undefined') ResearchFoundation.initResearch();
         });
 
+        Router.register('admin', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'none'; // Hide nav for admin
+            Router.render(Views.admin());
+            if (typeof AdminUI !== 'undefined') AdminUI.init();
+        });
+
         // Initialize router
         Router.init();
 

@@ -888,6 +888,129 @@ const Views = {
                 <iframe id="researchFrame" style="width: 100%; height: 100vh; border: none; display: none;"></iframe>
             </div>
         `;
+    },
+
+    /**
+     * Admin Dashboard View
+     */
+    admin() {
+        return `
+            <div class="view-container" style="max-width: 1200px; margin: 0 auto; padding-top: 40px;">
+                <!-- Admin Header -->
+                <div style="margin-bottom: 32px;">
+                    <h1 style="font-size: var(--text-3xl); font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+                        <i class="fas fa-shield-alt" style="color: var(--primary-500); margin-right: 12px;"></i>Admin Dashboard
+                    </h1>
+                    <p style="color: var(--text-secondary);">Manage API Keys, Users, and System Settings</p>
+                </div>
+
+                <!-- Tabs Navigation -->
+                <div class="admin-tabs" style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color);">
+                    <button class="admin-tab-btn active" data-tab="dashboard" onclick="AdminUI.switchTab('dashboard')">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </button>
+                    <button class="admin-tab-btn" data-tab="api-keys" onclick="AdminUI.switchTab('api-keys')">
+                        <i class="fas fa-key"></i> API Keys
+                    </button>
+                    <button class="admin-tab-btn" data-tab="users" onclick="AdminUI.switchTab('users')">
+                        <i class="fas fa-users"></i> Users
+                    </button>
+                    <button class="admin-tab-btn" data-tab="settings" onclick="AdminUI.switchTab('settings')">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
+                </div>
+
+                <!-- Dashboard Tab -->
+                <div id="dashboard-tab" class="admin-tab-content" style="display: block;">
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 32px;">
+                        <div class="card" style="padding: 24px; border-left: 4px solid var(--primary-500);">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">Total Users</p>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary-500);" id="totalUsers">--</div>
+                            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 8px;"><i class="fas fa-arrow-up" style="color: #10b981;"></i> +12% this month</p>
+                        </div>
+                        <div class="card" style="padding: 24px; border-left: 4px solid var(--info-500);">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">API Calls</p>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--info-500);" id="totalApiCalls">--</div>
+                            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 8px;"><i class="fas fa-arrow-up" style="color: #10b981;"></i> +24% this month</p>
+                        </div>
+                        <div class="card" style="padding: 24px; border-left: 4px solid var(--success-500);">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">System Uptime</p>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--success-500);" id="systemUptime">--</div>
+                            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 8px;">Last 30 days</p>
+                        </div>
+                        <div class="card" style="padding: 24px; border-left: 4px solid var(--warning-500);">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">Active API Keys</p>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--warning-500);" id="activeKeys">--</div>
+                            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 8px;"><i class="fas fa-circle" style="color: #10b981;"></i> All healthy</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card" style="padding: 24px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">Recent Activity</h3>
+                        <div id="recentActivity" style="space-y: 12px;">
+                            <div style="text-align: center; padding: 20px; color: var(--text-tertiary);">
+                                <p>Loading activity...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Keys Tab -->
+                <div id="api-keys-tab" class="admin-tab-content" style="display: none;">
+                    <div style="margin-bottom: 24px;">
+                        <button class="btn btn-primary" onclick="AdminUI.showCreateKeyModal()" style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-plus"></i> Create New API Key
+                        </button>
+                    </div>
+
+                    <div class="card" style="padding: 24px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">API Keys Management</h3>
+                        <div id="apiKeysTable" style="overflow-x: auto;">
+                            <div style="text-align: center; padding: 20px; color: var(--text-tertiary);">
+                                <div class="loading-spinner" style="margin: 0 auto 12px;"></div>
+                                <p>Loading API keys...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="users-tab" class="admin-tab-content" style="display: none;">
+                    <div class="card" style="padding: 24px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">User Management</h3>
+                        <div id="usersTable" style="overflow-x: auto;">
+                            <div style="text-align: center; padding: 20px; color: var(--text-tertiary);">
+                                <div class="loading-spinner" style="margin: 0 auto 12px;"></div>
+                                <p>Loading users...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settings-tab" class="admin-tab-content" style="display: none;">
+                    <div class="card" style="padding: 24px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 24px;">System Settings</h3>
+
+                        <div style="margin-bottom: 24px;">
+                            <label style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">API Key Rotation Policy</label>
+                            <div style="background: var(--bg-secondary); padding: 12px; border-radius: var(--radius-md); margin-bottom: 12px; color: var(--text-secondary);">
+                                <select id="rotationPolicy" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                                    <option value="30">Rotate every 30 days</option>
+                                    <option value="60">Rotate every 60 days</option>
+                                    <option value="90">Rotate every 90 days</option>
+                                    <option value="manual">Manual only</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="AdminUI.saveSettings()" style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 };
 
