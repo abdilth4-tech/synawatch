@@ -3709,6 +3709,212 @@ img, video, canvas {
     to { transform: translateY(100px); opacity: 0; }
 }
 
+/* ===== Quick Menu Cards ===== */
+.quick-menu-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 160px;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Decorative background element */
+.quick-menu-card .card-decorative-bg {
+    position: absolute;
+    top: -50%;
+    right: -25%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+/* Icon box styling */
+.quick-menu-card .card-icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: white;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Card content */
+.quick-menu-card .card-content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.quick-menu-card .card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+}
+
+.quick-menu-card .card-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+/* Hover effect background */
+.quick-menu-card .card-hover-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: 20px;
+}
+
+/* Hover state */
+.quick-menu-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.quick-menu-card:hover .card-icon-box {
+    transform: scale(1.1) rotateY(360deg);
+}
+
+.quick-menu-card:hover .card-title {
+    color: var(--primary-600);
+}
+
+/* Color gradients for each card */
+.admin-gradient {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+}
+
+.assessment-gradient {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+}
+
+.chat-gradient {
+    background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+}
+
+.crisis-gradient {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+}
+
+.sleep-gradient {
+    background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+}
+
+.journal-gradient {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+}
+
+.mindful-gradient {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.mood-gradient {
+    background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+}
+
+.academy-gradient {
+    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+}
+
+.games-gradient {
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+}
+
+/* Card specific hover backgrounds */
+.admin-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+    opacity: 1;
+}
+
+.assessment-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+    opacity: 1;
+}
+
+.chat-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.1) 100%);
+    opacity: 1;
+}
+
+.crisis-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+    opacity: 1;
+}
+
+.crisis-card {
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.sleep-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+    opacity: 1;
+}
+
+.journal-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
+    opacity: 1;
+}
+
+.mindful-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+    opacity: 1;
+}
+
+.mood-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(219, 39, 119, 0.1) 100%);
+    opacity: 1;
+}
+
+.academy-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+    opacity: 1;
+}
+
+.games-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(8, 145, 178, 0.1) 100%);
+    opacity: 1;
+}
+
+/* Animation for icon rotation */
+@keyframes iconRotate {
+    0% { transform: scale(1) rotateY(0deg); }
+    50% { transform: scale(1.15) rotateY(180deg); }
+    100% { transform: scale(1) rotateY(360deg); }
+}
+
+.quick-menu-card:hover .card-icon-box {
+    animation: iconRotate 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
 /* Responsive More Menu */
 @media (max-width: 360px) {
     .more-menu-grid {

@@ -61,6 +61,144 @@ const Views = {
                     </div>
                 </div>
 
+                <!-- Menu Cepat / Quick Menu -->
+                <div style="margin-top: 32px; margin-bottom: 32px;">
+                    <h3 class="section-title" style="margin-bottom: 20px;">Menu Cepat</h3>
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
+                        <!-- Admin Panel (if admin) -->
+                        <div id="adminCardContainer" style="display: none;">
+                            <div class="quick-menu-card admin-card" onclick="Router.navigate('admin')" data-card="admin">
+                                <div class="card-decorative-bg"></div>
+                                <div class="card-icon-box admin-gradient">
+                                    <i class="fas fa-sliders-h"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Admin Panel</h4>
+                                    <p class="card-subtitle">Kelola Sistem</p>
+                                </div>
+                                <div class="card-hover-bg"></div>
+                            </div>
+                        </div>
+
+                        <!-- Assessment -->
+                        <div class="quick-menu-card assessment-card" onclick="Router.navigate('assessment')" data-card="assessment">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box assessment-gradient">
+                                <i class="fas fa-list-check"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Asesmen</h4>
+                                <p class="card-subtitle">PHQ-9 & UCLA</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- AI Chat -->
+                        <div class="quick-menu-card chat-card" onclick="Router.navigate('synachat')" data-card="chat">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box chat-gradient">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">AI Chat</h4>
+                                <p class="card-subtitle">Dr. Synachat</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Crisis Support -->
+                        <div class="quick-menu-card crisis-card" onclick="Router.navigate('support')" data-card="crisis">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box crisis-gradient">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Bantuan Krisis</h4>
+                                <p class="card-subtitle">Hubungi Sekarang</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Sleep Lab -->
+                        <div class="quick-menu-card sleep-card" onclick="Router.navigate('sleep')" data-card="sleep">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box sleep-gradient">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Sleep Lab</h4>
+                                <p class="card-subtitle">Pantau Tidur</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Journal -->
+                        <div class="quick-menu-card journal-card" onclick="Router.navigate('journal')" data-card="journal">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box journal-gradient">
+                                <i class="fas fa-pen-fancy"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Jurnal</h4>
+                                <p class="card-subtitle">Tulis Harian</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Mindfulness -->
+                        <div class="quick-menu-card mindful-card" onclick="Router.navigate('mindful')" data-card="mindful">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box mindful-gradient">
+                                <i class="fas fa-spa"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Mindful</h4>
+                                <p class="card-subtitle">Meditasi</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Mood Booster -->
+                        <div class="quick-menu-card mood-card" onclick="Router.navigate('moodbooster')" data-card="mood">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box mood-gradient">
+                                <i class="fas fa-music"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Mood Booster</h4>
+                                <p class="card-subtitle">Terapi Musik</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Academy -->
+                        <div class="quick-menu-card academy-card" onclick="Router.navigate('academy')" data-card="academy">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box academy-gradient">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Academy</h4>
+                                <p class="card-subtitle">Belajar</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Games -->
+                        <div class="quick-menu-card games-card" onclick="Router.navigate('games')" data-card="games">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box games-gradient">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Games</h4>
+                                <p class="card-subtitle">Stress Relief</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Current Health Metrics -->
                 <h3 class="section-title">Current Health</h3>
                 <div class="card-grid">
@@ -124,81 +262,6 @@ const Views = {
                     </div>
                 </div>
 
-                <!-- Quick Feature Shortcuts -->
-                <h3 class="section-title">Quick Features</h3>
-                <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px;">
-                    <!-- Admin Panel (if admin) -->
-                    <div id="adminCardContainer" style="display: none;">
-                        <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('admin')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                            <div style="font-size: 2rem; margin-bottom: 8px;">⚙️</div>
-                            <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Admin Panel</div>
-                            <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Keys & Users</div>
-                        </div>
-                    </div>
-
-                    <!-- Assessment -->
-                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('assessment')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">📋</div>
-                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Assessment</div>
-                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">PHQ-9 & UCLA</div>
-                    </div>
-
-                    <!-- AI Chat -->
-                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('synachat')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">💬</div>
-                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">AI Chat</div>
-                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Talk to Dr. Synachat</div>
-                    </div>
-
-                    <!-- Crisis Support -->
-                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s; border: 2px solid rgba(239,68,68,0.3);" onclick="Router.navigate('support')" onmouseover="this.style.boxShadow='0 8px 20px rgba(239,68,68,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">🆘</div>
-                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--danger-500);">Crisis Support</div>
-                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Get Help Now</div>
-                    </div>
-
-                    <!-- Sleep Lab -->
-                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('sleep')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">😴</div>
-                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Sleep Lab</div>
-                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Track & Improve</div>
-                    </div>
-
-                    <!-- Journal -->
-                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('journal')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">📝</div>
-                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Journal</div>
-                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Daily Thoughts</div>
-                    </div>
-
-                    <!-- Mindfulness -->
-                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('mindful')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">🧘</div>
-                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Mindful</div>
-                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Meditate</div>
-                    </div>
-
-                    <!-- Mood Booster -->
-                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('moodbooster')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">🎵</div>
-                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Mood Booster</div>
-                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Music Therapy</div>
-                    </div>
-
-                    <!-- Academy -->
-                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('academy')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">🎓</div>
-                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Academy</div>
-                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Learn & Grow</div>
-                    </div>
-
-                    <!-- Games -->
-                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('games')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">🎮</div>
-                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Games</div>
-                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Stress Relief</div>
-                    </div>
-                </div>
 
                 <!-- Real-time Charts -->
                 <h3 class="section-title">
