@@ -21,35 +21,40 @@ service cloud.firestore {
     }
 
     // ===== USERS COLLECTION =====
-    match /users/{document=**} {
+    match /users/{userId} {
       // Users can read their own profile
-      allow read: if isAuthenticated() && isOwner(document);
+      allow read: if isAuthenticated() && request.auth.uid == userId;
 
       // Admins can read all user profiles
       allow read: if isAdmin();
 
-      // Users can write their own profile (limited fields)
-      allow write: if isAuthenticated() && isOwner(document) &&
-                     !request.resource.data.keys().hasAny(['role', 'email']);
+      // Users can create/update their own profile (limited fields)
+      allow create, update: if isAuthenticated() &&
+                              request.auth.uid == userId &&
+                              !request.resource.data.keys().hasAny(['role']);
 
-      // Only admins can set roles and emails
-      allow write: if isAdmin();
+      // Only admins can set roles
+      allow create, update: if isAdmin();
+
+      // Users can delete their own profile
+      allow delete: if isAdmin();
     }
 
     // ===== ASSESSMENTS COLLECTION =====
     match /assessments/{assessmentId} {
       // Users can read their own assessments
-      allow read: if isAuthenticated() && isOwner(resource.data.userId);
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
 
-      // Admins can read all assessments
-      allow read: if isAdmin();
+      // Users can create their own assessments
+      allow create: if isAuthenticated() &&
+                      request.resource.data.userId == request.auth.uid;
 
-      // Users can create/update their own assessments
-      allow create, update: if isAuthenticated() &&
-                             isOwner(request.resource.data.userId);
+      // Users can update their own assessments
+      allow update: if isAuthenticated() &&
+                     resource.data.userId == request.auth.uid;
 
       // Users can delete their own assessments
-      allow delete: if isAuthenticated() && isOwner(resource.data.userId);
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
 
       // Admins have full access
       allow read, write, delete: if isAdmin();
