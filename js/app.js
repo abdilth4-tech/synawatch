@@ -178,6 +178,13 @@ const App = {
             if (typeof AdminUI !== 'undefined') AdminUI.init();
         });
 
+        Router.register('games', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views.games());
+            if (typeof GamesModule !== 'undefined') GamesModule.init();
+        });
+
         // Initialize router
         Router.init();
 

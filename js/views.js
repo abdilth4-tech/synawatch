@@ -191,6 +191,13 @@ const Views = {
                         <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Academy</div>
                         <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Learn & Grow</div>
                     </div>
+
+                    <!-- Games -->
+                    <div class="card" style="padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="Router.navigate('games')" onmouseover="this.style.boxShadow='0 8px 20px rgba(139,92,246,0.2); transform: translateY(-2px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">🎮</div>
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">Games</div>
+                        <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">Stress Relief</div>
+                    </div>
                 </div>
 
                 <!-- Real-time Charts -->
@@ -955,6 +962,68 @@ const Views = {
                     </div>
                 </div>
                 <iframe id="researchFrame" style="width: 100%; height: 100vh; border: none; display: none;"></iframe>
+            </div>
+        `;
+    },
+
+    /**
+     * Games View
+     */
+    games() {
+        return `
+            <div class="view-container" style="max-width: 800px; margin: 0 auto; padding-top: 20px;">
+                <!-- Games Header -->
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 style="font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px;">
+                        🎮 Wellness Games
+                    </h1>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem;">Relax, play, and reduce stress with fun games</p>
+                </div>
+
+                <!-- Game Selector -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+                    <!-- Game 1: Breathing -->
+                    <div class="card" style="padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="GamesModule.displayGame('breathing')" onmouseover="this.style.boxShadow='0 12px 30px rgba(139,92,246,0.3); transform: translateY(-4px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 3rem; margin-bottom: 12px;">🫁</div>
+                        <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">Breathing Exercise</div>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-tertiary);">2 min • Reduce stress instantly</p>
+                    </div>
+
+                    <!-- Game 2: Memory -->
+                    <div class="card" style="padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="GamesModule.displayGame('memory')" onmouseover="this.style.boxShadow='0 12px 30px rgba(139,92,246,0.3); transform: translateY(-4px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 3rem; margin-bottom: 12px;">🧩</div>
+                        <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">Memory Match Game</div>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-tertiary);">Varies • Improve focus</p>
+                    </div>
+
+                    <!-- Game 3: Challenge -->
+                    <div class="card" style="padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="GamesModule.displayGame('challenge')" onmouseover="this.style.boxShadow='0 12px 30px rgba(139,92,246,0.3); transform: translateY(-4px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 3rem; margin-bottom: 12px;">🏆</div>
+                        <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">Daily Challenge</div>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-tertiary);">Daily • Earn points</p>
+                    </div>
+                </div>
+
+                <!-- Game Display Area -->
+                <div id="gameDisplay" style="background: white; border-radius: var(--radius-lg); padding: 20px; border: 1px solid var(--border-color);">
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                        <p style="font-size: 1.1rem;">👆 Select a game to get started!</p>
+                    </div>
+                </div>
+
+                <script>
+                GamesModule.displayGame = function(gameType) {
+                    const gameDisplay = document.getElementById('gameDisplay');
+
+                    if (gameType === 'breathing') {
+                        gameDisplay.innerHTML = GamesModule.breathingExercise();
+                    } else if (gameType === 'memory') {
+                        gameDisplay.innerHTML = GamesModule.stressRelieveGame();
+                    } else if (gameType === 'challenge') {
+                        gameDisplay.innerHTML = GamesModule.wellnessChallenge();
+                    }
+                };
+                </script>
             </div>
         `;
     },
