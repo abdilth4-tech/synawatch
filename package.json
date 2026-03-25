@@ -1,0 +1,22 @@
+{
+  "name": "synawatch-admin",
+  "version": "1.0.0",
+  "description": "SynaWatch Admin Setup & Management Scripts",
+  "main": "setup-admin.js",
+  "scripts": {
+    "setup-admin": "node setup-admin.js",
+    "setup-admin:help": "node setup-admin.js help"
+  },
+  "keywords": [
+    "firebase",
+    "admin",
+    "api-keys",
+    "synawatch"
+  ],
+  "author": "SynaWatch Team",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  },
+  "devDependencies": {}
+}
