@@ -681,6 +681,137 @@ const Views = {
     },
 
     /**
+     * Edit Profile View
+     */
+    'edit-profile'() {
+        return `
+            <div class="view-container" style="max-width: 600px; margin: 0 auto; padding-bottom: 80px;">
+                <!-- Header -->
+                <div style="padding: var(--space-6) var(--space-4); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: var(--space-3);">
+                    <button class="btn-icon" onclick="Router.navigate('profile')" style="background: rgba(139, 92, 246, 0.1); color: var(--primary-500); border: none; padding: 8px; border-radius: 8px; cursor: pointer;">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h1 style="margin: 0; font-size: var(--text-2xl);">Edit Profile</h1>
+                </div>
+
+                <!-- Form -->
+                <div style="padding: var(--space-6);">
+                    <!-- Name Field -->
+                    <div style="margin-bottom: var(--space-6);">
+                        <label style="display: block; margin-bottom: var(--space-2); font-weight: 600; color: var(--text-primary);">Full Name</label>
+                        <input
+                            type="text"
+                            id="editProfileName"
+                            placeholder="Enter your full name"
+                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: inherit;"
+                        />
+                    </div>
+
+                    <!-- Email Field (Read-only) -->
+                    <div style="margin-bottom: var(--space-6);">
+                        <label style="display: block; margin-bottom: var(--space-2); font-weight: 600; color: var(--text-primary);">Email Address</label>
+                        <input
+                            type="email"
+                            id="editProfileEmail"
+                            disabled
+                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: inherit; background: var(--bg-tertiary); cursor: not-allowed; opacity: 0.6;"
+                        />
+                        <p style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 4px;">Email cannot be changed. Contact support to change email.</p>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button
+                        class="btn btn-primary"
+                        onclick="saveProfileChanges()"
+                        style="width: 100%; justify-content: center; padding: 12px; margin-bottom: var(--space-3);"
+                    >
+                        <i class="fas fa-check"></i> Save Changes
+                    </button>
+
+                    <button
+                        class="btn btn-outline"
+                        onclick="Router.navigate('profile')"
+                        style="width: 100%; justify-content: center; padding: 12px;"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Change Password View
+     */
+    'change-password'() {
+        return `
+            <div class="view-container" style="max-width: 600px; margin: 0 auto; padding-bottom: 80px;">
+                <!-- Header -->
+                <div style="padding: var(--space-6) var(--space-4); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: var(--space-3);">
+                    <button class="btn-icon" onclick="Router.navigate('profile')" style="background: rgba(139, 92, 246, 0.1); color: var(--primary-500); border: none; padding: 8px; border-radius: 8px; cursor: pointer;">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h1 style="margin: 0; font-size: var(--text-2xl);">Change Password</h1>
+                </div>
+
+                <!-- Form -->
+                <div style="padding: var(--space-6);">
+                    <!-- Current Password -->
+                    <div style="margin-bottom: var(--space-6);">
+                        <label style="display: block; margin-bottom: var(--space-2); font-weight: 600; color: var(--text-primary);">Current Password</label>
+                        <input
+                            type="password"
+                            id="currentPassword"
+                            placeholder="Enter your current password"
+                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: inherit;"
+                        />
+                    </div>
+
+                    <!-- New Password -->
+                    <div style="margin-bottom: var(--space-6);">
+                        <label style="display: block; margin-bottom: var(--space-2); font-weight: 600; color: var(--text-primary);">New Password</label>
+                        <input
+                            type="password"
+                            id="newPassword"
+                            placeholder="Enter your new password (min. 8 characters)"
+                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: inherit;"
+                        />
+                        <p style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 4px;">Password must be at least 8 characters long</p>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div style="margin-bottom: var(--space-6);">
+                        <label style="display: block; margin-bottom: var(--space-2); font-weight: 600; color: var(--text-primary);">Confirm New Password</label>
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm your new password"
+                            style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: inherit;"
+                        />
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button
+                        class="btn btn-primary"
+                        onclick="changePassword()"
+                        style="width: 100%; justify-content: center; padding: 12px; margin-bottom: var(--space-3);"
+                    >
+                        <i class="fas fa-check"></i> Update Password
+                    </button>
+
+                    <button
+                        class="btn btn-outline"
+                        onclick="Router.navigate('profile')"
+                        style="width: 100%; justify-content: center; padding: 12px;"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
      * Synachat View - Modern AI Assistant Interface
      */
     synachat() {

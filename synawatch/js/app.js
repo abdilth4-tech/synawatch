@@ -115,6 +115,19 @@ const App = {
             this.initProfileView();
         });
 
+        Router.register('edit-profile', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views['edit-profile']());
+            loadEditProfileData();
+        });
+
+        Router.register('change-password', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views['change-password']());
+        });
+
         Router.register('synachat', () => {
             const nav = document.querySelector('.bottom-nav');
             if (nav) nav.style.display = 'flex';
@@ -789,17 +802,127 @@ async function performLogout() {
 }
 
 /**
- * Open Edit Profile Modal
+ * Open Edit Profile Page
  */
 function openEditProfile() {
-    Utils.showToast('Edit Profile coming soon!', 'info');
+    Router.navigate('edit-profile');
 }
 
 /**
- * Open Change Password Modal
+ * Open Change Password Page
  */
 function openChangePassword() {
-    Utils.showToast('Change Password coming soon!', 'info');
+    Router.navigate('change-password');
+}
+
+/**
+ * Load Edit Profile Data
+ */
+async function loadEditProfileData() {
+    try {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const nameInput = document.getElementById('editProfileName');
+        const emailInput = document.getElementById('editProfileEmail');
+
+        if (emailInput) emailInput.value = user.email;
+
+        // Get user data from Firestore
+        const userData = await FirebaseService.getUserDocument(user.uid);
+        if (nameInput && userData) {
+            nameInput.value = userData.name || user.displayName || '';
+        }
+    } catch (error) {
+        console.error('Error loading profile data:', error);
+        Utils.showToast('Failed to load profile data', 'error');
+    }
+}
+
+/**
+ * Save Profile Changes
+ */
+async function saveProfileChanges() {
+    try {
+        const user = auth.currentUser;
+        if (!user) {
+            Utils.showToast('User not authenticated', 'error');
+            return;
+        }
+
+        const nameInput = document.getElementById('editProfileName');
+        const newName = nameInput?.value?.trim();
+
+        if (!newName) {
+            Utils.showToast('Please enter a name', 'warning');
+            return;
+        }
+
+        // Update display name
+        await user.updateProfile({ displayName: newName });
+
+        // Update Firestore
+        await FirebaseService.updateUserDocument(user.uid, { name: newName });
+
+        Utils.showToast('Profile updated successfully!', 'success');
+        setTimeout(() => Router.navigate('profile'), 1000);
+    } catch (error) {
+        console.error('Error saving profile:', error);
+        Utils.showToast(error.message || 'Failed to save profile', 'error');
+    }
+}
+
+/**
+ * Change Password
+ */
+async function changePassword() {
+    try {
+        const user = auth.currentUser;
+        if (!user) {
+            Utils.showToast('User not authenticated', 'error');
+            return;
+        }
+
+        const currentPassword = document.getElementById('currentPassword')?.value;
+        const newPassword = document.getElementById('newPassword')?.value;
+        const confirmPassword = document.getElementById('confirmPassword')?.value;
+
+        // Validation
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            Utils.showToast('Please fill in all fields', 'warning');
+            return;
+        }
+
+        if (newPassword.length < 8) {
+            Utils.showToast('New password must be at least 8 characters', 'warning');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            Utils.showToast('Passwords do not match', 'warning');
+            return;
+        }
+
+        // Re-authenticate user with current password
+        const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+        await user.reauthenticateWithCredential(credential);
+
+        // Update password
+        await user.updatePassword(newPassword);
+
+        Utils.showToast('Password changed successfully!', 'success');
+        setTimeout(() => Router.navigate('profile'), 1500);
+    } catch (error) {
+        console.error('Error changing password:', error);
+
+        if (error.code === 'auth/wrong-password') {
+            Utils.showToast('Current password is incorrect', 'error');
+        } else if (error.code === 'auth/weak-password') {
+            Utils.showToast('Password is too weak. Use at least 8 characters', 'error');
+        } else {
+            Utils.showToast(error.message || 'Failed to change password', 'error');
+        }
+    }
 }
 
 // Make functions globally available
