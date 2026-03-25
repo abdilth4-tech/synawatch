@@ -38,6 +38,24 @@ service cloud.firestore {
 
       // Users can delete their own profile
       allow delete: if isAdmin();
+
+      // ===== USER ASSESSMENTS SUBCOLLECTION =====
+      match /assessments/{assessmentId} {
+        // Users can read their own assessments
+        allow read: if isAuthenticated() && request.auth.uid == userId;
+
+        // Users can create their own assessments
+        allow create: if isAuthenticated() && request.auth.uid == userId;
+
+        // Users can update their own assessments
+        allow update: if isAuthenticated() && request.auth.uid == userId;
+
+        // Users can delete their own assessments
+        allow delete: if isAuthenticated() && request.auth.uid == userId;
+
+        // Admins have full access
+        allow read, write, delete: if isAdmin();
+      }
     }
 
     // ===== ASSESSMENTS COLLECTION =====
