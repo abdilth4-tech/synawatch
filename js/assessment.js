@@ -238,6 +238,165 @@ const Assessment = {
         }
     },
 
+    /**
+     * [GAP 1] Multimodal Bio-Psycho Fusion Score
+     * Combines physiological sensor data (GSR, HRV, SpO2) with psychometric scores (PHQ-9, UCLA)
+     * Based on: Hickey et al. 2021, Quisel et al. 2025, Can et al. 2021
+     * Produces a unified "SynaScore" (0-100) reflecting overall mental wellness
+     */
+    calculateFusionScore(phq9Score, uclaScore) {
+        // Get current sensor data from App state
+        const state = (typeof App !== 'undefined' && App.getInterventionState) ? App.getInterventionState() : {};
+
+        // Normalize PHQ-9 (0-27) to 0-100 inverted (higher = better)
+        const phq9Normalized = Math.max(0, 100 - (phq9Score / 27) * 100);
+
+        // Normalize UCLA (20-80) to 0-100 inverted (higher = better)
+        const uclaNormalized = Math.max(0, 100 - ((uclaScore - 20) / 60) * 100);
+
+        // Normalize sensor data (if available)
+        const stressNormalized = Math.max(0, 100 - (state.stress || 0)); // Lower stress = higher score
+        const gsrNormalized = Math.max(0, 100 - (state.gsr || 0)); // Lower GSR = calmer
+        const hrScore = state.hr > 0 ? Math.max(0, 100 - Math.abs(state.hr - 72) * 2) : 50; // Optimal ~72 BPM
+        const spo2Score = state.spo2 > 0 ? Math.min(100, (state.spo2 / 100) * 100) : 50; // Higher SpO2 = better
+
+        // Weighted fusion: Psychometric (60%) + Physiological (40%)
+        // Literature suggests psychometric has higher diagnostic validity (Levis et al. 2020)
+        const hasSensorData = state.hr > 0 || state.stress > 0;
+
+        let fusionScore;
+        if (hasSensorData) {
+            const psychoScore = (phq9Normalized * 0.35) + (uclaNormalized * 0.25);
+            const bioScore = (stressNormalized * 0.15) + (gsrNormalized * 0.10) + (hrScore * 0.10) + (spo2Score * 0.05);
+            fusionScore = Math.round(psychoScore + bioScore);
+        } else {
+            // Without sensor data, use psychometric only
+            fusionScore = Math.round((phq9Normalized * 0.6) + (uclaNormalized * 0.4));
+        }
+
+        // Discordance detection: flag when self-report and bio-signals disagree
+        let discordance = null;
+        if (hasSensorData) {
+            const psychoAvg = (phq9Normalized + uclaNormalized) / 2;
+            const bioAvg = (stressNormalized + gsrNormalized + hrScore + spo2Score) / 4;
+            const diff = Math.abs(psychoAvg - bioAvg);
+            if (diff > 30) {
+                discordance = psychoAvg > bioAvg
+                    ? 'Laporan diri Anda menunjukkan kondisi baik, namun sinyal tubuh menunjukkan tekanan. Perhatikan sinyal fisik Anda.'
+                    : 'Tubuh Anda dalam kondisi rileks, namun skor psikometrik menunjukkan beban emosional. Pertimbangkan untuk berbicara dengan seseorang.';
+            }
+        }
+
+        // Categorize fusion score
+        let fusionCategory, fusionColor;
+        if (fusionScore >= 80) { fusionCategory = 'Sangat Baik'; fusionColor = '#10b981'; }
+        else if (fusionScore >= 60) { fusionCategory = 'Baik'; fusionColor = '#3b82f6'; }
+        else if (fusionScore >= 40) { fusionCategory = 'Waspada'; fusionColor = '#f59e0b'; }
+        else if (fusionScore >= 20) { fusionCategory = 'Perlu Perhatian'; fusionColor = '#f97316'; }
+        else { fusionCategory = 'Kritis'; fusionColor = '#ef4444'; }
+
+        return { fusionScore, fusionCategory, fusionColor, discordance, hasSensorData };
+    },
+
+    /**
+     * [GAP 5] Longitudinal Psychometric Tracking
+     * Shows PHQ-9 and UCLA score trends over time with intervention correlation
+     * Based on: Moshe et al. 2021, Morgiève et al. 2022
+     */
+    async renderLongitudinalChart(container) {
+        const user = auth?.currentUser;
+        if (!user || typeof db === 'undefined') return;
+
+        try {
+            const snapshot = await db.collection('assessments')
+                .where('userId', '==', user.uid)
+                .orderBy('timestamp', 'desc')
+                .limit(12)
+                .get();
+
+            if (snapshot.empty || snapshot.size < 2) {
+                container.innerHTML += `
+                    <div style="background: #f8f9ff; padding: 16px; border-radius: 12px; text-align: center; margin-top: 20px;">
+                        <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--primary-300); margin-bottom: 8px;"></i>
+                        <p style="color: var(--text-tertiary); font-size: 0.9rem;">Grafik tren akan tersedia setelah 2+ evaluasi.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const assessments = [];
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                assessments.push({
+                    date: d.date || (d.timestamp?.toDate ? d.timestamp.toDate().toISOString() : new Date().toISOString()),
+                    phq9: d.phq9?.score ?? d.phq9Score ?? 0,
+                    ucla: d.ucla?.score ?? d.uclaScore ?? 0
+                });
+            });
+            assessments.reverse(); // Chronological order
+
+            const chartId = 'longitudinalChart_' + Date.now();
+            container.innerHTML += `
+                <div style="background: white; padding: 20px; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-top: 20px;">
+                    <h4 style="margin-bottom: 16px; color: var(--text-primary);"><i class="fas fa-chart-line" style="color: var(--primary-500);"></i> Tren Longitudinal</h4>
+                    <canvas id="${chartId}" height="200"></canvas>
+                    <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 8px; text-align: center;">Berdasarkan ${assessments.length} evaluasi terakhir</p>
+                </div>
+            `;
+
+            // Wait for DOM render
+            requestAnimationFrame(() => {
+                const canvas = document.getElementById(chartId);
+                if (!canvas || typeof Chart === 'undefined') return;
+
+                new Chart(canvas, {
+                    type: 'line',
+                    data: {
+                        labels: assessments.map(a => {
+                            const d = new Date(a.date);
+                            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                        }),
+                        datasets: [
+                            {
+                                label: 'PHQ-9 (Depresi)',
+                                data: assessments.map(a => a.phq9),
+                                borderColor: '#8B5CF6',
+                                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 4,
+                                pointBackgroundColor: '#8B5CF6'
+                            },
+                            {
+                                label: 'UCLA (Kesepian)',
+                                data: assessments.map(a => a.ucla),
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 4,
+                                pointBackgroundColor: '#3b82f6'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            });
+        } catch (e) {
+            console.error('Longitudinal chart error:', e);
+        }
+    },
+
     showResults(phq9Score, phq9Category, uclaScore, uclaCategory) {
         const container = document.getElementById('assessmentContent');
         if (!container) return;
@@ -274,14 +433,35 @@ const Assessment = {
             `;
         }
 
+        // [GAP 1] Calculate Fusion Score
+        const fusion = this.calculateFusionScore(phq9Score, uclaScore);
+        const fusionHtml = `
+            <div style="background: linear-gradient(135deg, ${fusion.fusionColor}15, ${fusion.fusionColor}08); padding: 20px; border-radius: 16px; border: 2px solid ${fusion.fusionColor}30; margin-bottom: 16px;">
+                <p style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">SynaScore (Bio-Psycho Fusion)</p>
+                <p style="font-size: 3rem; font-weight: 800; color: ${fusion.fusionColor}; margin-bottom: 4px;">${fusion.fusionScore}</p>
+                <p style="font-size: var(--text-sm); font-weight: 600; color: ${fusion.fusionColor};">${fusion.fusionCategory}</p>
+                <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">${fusion.hasSensorData ? 'Sensor + Psikometrik' : 'Psikometrik saja (hubungkan sensor untuk akurasi lebih)'}</p>
+            </div>
+        `;
+
+        const discordanceHtml = fusion.discordance ? `
+            <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 14px; margin-bottom: 16px; border-radius: 0 8px 8px 0; text-align: left;">
+                <p style="color: #d97706; font-weight: 600; margin-bottom: 4px;"><i class="fas fa-exclamation-triangle"></i> Deteksi Diskordan</p>
+                <p style="font-size: 0.85rem; color: #92400e;">${fusion.discordance}</p>
+            </div>
+        ` : '';
+
         container.innerHTML = `
             <div style="text-align: center; animation: fadeIn 0.5s;">
                 <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--success-400), var(--success-600)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: white; font-size: 2.5rem; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
                     <i class="fas fa-check"></i>
                 </div>
                 <h2 style="font-size: var(--text-2xl); color: var(--text-primary); margin-bottom: 12px;">Evaluasi Selesai</h2>
-                <p style="color: var(--text-tertiary); margin-bottom: 32px;">Terima kasih. Sistem kami telah menyesuaikan fitur SYNAWATCH khusus untuk kondisi Anda.</p>
-                
+                <p style="color: var(--text-tertiary); margin-bottom: 24px;">Terima kasih. Sistem kami telah menyesuaikan fitur SYNAWATCH khusus untuk kondisi Anda.</p>
+
+                ${fusionHtml}
+                ${discordanceHtml}
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div style="background: var(--bg-secondary); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color);">
                         <p style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Mental Score</p>
@@ -297,11 +477,19 @@ const Assessment = {
 
                 ${recommendationHtml}
 
+                <div id="longitudinalContainer"></div>
+
                 <div style="margin-top: 32px;">
                     <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="Router.navigate('dashboard')">Lewati ke Dashboard</button>
                 </div>
             </div>
         `;
+
+        // [GAP 5] Render longitudinal tracking chart
+        const longitudinalContainer = document.getElementById('longitudinalContainer');
+        if (longitudinalContainer) {
+            this.renderLongitudinalChart(longitudinalContainer);
+        }
     }
 };
 

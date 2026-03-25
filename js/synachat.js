@@ -48,6 +48,95 @@ let avatarInitialized = false;
 let synachatInitialized = false;
 
 /**
+ * [GAP 6] Proactive Sensor Anomaly Detection
+ * Monitors real-time biosensor data and initiates conversation when anomalies detected
+ * Based on: He et al. 2023, Huang et al. 2024, Daley et al. 2022
+ */
+let proactiveAnomalyMonitor = {
+    enabled: true,
+    sensorHistory: [],
+    lastAnomalyPrompt: 0,
+    ANOMALY_COOLDOWN: 10 * 60 * 1000, // 10 minutes between proactive initiations
+
+    /**
+     * Check for biosensor anomalies that warrant proactive AI intervention
+     */
+    checkForAnomalies(sensorData) {
+        if (!this.enabled || !sensorData) return;
+
+        const now = Date.now();
+        if (now - this.lastAnomalyPrompt < this.ANOMALY_COOLDOWN) return;
+
+        // Track sensor history
+        this.sensorHistory.push({
+            stress: sensorData.stress || 0,
+            gsr: sensorData.gsr || 0,
+            hr: sensorData.hr || 0,
+            ts: now
+        });
+        if (this.sensorHistory.length > 50) this.sensorHistory.shift();
+
+        // Detect sustained elevation
+        if (this.sensorHistory.length >= 10) {
+            const recent = this.sensorHistory.slice(-10);
+            const avgStress = recent.reduce((s, r) => s + r.stress, 0) / recent.length;
+            const avgGSR = recent.reduce((s, r) => s + r.gsr, 0) / recent.length;
+
+            // Trigger if sustained high stress + high GSR
+            if (avgStress > 70 && avgGSR > 65 && sensorData.hr > 85) {
+                this.promptProactiveChat(sensorData, avgStress, avgGSR);
+                this.lastAnomalyPrompt = now;
+            }
+        }
+    },
+
+    /**
+     * Show non-intrusive proactive chat suggestion
+     */
+    promptProactiveChat(sensorData, avgStress, avgGSR) {
+        // Check if already in chat view
+        if (document.getElementById('chatWindow')) return;
+
+        const banner = document.createElement('div');
+        banner.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #6366f1 100%);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+            z-index: 1000;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        `;
+
+        banner.innerHTML = `
+            <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Dr. Synachat tersedia</div>
+                <div style="font-size: 0.85rem; opacity: 0.9;">Pola stres terdeteksi. Mau ngobrol sebentar?</div>
+            </div>
+            <button onclick="this.parentElement.remove(); Router.navigate('synachat');" style="background: white; color: #8B5CF6; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; flex-shrink: 0;">
+                Chat
+            </button>
+            <button onclick="this.parentElement.remove();" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 1.2rem;">
+                ✕
+            </button>
+        `;
+
+        document.body.appendChild(banner);
+        setTimeout(() => banner.style.opacity = '0.8', 100);
+        setTimeout(() => banner.remove(), 8000); // Auto-dismiss after 8s
+    }
+};
+
+window.proactiveAnomalyMonitor = proactiveAnomalyMonitor;
+
+/**
  * Initialize Synachat with 3D Avatar
  */
 async function initSynachat() {
@@ -68,7 +157,13 @@ async function initSynachat() {
 
     // Listen for BLE data updates to update health context
     if (typeof BLEConnection !== 'undefined') {
-        BLEConnection.onDataUpdate(updateHealthContext);
+        BLEConnection.onDataUpdate((data) => {
+            updateHealthContext(data);
+            // [GAP 6] Check for sensor anomalies that warrant proactive intervention
+            if (proactiveAnomalyMonitor) {
+                proactiveAnomalyMonitor.checkForAnomalies(data);
+            }
+        });
     }
 
     // Update health context display
