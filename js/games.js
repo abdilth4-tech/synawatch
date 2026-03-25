@@ -419,6 +419,21 @@ const GamesModule = {
                 </script>
             </div>
         `;
+    },
+
+    /**
+     * Display selected game
+     */
+    displayGame(gameType) {
+        const gameDisplay = document.getElementById('gameDisplay');
+
+        if (gameType === 'breathing') {
+            gameDisplay.innerHTML = this.breathingExercise();
+        } else if (gameType === 'memory') {
+            gameDisplay.innerHTML = this.stressRelieveGame();
+        } else if (gameType === 'challenge') {
+            gameDisplay.innerHTML = this.wellnessChallenge();
+        }
     }
 };
 

@@ -9,5 +9,9 @@
       "**/*.exe",
       "bkn utk spa/**"
     ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   }
 }

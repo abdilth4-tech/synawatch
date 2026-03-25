@@ -325,52 +325,6 @@ const Views = {
                     </div>
                 </div>
 
-                <!-- Additional Metrics -->
-                <h3 class="section-title">Additional Metrics</h3>
-                <div class="card-grid">
-                    <div class="card metric-card">
-                        <div class="metric-icon success">
-                            <i class="fas fa-temperature-half"></i>
-                        </div>
-                        <div class="metric-value">
-                            <span id="btValue">--</span>
-                            <span class="metric-unit">°C</span>
-                        </div>
-                        <div class="metric-label">Body Temp</div>
-                    </div>
-
-                    <div class="card metric-card">
-                        <div class="metric-icon info">
-                            <i class="fas fa-cloud-sun"></i>
-                        </div>
-                        <div class="metric-value">
-                            <span id="atValue">--</span>
-                            <span class="metric-unit">°C</span>
-                        </div>
-                        <div class="metric-label">Ambient Temp</div>
-                    </div>
-
-                    <div class="card metric-card">
-                        <div class="metric-icon primary">
-                            <i id="actIcon" class="fas fa-person"></i>
-                        </div>
-                        <div class="metric-value" style="font-size: var(--text-lg);">
-                            <span id="actValue">Resting</span>
-                        </div>
-                        <div class="metric-label">Activity</div>
-                    </div>
-
-                    <div class="card metric-card">
-                        <div class="metric-icon success">
-                            <i class="fas fa-fingerprint"></i>
-                        </div>
-                        <div class="metric-value" style="font-size: var(--text-sm);">
-                            <span id="fingerStatus" style="color: var(--danger-400);">Not Detected</span>
-                        </div>
-                        <div class="metric-label">Finger Detection</div>
-                    </div>
-                </div>
-
                 <!-- Quick Actions -->
                 <div style="margin-top: var(--space-6); display: flex; gap: var(--space-3); flex-wrap: wrap;">
                     <button class="btn btn-primary btn-sm" data-route="health">
@@ -1074,19 +1028,6 @@ const Views = {
                     </div>
                 </div>
 
-                <script>
-                GamesModule.displayGame = function(gameType) {
-                    const gameDisplay = document.getElementById('gameDisplay');
-
-                    if (gameType === 'breathing') {
-                        gameDisplay.innerHTML = GamesModule.breathingExercise();
-                    } else if (gameType === 'memory') {
-                        gameDisplay.innerHTML = GamesModule.stressRelieveGame();
-                    } else if (gameType === 'challenge') {
-                        gameDisplay.innerHTML = GamesModule.wellnessChallenge();
-                    }
-                };
-                </script>
             </div>
         `;
     },
