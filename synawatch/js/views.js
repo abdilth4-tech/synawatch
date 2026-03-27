@@ -196,6 +196,19 @@ const Views = {
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
+
+                        <!-- Yoga -->
+                        <div class="quick-menu-card yoga-card" onclick="Router.navigate('yoga')" data-card="yoga">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box yoga-gradient">
+                                <i class="fas fa-spa"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Yoga</h4>
+                                <p class="card-subtitle">Mental Health</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -326,7 +339,7 @@ const Views = {
                 </div>
 
                 <!-- Quick Actions -->
-                <div style="margin-top: var(--space-6); display: flex; gap: var(--space-3); flex-wrap: wrap;">
+                <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
                     <button class="btn btn-primary btn-sm" data-route="health">
                         <i class="fas fa-heartbeat"></i>
                         Start Monitoring
