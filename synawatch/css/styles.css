@@ -3810,7 +3810,7 @@ img, video, canvas {
     position: relative;
     overflow: visible;
     border-radius: 0;
-    padding: 8px 4px;
+    padding: 4px 2px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: transparent;
@@ -3823,6 +3823,7 @@ img, video, canvas {
     min-height: auto;
     justify-content: flex-start;
     box-shadow: none;
+    width: 100%;
 }
 
 /* Decorative background element */
@@ -3833,18 +3834,18 @@ img, video, canvas {
 /* Icon box styling - Light & Subtle */
 /* Icon box styling - Light & Minimalist */
 .quick-menu-card .card-icon-box {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    margin-bottom: 6px;
+    font-size: 1.25rem;
+    margin-bottom: 4px;
     transition: all 0.3s ease;
     position: relative;
     z-index: 2;
-    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.10), 0 2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 12px rgba(124, 58, 237, 0.08), 0 1px 4px rgba(0,0,0,0.04);
     border: 1px solid rgba(255, 255, 255, 0.80);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -3861,17 +3862,19 @@ img, video, canvas {
 }
 
 .quick-menu-card .card-title {
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 2px;
-    letter-spacing: -0.3px;
+    margin-bottom: 1px;
+    letter-spacing: -0.2px;
+    line-height: 1;
 }
 
 .quick-menu-card .card-subtitle {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--text-tertiary);
-    font-weight: 500;
+    font-weight: 400;
+    line-height: 1;
 }
 
 /* Hover effect background */
