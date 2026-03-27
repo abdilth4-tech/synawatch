@@ -497,9 +497,23 @@ img, svg {
 
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-4);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
     margin-bottom: var(--space-6);
+}
+
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+}
+
+@media (max-width: 640px) {
+    .card-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+    }
 }
 
 /* Metric Card */
@@ -3796,7 +3810,7 @@ img, video, canvas {
     position: relative;
     overflow: visible;
     border-radius: 0;
-    padding: 12px 8px;
+    padding: 8px 4px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: transparent;
@@ -3819,14 +3833,14 @@ img, video, canvas {
 /* Icon box styling - Light & Subtle */
 /* Icon box styling - Light & Minimalist */
 .quick-menu-card .card-icon-box {
-    width: 72px;
-    height: 72px;
-    border-radius: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    margin-bottom: 12px;
+    font-size: 1.5rem;
+    margin-bottom: 6px;
     transition: all 0.3s ease;
     position: relative;
     z-index: 2;
@@ -3847,15 +3861,15 @@ img, video, canvas {
 }
 
 .quick-menu-card .card-title {
-    font-size: 0.95rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     letter-spacing: -0.3px;
 }
 
 .quick-menu-card .card-subtitle {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: var(--text-tertiary);
     font-weight: 500;
 }
