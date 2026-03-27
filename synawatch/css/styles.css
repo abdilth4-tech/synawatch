@@ -39,13 +39,13 @@
     --info-500: #3b82f6;
     --info-600: #2563eb;
 
-    /* Aura Glass Theme Colors */
-    --bg-primary: #e5e7eb;
+    /* Glassmorphism White Theme Colors */
+    --bg-primary: #f8fafc;
     --bg-secondary: #f5f3ff;
     --bg-tertiary: #FFFFFF;
-    --bg-card: rgba(255, 255, 255, 0.3);
-    --bg-card-solid: rgba(255, 255, 255, 0.35);
-    --bg-card-hover: rgba(255, 255, 255, 0.5);
+    --bg-card: rgba(255, 255, 255, 0.60);
+    --bg-card-solid: rgba(255, 255, 255, 0.70);
+    --bg-card-hover: rgba(255, 255, 255, 0.85);
 
     --text-primary: #1e293b;
     --text-secondary: #475569;
@@ -61,7 +61,7 @@
     --gradient-primary-light: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 50%, #C4B5FD 100%);
     --gradient-success: linear-gradient(135deg, #059669 0%, #10b981 100%);
     --gradient-danger: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-    --gradient-bg: linear-gradient(180deg, #F0F4F7 0%, #F5F3FF 100%);
+    --gradient-bg: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
 
     /* Typography */
     --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -103,13 +103,13 @@
     --radius-2xl: 28px;
     --radius-full: 9999px;
 
-    /* Shadows - Light theme shadows */
+    /* Shadows - Glassmorphism Shadows with Purple Tint */
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
     --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.1);
-    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
-    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    --shadow-card: 0 4px 20px rgba(124, 58, 237, 0.07), 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-glass: 0 8px 32px rgba(124, 58, 237, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.9);
     --shadow-glow-primary: 0 8px 32px rgba(139, 92, 246, 0.25);
     --shadow-glow-success: 0 8px 32px rgba(16, 185, 129, 0.25);
 
@@ -178,31 +178,31 @@ body {
 }
 
 .aura-1 {
-    width: 600px;
-    height: 600px;
-    background: #a855f7;
-    top: -10%;
-    left: -10%;
-    opacity: 0.4;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, #a855f7 0%, #7c3aed 100%);
+    top: -15%;
+    left: -15%;
+    opacity: 0.18;
 }
 
 .aura-2 {
     width: 500px;
     height: 500px;
-    background: #ffffff;
-    bottom: -5%;
-    right: -5%;
-    opacity: 0.2;
+    background: radial-gradient(circle, #c4b5fd 0%, #8b5cf6 100%);
+    bottom: -10%;
+    right: -10%;
+    opacity: 0.12;
     animation-delay: -5s;
 }
 
 .aura-3 {
-    width: 400px;
-    height: 400px;
-    background: #c084fc;
-    top: 40%;
-    left: 30%;
-    opacity: 0.3;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, #ddd6fe 0%, #a78bfa 100%);
+    top: 35%;
+    left: 25%;
+    opacity: 0.14;
     animation-delay: -10s;
 }
 
@@ -264,17 +264,18 @@ img, svg {
     margin: 0 auto;
     min-height: 100vh;
     min-height: 100dvh;
-    background: var(--bg-primary);
+    background: transparent;
     position: relative;
+    z-index: 1;
     padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 20px);
 }
 
-/* ===== App Header - Aura Glass ===== */
+/* ===== App Header - Glassmorphism ===== */
 .app-header {
     height: var(--header-height);
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
     color: var(--text-primary);
     padding: 0 var(--space-5);
     position: sticky;
@@ -283,8 +284,8 @@ img, svg {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.12);
+    box-shadow: 0 4px 24px rgba(124, 58, 237, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
 .app-header .logo {
@@ -447,21 +448,32 @@ img, svg {
 
 /* Section Title */
 .section-title {
-    font-size: var(--text-sm);
-    font-weight: var(--font-semibold);
-    color: var(--text-primary);
+    font-size: 0.7rem;
+    font-weight: var(--font-bold);
+    color: var(--primary-600);
     margin-bottom: var(--space-4);
     margin-top: var(--space-6);
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.section-title::before {
+    content: '';
+    width: 4px;
+    height: 14px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+    flex-shrink: 0;
 }
 
 .section-title::after {
     content: '';
     flex: 1;
     height: 1px;
-    background: linear-gradient(90deg, var(--border-color), transparent);
+    background: linear-gradient(90deg, rgba(139,92,246,0.2), transparent);
 }
 
 /* ===== Cards - Aura Glassmorphism ===== */
@@ -471,16 +483,16 @@ img, svg {
     -webkit-backdrop-filter: blur(20px);
     border-radius: var(--radius-xl);
     padding: var(--space-5);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: var(--shadow-glass);
     transition: all var(--transition-slow);
 }
 
 .card:hover {
     background: var(--bg-card-hover);
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
-    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 48px rgba(124, 58, 237, 0.12);
+    border-color: rgba(139, 92, 246, 0.25);
 }
 
 .card-grid {
@@ -496,19 +508,20 @@ img, svg {
     padding: var(--space-4);
     position: relative;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.90);
     border-radius: var(--radius-xl);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.07), inset 0 1px 0 rgba(255,255,255,1);
     transition: all var(--transition-slow);
 }
 
 .metric-card:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.88);
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(124, 58, 237, 0.1);
+    box-shadow: 0 16px 36px rgba(124, 58, 237, 0.12);
+    border-color: rgba(139, 92, 246, 0.20);
 }
 
 .metric-card::before {
@@ -1393,33 +1406,34 @@ img, svg {
 
 /* ===== Featured Card (Health Score) ===== */
 .featured-card {
-    background: var(--gradient-primary-light);
+    background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%);
     border-radius: var(--radius-2xl);
     padding: var(--space-6);
     margin-bottom: var(--space-6);
     position: relative;
     overflow: hidden;
-    box-shadow: var(--shadow-glow-primary);
+    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.40), 0 4px 12px rgba(124, 58, 237, 0.20);
+    border: 1px solid rgba(255, 255, 255, 0.20);
 }
 
 .featured-card::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -30%;
-    width: 80%;
-    height: 80%;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+    top: -20%;
+    right: -15%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(ellipse at 80% 10%, rgba(255,255,255,0.25) 0%, transparent 55%);
 }
 
 .featured-card::after {
     content: '';
     position: absolute;
     bottom: -30%;
-    left: -20%;
-    width: 60%;
-    height: 60%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(ellipse at 20% 110%, rgba(196,181,253,0.30) 0%, transparent 55%);
 }
 
 .featured-card .content {
@@ -3816,9 +3830,10 @@ img, video, canvas {
     transition: all 0.3s ease;
     position: relative;
     z-index: 2;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.10), 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.80);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 
 /* Card content */
@@ -3867,58 +3882,58 @@ img, video, canvas {
 
 /* Color Light Backgrounds for Icon Box - Minimalist Style */
 .admin-gradient {
-    background: rgba(139, 92, 246, 0.15);
+    background: rgba(124, 58, 237, 0.12);
     color: #7C3AED;
 }
 
 .assessment-gradient {
-    background: rgba(59, 130, 246, 0.15);
-    color: #2563EB;
+    background: rgba(37, 99, 235, 0.12);
+    color: #1D4ED8;
 }
 
 .chat-gradient {
-    background: rgba(99, 102, 241, 0.15);
-    color: #4F46E5;
+    background: rgba(79, 70, 229, 0.12);
+    color: #4338CA;
 }
 
 .crisis-gradient {
-    background: rgba(239, 68, 68, 0.15);
-    color: #DC2626;
+    background: rgba(220, 38, 38, 0.12);
+    color: #B91C1C;
 }
 
 .sleep-gradient {
-    background: rgba(139, 92, 246, 0.15);
-    color: #7C3AED;
+    background: rgba(124, 58, 237, 0.12);
+    color: #6D28D9;
 }
 
 .journal-gradient {
-    background: rgba(245, 158, 11, 0.15);
-    color: #D97706;
+    background: rgba(217, 119, 6, 0.12);
+    color: #B45309;
 }
 
 .mindful-gradient {
-    background: rgba(16, 185, 129, 0.15);
-    color: #059669;
+    background: rgba(5, 150, 105, 0.12);
+    color: #047857;
 }
 
 .mood-gradient {
-    background: rgba(236, 72, 153, 0.15);
-    color: #DB2777;
+    background: rgba(219, 39, 119, 0.12);
+    color: #BE185D;
 }
 
 .academy-gradient {
-    background: rgba(245, 158, 11, 0.15);
-    color: #D97706;
+    background: rgba(217, 119, 6, 0.12);
+    color: #B45309;
 }
 
 .games-gradient {
-    background: rgba(6, 182, 212, 0.15);
-    color: #0891B2;
+    background: rgba(8, 145, 178, 0.12);
+    color: #0E7490;
 }
 
 .yoga-gradient {
-    background: rgba(139, 92, 246, 0.15);
-    color: #7C3AED;
+    background: rgba(124, 58, 237, 0.12);
+    color: #6D28D9;
 }
 
 /* Card specific hover backgrounds */
