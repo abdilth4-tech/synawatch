@@ -6,8 +6,9 @@
 
 /* ===== Google Fonts ===== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
 
-/* ===== CSS Variables - Light Purple Theme ===== */
+/* ===== CSS Variables - Aura Glass Theme ===== */
 :root {
     /* Primary - Purple/Violet */
     --primary-50: #f5f3ff;
@@ -38,17 +39,17 @@
     --info-500: #3b82f6;
     --info-600: #2563eb;
 
-    /* Light Theme Colors */
-    --bg-primary: #F0F4F7;
-    --bg-secondary: #F5F3FF;
+    /* Aura Glass Theme Colors */
+    --bg-primary: #e5e7eb;
+    --bg-secondary: #f5f3ff;
     --bg-tertiary: #FFFFFF;
-    --bg-card: rgba(255, 255, 255, 0.85);
-    --bg-card-solid: #FFFFFF;
-    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    --bg-card: rgba(255, 255, 255, 0.3);
+    --bg-card-solid: rgba(255, 255, 255, 0.35);
+    --bg-card-hover: rgba(255, 255, 255, 0.5);
 
-    --text-primary: #333333;
-    --text-secondary: #64748b;
-    --text-tertiary: #8E8E8E;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
     --text-muted: #94a3b8;
 
     --border-color: rgba(139, 92, 246, 0.15);
@@ -145,15 +146,53 @@ html {
 }
 
 body {
-    font-family: var(--font-sans);
+    font-family: 'Plus Jakarta Sans', var(--font-sans);
     font-size: var(--text-base);
     line-height: 1.7;
     color: var(--text-primary);
-    background: var(--gradient-bg);
+    background: var(--bg-primary);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    position: relative;
+}
+
+/* Aura Background Animation */
+body::before {
+    content: '';
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: #a855f7;
+    border-radius: 50%;
+    top: -10%;
+    left: -10%;
+    z-index: -1;
+    filter: blur(120px);
+    opacity: 0.3;
+    animation: auraMove 25s infinite alternate ease-in-out;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    background: #ffffff;
+    border-radius: 50%;
+    bottom: -5%;
+    right: -5%;
+    z-index: -1;
+    filter: blur(120px);
+    opacity: 0.2;
+    animation: auraMove 25s infinite alternate ease-in-out -5s;
+}
+
+@keyframes auraMove {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(80px, 40px) scale(1.1); }
+    100% { transform: translate(-40px, 80px) scale(0.9); }
 }
 
 a {
@@ -212,12 +251,12 @@ img, svg {
     padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 20px);
 }
 
-/* ===== App Header - Glassmorphism ===== */
+/* ===== App Header - Aura Glass ===== */
 .app-header {
     height: var(--header-height);
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px) saturate(150%);
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     color: var(--text-primary);
     padding: 0 var(--space-5);
     position: sticky;
@@ -226,8 +265,8 @@ img, svg {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .app-header .logo {
@@ -407,23 +446,23 @@ img, svg {
     background: linear-gradient(90deg, var(--border-color), transparent);
 }
 
-/* ===== Cards - Glassmorphism ===== */
+/* ===== Cards - Aura Glassmorphism ===== */
 .card {
     background: var(--bg-card);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: var(--radius-xl);
     padding: var(--space-5);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: var(--shadow-glass);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
     transition: all var(--transition-slow);
 }
 
 .card:hover {
     background: var(--bg-card-hover);
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: rgba(139, 92, 246, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(124, 58, 237, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
 }
 
 .card-grid {
@@ -439,8 +478,19 @@ img, svg {
     padding: var(--space-4);
     position: relative;
     overflow: hidden;
-    background: var(--bg-card-solid);
-    border: 1px solid var(--border-light);
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transition: all var(--transition-slow);
+}
+
+.metric-card:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(124, 58, 237, 0.1);
 }
 
 .metric-card::before {
@@ -3983,4 +4033,14 @@ img, video, canvas {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border-color: #667eea;
+}
+
+/* ─── Yoga Card ─────────────────────────────────────────────── */
+.yoga-gradient {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+}
+
+.yoga-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(124, 58, 237, 0.12) 100%);
+    opacity: 1;
 }
