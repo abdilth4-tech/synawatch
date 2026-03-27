@@ -516,7 +516,7 @@ img, svg {
     }
 }
 
-/* Metric Card */
+/* Metric Card - Vitalora Style with Accent Top Border */
 .metric-card {
     text-align: center;
     padding: var(--space-4);
@@ -526,6 +526,7 @@ img, svg {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.90);
+    border-top: 3px solid var(--primary-500);
     border-radius: var(--radius-xl);
     box-shadow: 0 4px 20px rgba(124, 58, 237, 0.07), inset 0 1px 0 rgba(255,255,255,1);
     transition: all var(--transition-slow);
@@ -534,24 +535,8 @@ img, svg {
 .metric-card:hover {
     background: rgba(255, 255, 255, 0.88);
     transform: translateY(-4px);
-    box-shadow: 0 16px 36px rgba(124, 58, 237, 0.12);
-    border-color: rgba(139, 92, 246, 0.20);
-}
-
-.metric-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--gradient-primary);
-    opacity: 0;
-    transition: opacity var(--transition-base);
-}
-
-.metric-card:hover::before {
-    opacity: 1;
+    box-shadow: 0 16px 36px rgba(124, 58, 237, 0.15);
+    border-color: rgba(139, 92, 246, 0.25);
 }
 
 /* Metric Icon */
@@ -4603,4 +4588,49 @@ img, video, canvas {
     .yoga-category-select {
         width: 100%;
     }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* DASHBOARD: Vitalora-Inspired Styling */
+/* ═══════════════════════════════════════════════════════════════ */
+
+/* Accent top border colors for metric cards by type */
+.card-grid .metric-card:nth-child(1) {
+    border-top-color: #EF4444;
+}
+
+.card-grid .metric-card:nth-child(2) {
+    border-top-color: #3B82F6;
+}
+
+.card-grid .metric-card:nth-child(3) {
+    border-top-color: #F59E0B;
+}
+
+.card-grid .metric-card:nth-child(4) {
+    border-top-color: #8B5CF6;
+}
+
+/* Enhanced metric icons with prominent appearance */
+.metric-icon {
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Quick menu cards with better visibility */
+.quick-menu-card {
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.quick-menu-card:hover {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(139, 92, 246, 0.3);
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.1);
+}
+
+.quick-menu-card .card-icon-box {
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
