@@ -10,7 +10,8 @@ const InterventionEngine = {
         breathing: 0,
         synachat: 0,
         music: 0,
-        crisis: 0
+        crisis: 0,
+        yoga: 0
     },
     COOLDOWN_PERIOD: 5 * 60 * 1000, // 5 minutes between automatic interventions
     SIMULATION_MODE: true, // Set to true to allow easier trigger during dev
@@ -163,6 +164,15 @@ const InterventionEngine = {
                 this.cooldowns.crisis = now;
             }
         }
+
+        // [YOGA] Mild-moderate persistent stress → suggest yoga practice
+        // Triggered when stress is elevated but not acute (yoga is better suited for moderate stress)
+        if (stress > (threshold - 25) && stress <= (threshold - 5) && gsr < 70) {
+            if (now - this.cooldowns.yoga > this.COOLDOWN_PERIOD * 4) {
+                this.triggerIntervention('yoga');
+                this.cooldowns.yoga = now;
+            }
+        }
     },
 
     /**
@@ -195,6 +205,13 @@ const InterventionEngine = {
             case 'crisis':
                 // [GAP 7] Auto-activated crisis protocol
                 this.showCrisisAlert();
+                break;
+            case 'yoga':
+                // Suggest yoga practice for moderate persistent stress
+                this.showAlert(
+                    "Sensor mendeteksi stres ringan yang persisten. Yoga singkat 5-10 menit dapat sangat membantu menenangkan sistem saraf Anda.",
+                    () => { Router.navigate('yoga'); }
+                );
                 break;
         }
     },

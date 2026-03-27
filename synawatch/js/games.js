@@ -11,36 +11,79 @@ const GamesModule = {
         breathingExercises: 0,
         puzzlesCompleted: 0,
         meditationMinutes: 0,
-        totalStressRelief: 0
+        totalStressRelief: 0,
+        challengesCompleted: 0
     },
 
     /**
      * Initialize Games Module
      */
-    init() {
+    async init() {
         console.log('Games Module initialized');
-        this.loadStats();
+        await this.loadStats();
     },
 
     /**
-     * Load player stats from localStorage
+     * Load player stats from Firestore (with localStorage fallback)
      */
-    loadStats() {
+    async loadStats() {
+        // Try Firestore first
+        try {
+            const user = typeof firebase !== 'undefined' && firebase.auth().currentUser;
+            if (user && typeof db !== 'undefined') {
+                const doc = await db.collection('users').doc(user.uid)
+                    .collection('game_stats').doc('summary').get();
+                if (doc.exists) {
+                    this.stats = { ...this.stats, ...doc.data() };
+                    console.log('✅ Game stats loaded from Firestore');
+                    this._syncToLocalStorage();
+                    return;
+                }
+            }
+        } catch (e) {
+            console.warn('Firestore game stats unavailable, using localStorage');
+        }
+
+        // Fallback: localStorage
         try {
             const saved = localStorage.getItem('synawatch_game_stats');
             if (saved) {
-                this.stats = JSON.parse(saved);
+                const parsed = JSON.parse(saved);
+                this.stats = { ...this.stats, ...(parsed.stats || parsed) };
             }
         } catch (e) {
-            console.log('Could not load stats');
+            console.log('Could not load stats from localStorage');
         }
     },
 
     /**
-     * Save player stats to localStorage
+     * Save player stats to Firestore AND localStorage
      */
-    saveStats() {
-        localStorage.setItem('synawatch_game_stats', JSON.stringify(this.stats));
+    async saveStats() {
+        // Save to localStorage immediately
+        this._syncToLocalStorage();
+
+        // Save to Firestore asynchronously
+        try {
+            const user = typeof firebase !== 'undefined' && firebase.auth().currentUser;
+            if (user && typeof db !== 'undefined') {
+                await db.collection('users').doc(user.uid)
+                    .collection('game_stats').doc('summary').set({
+                        ...this.stats,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                        userId: user.uid
+                    }, { merge: true });
+                console.log('✅ Game stats saved to Firestore');
+            }
+        } catch (e) {
+            console.warn('Could not save game stats to Firestore (saved to localStorage):', e.message);
+        }
+    },
+
+    _syncToLocalStorage() {
+        try {
+            localStorage.setItem('synawatch_game_stats', JSON.stringify(this.stats));
+        } catch (e) {}
     },
 
     /**
