@@ -158,35 +158,52 @@ body {
     position: relative;
 }
 
-/* Aura Background Animation */
-body::before {
-    content: '';
+/* Aura Background Container */
+.aura-background {
     position: fixed;
-    width: 600px;
-    height: 600px;
-    background: #a855f7;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.aura {
+    position: absolute;
     border-radius: 50%;
-    top: -10%;
-    left: -10%;
-    z-index: -1;
     filter: blur(120px);
-    opacity: 0.3;
     animation: auraMove 25s infinite alternate ease-in-out;
 }
 
-body::after {
-    content: '';
-    position: fixed;
+.aura-1 {
+    width: 600px;
+    height: 600px;
+    background: #a855f7;
+    top: -10%;
+    left: -10%;
+    opacity: 0.4;
+}
+
+.aura-2 {
     width: 500px;
     height: 500px;
     background: #ffffff;
-    border-radius: 50%;
     bottom: -5%;
     right: -5%;
-    z-index: -1;
-    filter: blur(120px);
     opacity: 0.2;
-    animation: auraMove 25s infinite alternate ease-in-out -5s;
+    animation-delay: -5s;
+}
+
+.aura-3 {
+    width: 400px;
+    height: 400px;
+    background: #c084fc;
+    top: 40%;
+    left: 30%;
+    opacity: 0.3;
+    animation-delay: -10s;
 }
 
 @keyframes auraMove {
@@ -234,8 +251,9 @@ img, svg {
     margin: 0 auto;
     min-height: 100vh;
     min-height: 100dvh;
-    background: var(--bg-primary);
+    background: transparent;
     position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
 }
