@@ -185,6 +185,13 @@ const App = {
             if (typeof GamesModule !== 'undefined') GamesModule.init();
         });
 
+        Router.register('yoga', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views.yoga());
+            if (typeof YogaModule !== 'undefined') YogaModule.init();
+        });
+
         // Initialize router
         Router.init();
 
@@ -300,6 +307,10 @@ const App = {
                     <a class="more-menu-item" data-route="academy" onclick="App.closeMoreMenu()">
                         <div class="more-icon" style="background: rgba(139, 92, 246, 0.12); color: var(--primary-500);"><i class="fas fa-graduation-cap"></i></div>
                         <span>Syna Academy</span>
+                    </a>
+                    <a class="more-menu-item" data-route="yoga" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(20, 184, 166, 0.12); color: #14b8a6;"><i class="fas fa-spa"></i></div>
+                        <span>Yoga Studio</span>
                     </a>
                     <a class="more-menu-item" data-route="research" onclick="App.closeMoreMenu()">
                         <div class="more-icon" style="background: rgba(245, 158, 11, 0.12); color: var(--warning-500);"><i class="fas fa-flask"></i></div>

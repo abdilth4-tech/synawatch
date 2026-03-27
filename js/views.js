@@ -1033,6 +1033,49 @@ const Views = {
     },
 
     /**
+     * Yoga Studio View
+     */
+    yoga() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto; padding-top: 20px;">
+                <!-- Header -->
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; box-shadow: 0 6px 20px rgba(20, 184, 166, 0.35);">
+                        <i class="fas fa-spa" style="font-size: 1.75rem; color: white;"></i>
+                    </div>
+                    <h2 style="font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Yoga Studio</h2>
+                    <p style="font-size: var(--text-sm); color: var(--text-tertiary);">Jelajahi pose yoga untuk ketenangan pikiran & tubuh</p>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="yoga-search-wrapper">
+                    <i class="fas fa-search yoga-search-icon"></i>
+                    <input type="text" id="yogaSearch" class="yoga-search-bar" placeholder="Cari pose yoga... (contoh: tree, warrior)">
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="yoga-filter-bar">
+                    <div class="yoga-filter-group">
+                        <button class="yoga-filter-btn active" data-level="all">Semua</button>
+                        <button class="yoga-filter-btn" data-level="pemula">Pemula</button>
+                        <button class="yoga-filter-btn" data-level="menengah">Menengah</button>
+                        <button class="yoga-filter-btn" data-level="ahli">Ahli</button>
+                    </div>
+                    <select id="yogaCategoryFilter" class="yoga-category-select">
+                        <option value="all">Semua Kategori</option>
+                    </select>
+                </div>
+
+                <!-- Results -->
+                <div id="yogaResults"></div>
+
+                <!-- Detail Modal Container -->
+                <div id="yogaPoseDetail" style="display: none;"></div>
+            </div>
+        `;
+    },
+
+    /**
      * Admin Dashboard View
      */
     admin() {

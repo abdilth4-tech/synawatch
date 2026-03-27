@@ -1,0 +1,9 @@
+{
+  "name": "synawatch",
+  "version": "1.0.0",
+  "description": "SYNAWATCH - AI-Powered Smart Health Monitoring PWA",
+  "scripts": {
+    "dev": "npx http-server . -p 3000 -c-1",
+    "start": "npx http-server . -p 3000 -c-1"
+  }
+}
