@@ -203,14 +203,7 @@ const App = {
             const nav = document.querySelector('.bottom-nav');
             if (nav) nav.style.display = 'flex';
             Router.render(Views.yoga());
-            if (typeof Yoga !== 'undefined') Yoga.init();
-        });
-
-        // Yoga session route with protocol ID
-        Router.register('yoga-session/:protocolId', (params) => {
-            const nav = document.querySelector('.bottom-nav');
-            if (nav) nav.style.display = 'flex';
-            Router.render(Views['yoga-session'](params));
+            if (typeof YogaModule !== 'undefined') YogaModule.init();
         });
 
         // Initialize router
