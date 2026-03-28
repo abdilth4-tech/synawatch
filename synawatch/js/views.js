@@ -1373,4 +1373,16 @@ const Views = {
                                     <option value="manual">Manual only</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="AdminUI.saveSettings()" style="display: flex; align-items: center; gap: 8px;"
+                            <button class="btn btn-primary" onclick="AdminUI.saveSettings()" style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+};
+
+// Make it globally available
+window.Views = Views;
