@@ -420,40 +420,54 @@ async function disconnectBLE() {
 /**
  * Handle disconnection event
  */
+let isReconnecting = false;
+
 function onDisconnected(event) {
+    // Prevent re-entry during reconnection attempts
+    if (isReconnecting) return;
+
     console.log('Device disconnected');
     resetConnectionState();
     updateConnectionStatus('disconnected', 'Terputus dari perangkat');
     notifyConnectionChange(false);
 
-    // Attempt reconnection
-    if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-        reconnectAttempts++;
-        console.log(`Attempting reconnection (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`);
-        updateConnectionStatus('connecting', `Mencoba menghubungkan kembali (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`);
+    attemptReconnection();
+}
 
-        setTimeout(async () => {
-            if (!isConnected && bleDevice) {
-                try {
-                    bleServer = await bleDevice.gatt.connect();
-                    bleService = await bleServer.getPrimaryService(BLE_CONFIG.serviceUUID);
-                    bleCharacteristic = await bleService.getCharacteristic(BLE_CONFIG.characteristicUUID);
-                    await bleCharacteristic.startNotifications();
-                    bleCharacteristic.addEventListener('characteristicvaluechanged', handleDataNotification);
-
-                    isConnected = true;
-                    reconnectAttempts = 0;
-                    updateConnectionStatus('connected', 'Terhubung kembali ke ' + bleDevice.name);
-                    notifyConnectionChange(true);
-                } catch (error) {
-                    console.error('Reconnection failed:', error);
-                    onDisconnected();
-                }
-            }
-        }, 2000);
-    } else {
+function attemptReconnection() {
+    if (isReconnecting || isConnected || !bleDevice) return;
+    if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+        reconnectAttempts = 0;
+        isReconnecting = false;
         updateConnectionStatus('error', 'Gagal menghubungkan kembali. Silakan coba manual.');
+        return;
     }
+
+    isReconnecting = true;
+    reconnectAttempts++;
+    console.log(`Attempting reconnection (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`);
+    updateConnectionStatus('connecting', `Mencoba menghubungkan kembali (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`);
+
+    setTimeout(async () => {
+        try {
+            bleServer = await bleDevice.gatt.connect();
+            bleService = await bleServer.getPrimaryService(BLE_CONFIG.serviceUUID);
+            bleCharacteristic = await bleService.getCharacteristic(BLE_CONFIG.characteristicUUID);
+            await bleCharacteristic.startNotifications();
+            bleCharacteristic.addEventListener('characteristicvaluechanged', handleDataNotification);
+
+            isConnected = true;
+            reconnectAttempts = 0;
+            isReconnecting = false;
+            updateConnectionStatus('connected', 'Terhubung kembali ke ' + bleDevice.name);
+            notifyConnectionChange(true);
+        } catch (error) {
+            console.error('Reconnection failed:', error.message);
+            isReconnecting = false;
+            // Retry with exponential backoff instead of re-triggering onDisconnected
+            attemptReconnection();
+        }
+    }, 2000 * reconnectAttempts); // Exponential backoff: 2s, 4s, 6s, 8s, 10s
 }
 
 // Recording timer variables
