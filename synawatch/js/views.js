@@ -212,6 +212,19 @@ const Views = {
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
+
+                        <!-- HEROIC Program — Psikologi Positif 6-Dimensi -->
+                        <div class="quick-menu-card heroic-card" onclick="Router.navigate('heroic')" data-card="heroic">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box" style="background: linear-gradient(135deg, #4F46E5, #9333EA); border-radius: 14px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem;">
+                                <i class="fas fa-star-half-stroke"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">HEROIC</h4>
+                                <p class="card-subtitle">Psikologi Positif</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -1360,16 +1373,4 @@ const Views = {
                                     <option value="manual">Manual only</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="AdminUI.saveSettings()" style="display: flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-save"></i> Save Settings
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-};
-
-// Make it globally available
-window.Views = Views;
+                            <button class="btn btn-primary" onclick="AdminUI.saveSettings()" style="display: flex; align-items: center; gap: 8px;"

@@ -43,9 +43,66 @@ const CONFIG = {
         GSR_AROUSED: 80,
         TEMP_MIN: 36.1,
         TEMP_MAX: 37.2
+    },
+
+    // ─── HEROIC Program Configuration ───────────────────────────────────────────
+    // Hidayati, Fanani & Mulyani (2023) Positive Psychology Framework
+    // Integrates JITAI (Nahum-Shani et al., 2018) + XAI (Arrieta et al., 2020)
+    HEROIC_CONFIG: {
+        // Score thresholds for JITAI trigger (Nahum-Shani et al., 2018)
+        SCORE_ALERT_THRESHOLD: 40,        // Trigger intervention if any dim < 40
+        STRESS_CO_TRIGGER: 55,            // Combined stress level to trigger
+        COOLDOWN_MS: 1200000,             // 20-min cooldown between interventions
+
+        // Adaptive baseline (Nkurikiyeyezu et al., 2019 — 1.5 SD rule)
+        ADAPTIVE_BASELINE_SD: 1.5,
+
+        // 6 HEROIC dimensions
+        DIMENSIONS: ['H', 'E', 'R', 'O', 'I', 'C'],
+
+        // Weighted overall score (higher weight = more clinically significant)
+        // Efikasi (E) & Belas Kasih (C) weighted highest — Bandura 1997, Neff 2003
+        DIMENSION_WEIGHTS: { H: 1.0, E: 1.5, R: 1.0, O: 1.3, I: 1.2, C: 1.5 },
+
+        // Score decay without activity (per-hour passive decrease)
+        SCORE_DECAY_RATE: 0.02,
+
+        // Activity limits
+        MAX_ACTIVITIES_PER_DAY: 5,
+
+        // Gemini model for journal & activity analysis
+        GEMINI_MODEL: 'gemini-2.0-flash-exp',
+
+        // Firestore collection names
+        FIRESTORE_SCORE_HISTORY: 'heroicScoreHistory',
+        FIRESTORE_ACTIVITIES: 'heroicActivities',
+
+        // Dimension brand colors
+        COLORS: {
+            H: '#F59E0B',   // Amber — Humor
+            E: '#10B981',   // Emerald — Efikasi
+            R: '#6366F1',   // Indigo — Religiusitas
+            O: '#F97316',   // Orange — Optimisme
+            I: '#3B82F6',   // Blue — Interaksi
+            C: '#EC4899'    // Pink — Belas Kasih
+        },
+
+        // Gradient CSS per dimension (used by heroic-program.js cards)
+        GRADIENTS: {
+            H: 'linear-gradient(135deg, #F59E0B, #D97706)',
+            E: 'linear-gradient(135deg, #10B981, #059669)',
+            R: 'linear-gradient(135deg, #6366F1, #4F46E5)',
+            O: 'linear-gradient(135deg, #F97316, #EA580C)',
+            I: 'linear-gradient(135deg, #3B82F6, #2563EB)',
+            C: 'linear-gradient(135deg, #EC4899, #DB2777)'
+        }
     }
 };
 
 // Freeze config to prevent modifications
 Object.freeze(CONFIG);
 Object.freeze(CONFIG.HEALTH_THRESHOLDS);
+Object.freeze(CONFIG.HEROIC_CONFIG);
+Object.freeze(CONFIG.HEROIC_CONFIG.DIMENSION_WEIGHTS);
+Object.freeze(CONFIG.HEROIC_CONFIG.COLORS);
+Object.freeze(CONFIG.HEROIC_CONFIG.GRADIENTS);

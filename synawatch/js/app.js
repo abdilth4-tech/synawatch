@@ -64,6 +64,11 @@ const App = {
                             if (typeof InterventionEngine !== 'undefined') {
                                 InterventionEngine.init(userDoc.data());
                             }
+                            // Init HEROIC XAI Score Engine (depends on InterventionEngine)
+                            if (typeof HeroicXAI !== 'undefined') {
+                                HeroicXAI.init(userDoc.data());
+                                console.log('✅ HeroicXAI initialized — overall score:', HeroicXAI.getOverallScore());
+                            }
                         }
                     } catch (e) {
                         console.error('Failed to get user data:', e);
@@ -196,6 +201,10 @@ const App = {
             if (nav) nav.style.display = 'flex';
             Router.render(Views.games());
             if (typeof GamesModule !== 'undefined') GamesModule.init();
+            // Inject HEROIC games section below existing games (Sprint 4)
+            if (typeof HeroicGames !== 'undefined') {
+                setTimeout(() => HeroicGames.renderIntoGamesView(), 200);
+            }
         });
 
         // Yoga routes
@@ -204,6 +213,26 @@ const App = {
             if (nav) nav.style.display = 'flex';
             Router.render(Views.yoga());
             if (typeof YogaModule !== 'undefined') YogaModule.init();
+        });
+
+        // ── HEROIC Program route ────────────────────────────────────────────────
+        // Psikologi Positif 6-Dimensi: Humor, Efikasi, Religiusitas,
+        // Optimisme, Interaksi Sosial, Belas Kasih Diri
+        // Ref: Hidayati, Fanani & Mulyani (2023)
+        Router.register('heroic', () => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav) nav.style.display = 'flex';
+            // Views.heroic() is injected by heroic-program.js at load time
+            if (typeof Views !== 'undefined' && typeof Views.heroic === 'function') {
+                Router.render(Views.heroic());
+            } else {
+                Router.render(`<div class="view-container" style="padding:40px;text-align:center;">
+                    <i class="fas fa-star" style="font-size:3rem;color:#6366f1;margin-bottom:16px;"></i>
+                    <h2>HEROIC Program</h2><p>Memuat...</p></div>`);
+            }
+            if (typeof HeroicProgram !== 'undefined') {
+                setTimeout(() => HeroicProgram.init(), 100);
+            }
         });
 
         // Initialize router
@@ -337,6 +366,10 @@ const App = {
                     <a class="more-menu-item" data-route="yoga" onclick="App.closeMoreMenu()">
                         <div class="more-icon" style="background: rgba(102, 126, 234, 0.12); color: #667eea;"><i class="fas fa-spa"></i></div>
                         <span>Yoga Practice</span>
+                    </a>
+                    <a class="more-menu-item" data-route="heroic" onclick="App.closeMoreMenu()">
+                        <div class="more-icon" style="background: rgba(99, 102, 241, 0.12); color: #6366f1;"><i class="fas fa-star-half-stroke"></i></div>
+                        <span>HEROIC Program</span>
                     </a>
                 </div>
             </div>
@@ -543,6 +576,96 @@ const App = {
                 startDemoAnimation();
             }
         }
+
+        // ── Inject HEROIC Score Card into Dashboard ────────────────────────────
+        // Positioned above Quick Menu section so it's the first thing users see
+        setTimeout(() => {
+            if (document.getElementById('heroicDashboardCard')) return; // already injected
+            if (typeof HeroicXAI === 'undefined') return;
+
+            const overall = Math.round(HeroicXAI.getOverallScore());
+            const dims = HeroicXAI.DIMENSIONS || {};
+            const scores = HeroicXAI.scores || {};
+            const weakDimKey = HeroicXAI.getWeakestDimension ? HeroicXAI.getWeakestDimension() : 'E';
+            const weakDim = dims[weakDimKey] || { label: 'Efikasi Diri', icon: 'fa-chart-line', color: '#10B981' };
+            const weakScore = Math.round(scores[weakDimKey] || 50);
+
+            // Build mini dimension bars HTML
+            const dimBarsHtml = Object.values(dims).map(d => {
+                const sc = Math.round(scores[d.key] || 50);
+                return `<div title="${d.label}: ${sc}" style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                    <div style="width:28px;height:${Math.max(4, Math.round(sc * 0.32))}px;background:${d.color};border-radius:4px;transition:height 0.4s;"></div>
+                    <span style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.85);">${d.key}</span>
+                </div>`;
+            }).join('');
+
+            // Overall score color ring
+            const scoreColor = overall >= 70 ? '#10B981' : overall >= 50 ? '#F59E0B' : '#EF4444';
+            const scoreLabel = overall >= 70 ? 'Baik' : overall >= 50 ? 'Cukup' : 'Perlu Perhatian';
+
+            const card = document.createElement('div');
+            card.id = 'heroicDashboardCard';
+            card.style.cssText = 'padding: 0 16px 8px; margin-top: 16px;';
+            card.innerHTML = `
+                <div onclick="Router.navigate('heroic')" style="
+                    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%);
+                    border-radius: 20px;
+                    padding: 18px 20px;
+                    cursor: pointer;
+                    position: relative;
+                    overflow: hidden;
+                    box-shadow: 0 8px 24px rgba(99,102,241,0.35);
+                    transition: transform 0.2s, box-shadow 0.2s;
+                " onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform=''" ontouchstart="this.style.transform='scale(0.98)'" ontouchend="this.style.transform=''">
+                    <!-- decorative circles -->
+                    <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.06);"></div>
+                    <div style="position:absolute;bottom:-30px;right:60px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);"></div>
+
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+                        <div>
+                            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                                <i class="fas fa-star-half-stroke" style="color:rgba(255,255,255,0.9);font-size:14px;"></i>
+                                <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:0.08em;text-transform:uppercase;">HEROIC Score</span>
+                            </div>
+                            <div style="display:flex;align-items:baseline;gap:6px;">
+                                <span style="font-size:2.8rem;font-weight:800;color:white;line-height:1;">${overall}</span>
+                                <span style="font-size:13px;color:rgba(255,255,255,0.65);">/100</span>
+                            </div>
+                            <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.15);border-radius:20px;padding:3px 10px;margin-top:6px;">
+                                <span style="width:6px;height:6px;border-radius:50%;background:${scoreColor};"></span>
+                                <span style="font-size:11px;font-weight:600;color:white;">${scoreLabel}</span>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:10px;color:rgba(255,255,255,0.6);margin-bottom:6px;">Perlu perhatian:</div>
+                            <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end;">
+                                <i class="fas ${weakDim.icon}" style="color:${weakDim.color};font-size:13px;"></i>
+                                <span style="font-size:12px;font-weight:700;color:white;">${weakDim.label}</span>
+                            </div>
+                            <div style="font-size:11px;color:rgba(255,255,255,0.55);margin-top:2px;">${weakScore}/100</div>
+                        </div>
+                    </div>
+
+                    <!-- Mini dimension bars -->
+                    <div style="display:flex;align-items:flex-end;gap:8px;justify-content:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.12);">
+                        ${dimBarsHtml}
+                        <div style="margin-left:auto;display:flex;align-items:center;gap:4px;">
+                            <span style="font-size:10px;color:rgba(255,255,255,0.6);">Lihat detail</span>
+                            <i class="fas fa-chevron-right" style="font-size:9px;color:rgba(255,255,255,0.5);"></i>
+                        </div>
+                    </div>
+                </div>`;
+
+            // Insert after the featured-card (health score card), before quick menu
+            const featuredCard = document.querySelector('.featured-card');
+            if (featuredCard && featuredCard.parentNode) {
+                featuredCard.parentNode.insertBefore(card, featuredCard.nextSibling);
+            } else {
+                // Fallback: prepend to view-container
+                const viewContainer = document.querySelector('.view-container');
+                if (viewContainer) viewContainer.prepend(card);
+            }
+        }, 500);
     },
 
     /**
