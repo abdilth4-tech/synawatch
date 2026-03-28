@@ -570,10 +570,20 @@ const App = {
             initCharts();
         }
 
-        // Start demo animation if not connected
-        if (typeof BLEConnection !== 'undefined' && !BLEConnection.isConnected()) {
-            if (typeof startDemoAnimation === 'function') {
-                startDemoAnimation();
+        // Register BLE data handlers for live chart updates
+        if (typeof BLEConnection !== 'undefined') {
+            if (typeof handleDataUpdate === 'function') {
+                BLEConnection.onDataUpdate(handleDataUpdate);
+            }
+            if (typeof handleConnectionChange === 'function') {
+                BLEConnection.onConnectionChange(handleConnectionChange);
+            }
+
+            // Check current connection status
+            if (BLEConnection.isConnected()) {
+                if (typeof setLiveMode === 'function') setLiveMode(true);
+            } else {
+                if (typeof startDemoAnimation === 'function') startDemoAnimation();
             }
         }
 
