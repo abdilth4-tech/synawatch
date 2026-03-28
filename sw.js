@@ -3,9 +3,10 @@
  * PWA Offline Support & Caching Strategy
  */
 
-const CACHE_NAME = 'synawatch-v1.3.0';
-const STATIC_CACHE = 'synawatch-static-v1.3.0';
-const DYNAMIC_CACHE = 'synawatch-dynamic-v1.3.0';
+const APP_VERSION = '1.5.0';
+const CACHE_NAME = `synawatch-v${APP_VERSION}`;
+const STATIC_CACHE = `synawatch-static-v${APP_VERSION}`;
+const DYNAMIC_CACHE = `synawatch-dynamic-v${APP_VERSION}`;
 
 // Assets to cache immediately on install
 const STATIC_ASSETS = [
@@ -144,32 +145,21 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Cache-first strategy for static assets
+    // Network-first strategy for static assets (always get fresh version when online)
     if (STATIC_ASSETS.some(asset => url.pathname === asset || url.pathname.endsWith(asset))) {
         event.respondWith(
-            caches.match(request)
-                .then((cachedResponse) => {
-                    if (cachedResponse) {
-                        // Return cached version, but also update cache in background
-                        fetch(request)
-                            .then(response => {
-                                if (response.ok) {
-                                    caches.open(STATIC_CACHE)
-                                        .then(cache => cache.put(request, response));
-                                }
-                            })
-                            .catch(() => {});
-                        return cachedResponse;
+            fetch(request)
+                .then((response) => {
+                    if (response.ok) {
+                        const responseClone = response.clone();
+                        caches.open(STATIC_CACHE)
+                            .then((cache) => cache.put(request, responseClone));
                     }
-                    return fetch(request)
-                        .then((response) => {
-                            if (response.ok) {
-                                const responseClone = response.clone();
-                                caches.open(STATIC_CACHE)
-                                    .then((cache) => cache.put(request, responseClone));
-                            }
-                            return response;
-                        });
+                    return response;
+                })
+                .catch(() => {
+                    // Offline - fallback to cache
+                    return caches.match(request);
                 })
         );
         return;
@@ -202,6 +192,14 @@ self.addEventListener('fetch', (event) => {
                     });
             })
     );
+});
+
+// Listen for skip waiting message from client
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        console.log('[SW] Skip waiting requested');
+        self.skipWaiting();
+    }
 });
 
 // Background sync for offline data

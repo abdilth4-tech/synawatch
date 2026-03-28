@@ -142,6 +142,19 @@
 html {
     font-size: 16px;
     scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    display: none;
+}
+
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 body {
@@ -154,6 +167,8 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
 }
 
 a {
@@ -209,10 +224,11 @@ img, svg {
     min-height: 100dvh;
     background: var(--bg-primary);
     position: relative;
+    padding-top: var(--header-height);
     padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 20px);
 }
 
-/* ===== App Header - Glassmorphism ===== */
+/* ===== App Header - Fixed ===== */
 .app-header {
     height: var(--header-height);
     background: rgba(255, 255, 255, 0.95);
@@ -220,8 +236,10 @@ img, svg {
     -webkit-backdrop-filter: blur(12px) saturate(150%);
     color: var(--text-primary);
     padding: 0 var(--space-5);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: var(--z-sticky);
     display: flex;
     justify-content: space-between;
@@ -282,19 +300,19 @@ img, svg {
 }
 
 .app-logo {
-    width: 40px;
-    height: 40px;
-    background: var(--gradient-primary);
-    border-radius: var(--radius-md);
+    width: 44px;
+    height: 44px;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-glow-primary);
+    flex-shrink: 0;
 }
 
-.app-logo i {
-    font-size: 1.25rem;
-    color: white;
+.app-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* BLE Button & Indicator */
@@ -2180,21 +2198,20 @@ img, video, canvas {
 }
 
 .loading-logo {
-    width: 80px;
-    height: 80px;
-    background: var(--gradient-primary);
-    border-radius: var(--radius-xl);
+    width: 130px;
+    height: 130px;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto var(--space-6);
     animation: pulse 2s ease-in-out infinite;
-    box-shadow: var(--shadow-glow-primary);
 }
 
-.loading-logo i {
-    font-size: 2.5rem;
-    color: white;
+.loading-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .loading-title {
@@ -2462,31 +2479,70 @@ img, video, canvas {
 /* ===== Synachat 3D Avatar View - Clean Design ===== */
 
 /* Override view-container constraints when synachat is active */
-.view-container.synachat-active {
-    max-width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-}
-
-/* Also support :has() for modern browsers */
+.view-container.synachat-active,
 .view-container:has(.synachat-container) {
     max-width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
 }
+
+/* Remove app-container side padding when synachat is open, keep bottom for nav */
+body.synachat-view .app-container {
+    padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 16px) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    min-height: 100svh;
+    width: 100%;
+    max-width: 100%;
+    /* Lock viewport: inner synachat scrolls; page behind does not (fixes desktop “missing” panel) */
+    overflow: hidden;
+}
+
+/* Main fills space below fixed header so chat reaches true bottom (no body gradient gap) */
+body.synachat-view .app-container > main#view-container,
+body.synachat-view .app-container > main.view-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    /* Explicit min height so %-heights inside synachat resolve on desktop (was collapsing to 0) */
+    min-height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
+}
+
+/*
+ * Synachat root: use viewport-based height, NOT height:100% of main (broken when main height was auto).
+ * Keeps avatar column + chat + input bar visible on desktop side-by-side layout.
+ */
+body.synachat-view .synachat-container {
+    flex: 1 1 auto;
+    min-height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
+    height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px) !important;
+    max-height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
+}
+
+/* Bottom nav stays visible on synachat */
 
 .synachat-container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - var(--header-height) - var(--nav-height));
-    height: calc(100dvh - var(--header-height) - var(--nav-height));
+    height: calc(100vh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
+    height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
     margin: 0;
+    padding: 0;
     overflow: hidden;
-    background: #f8f9fa;
+    background: var(--bg-primary);
     position: relative;
     transition: flex-direction 0.3s ease;
     width: 100%;
+    max-width: 100%;
 }
 
 /* Avatar Section - Fixed Height (Mobile: Top, Tablet/Desktop: Side) */
@@ -2605,11 +2661,16 @@ img, video, canvas {
 }
 
 /* TTS Toggle Button - Glass Style */
-.tts-toggle {
+.synachat-action-btns {
     position: absolute;
     top: var(--space-4);
     right: var(--space-4);
     z-index: 10;
+    display: flex;
+    gap: 8px;
+}
+
+.tts-toggle {
     width: 44px;
     height: 44px;
     border-radius: var(--radius-lg);
@@ -2642,18 +2703,18 @@ img, video, canvas {
     border-color: rgba(239, 68, 68, 0.3);
 }
 
-/* Chat Section - Clean White */
+/* Chat Section */
 .synachat-chat-section {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: white;
+    background: var(--bg-secondary, white);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     margin-top: -16px;
     position: relative;
     z-index: 5;
-    box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
     overflow: hidden;
     min-height: 0;
     transition: all 0.3s ease;
@@ -2836,13 +2897,17 @@ img, video, canvas {
     font-size: 0.875rem;
 }
 
-/* Input Container - Floating Style */
+/* Input Container - Floating Style (sticky within chat column so it stays put while messages scroll) */
 .synachat-input-container {
     flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
     padding: var(--space-4) var(--space-5);
     padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
     background: white;
     border-top: 1px solid #f0f0f0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .input-wrapper {
@@ -2961,6 +3026,21 @@ img, video, canvas {
     color: #6b7280;
 }
 
+/* User avatar: profile photo from Firebase photoURL */
+.synachat-messages .message.user .message-avatar--user-photo {
+    background: transparent;
+    padding: 0;
+    overflow: hidden;
+}
+
+.synachat-messages .message.user .message-avatar .message-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+}
+
 .synachat-messages .message .message-content {
     display: flex;
     flex-direction: column;
@@ -3076,8 +3156,8 @@ img, video, canvas {
 /* Synachat Responsive - Mobile Small */
 @media (max-width: 380px) {
     .synachat-container {
-        height: calc(100vh - var(--header-height) - var(--nav-height));
-        height: calc(100dvh - var(--header-height) - var(--nav-height));
+        height: calc(100vh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
+        height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
     }
 
     .synachat-avatar-section {
@@ -3096,9 +3176,12 @@ img, video, canvas {
         font-size: var(--text-sm);
     }
 
-    .tts-toggle {
+    .synachat-action-btns {
         top: var(--space-3);
         right: var(--space-3);
+    }
+
+    .tts-toggle {
         width: 38px;
         height: 38px;
     }
@@ -3195,11 +3278,6 @@ img, video, canvas {
 
 /* Synachat Responsive - Mobile Medium */
 @media (min-width: 381px) and (max-width: 480px) {
-    .synachat-container {
-        margin: -16px;
-        margin-bottom: -16px;
-    }
-
     .synachat-avatar-section {
         height: 180px;
         min-height: 180px;
@@ -3229,8 +3307,8 @@ img, video, canvas {
         max-width: 100%;
         width: 100%;
         margin: 0;
-        height: calc(100vh - var(--header-height) - var(--nav-height));
-        height: calc(100dvh - var(--header-height) - var(--nav-height));
+        height: calc(100vh - var(--header-height));
+        height: calc(100dvh - var(--header-height));
         border-radius: 0;
         overflow: hidden;
         box-shadow: none;
@@ -3273,10 +3351,13 @@ img, video, canvas {
         font-size: var(--text-base);
     }
 
-    .tts-toggle {
+    .synachat-action-btns {
         top: auto;
         bottom: var(--space-5);
         right: var(--space-5);
+    }
+
+    .tts-toggle {
         width: 48px;
         height: 48px;
     }
@@ -3391,9 +3472,13 @@ img, video, canvas {
         font-size: var(--text-lg);
     }
 
-    .tts-toggle {
+    .synachat-action-btns {
+        top: auto;
         bottom: var(--space-6);
         right: var(--space-6);
+    }
+
+    .tts-toggle {
         width: 52px;
         height: 52px;
     }
@@ -3512,9 +3597,13 @@ img, video, canvas {
         right: var(--space-8);
     }
 
-    .tts-toggle {
+    .synachat-action-btns {
+        top: auto;
         bottom: var(--space-8);
         right: var(--space-8);
+    }
+
+    .tts-toggle {
         width: 56px;
         height: 56px;
     }
@@ -3524,4 +3613,1004 @@ img, video, canvas {
         height: 160px;
         font-size: 4rem;
     }
+}
+
+/* ===== More Menu Overlay ===== */
+.more-menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.more-menu-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.25s ease;
+}
+
+.more-menu-overlay.show .more-menu-backdrop {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.more-menu-panel {
+    position: relative;
+    z-index: 401;
+    background: white;
+    border-radius: 24px 24px 0 0;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px 20px calc(var(--nav-height) + 20px);
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.more-menu-overlay.show .more-menu-panel {
+    transform: translateY(0);
+}
+
+.more-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.more-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.more-menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.more-menu-item:active {
+    transform: scale(0.92);
+}
+
+.more-menu-item .more-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.more-menu-item:hover .more-icon {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.more-menu-item span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* ===== Intervention Floating Card ===== */
+.intervention-card-container {
+    position: fixed;
+    bottom: calc(var(--nav-height) + 16px);
+    left: 16px;
+    right: 16px;
+    z-index: 350;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.intervention-card {
+    max-width: 400px;
+    width: 100%;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(139, 92, 246, 0.15);
+    overflow: hidden;
+    pointer-events: auto;
+    animation: slideUpIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.intervention-card-header {
+    background: var(--gradient-primary);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+}
+
+.intervention-card-header i {
+    font-size: 1.1rem;
+}
+
+.intervention-card-header span {
+    font-weight: 600;
+    font-size: 0.875rem;
+    flex: 1;
+}
+
+.intervention-card-body {
+    padding: 16px;
+}
+
+.intervention-card-body p {
+    font-size: 0.825rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.intervention-card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.intervention-card-actions button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.intervention-card-actions .btn-action {
+    background: var(--primary-500);
+    color: white;
+}
+
+.intervention-card-actions .btn-action:hover {
+    background: var(--primary-600);
+}
+
+.intervention-card-actions .btn-dismiss {
+    background: var(--bg-primary);
+    color: var(--text-tertiary);
+}
+
+@keyframes slideUpIn {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDownOut {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(100px); opacity: 0; }
+}
+
+/* ===== Quick Menu Cards ===== */
+.quick-menu-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 160px;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Decorative background element */
+.quick-menu-card .card-decorative-bg {
+    position: absolute;
+    top: -50%;
+    right: -25%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+/* Icon box styling */
+.quick-menu-card .card-icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: white;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Card content */
+.quick-menu-card .card-content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.quick-menu-card .card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+}
+
+.quick-menu-card .card-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+/* Hover effect background */
+.quick-menu-card .card-hover-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: 20px;
+}
+
+/* Hover state */
+.quick-menu-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.quick-menu-card:hover .card-icon-box {
+    transform: scale(1.1) rotateY(360deg);
+}
+
+.quick-menu-card:hover .card-title {
+    color: var(--primary-600);
+}
+
+/* Color gradients for each card */
+.admin-gradient {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+}
+
+.assessment-gradient {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+}
+
+.chat-gradient {
+    background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+}
+
+.crisis-gradient {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+}
+
+.sleep-gradient {
+    background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+}
+
+.journal-gradient {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+}
+
+.mindful-gradient {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.mood-gradient {
+    background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+}
+
+.academy-gradient {
+    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+}
+
+.games-gradient {
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+}
+
+/* Card specific hover backgrounds */
+.admin-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+    opacity: 1;
+}
+
+.assessment-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+    opacity: 1;
+}
+
+.chat-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.1) 100%);
+    opacity: 1;
+}
+
+.crisis-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+    opacity: 1;
+}
+
+.crisis-card {
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.sleep-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+    opacity: 1;
+}
+
+.journal-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
+    opacity: 1;
+}
+
+.mindful-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+    opacity: 1;
+}
+
+.mood-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(219, 39, 119, 0.1) 100%);
+    opacity: 1;
+}
+
+.academy-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+    opacity: 1;
+}
+
+.games-card:hover .card-hover-bg {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(8, 145, 178, 0.1) 100%);
+    opacity: 1;
+}
+
+/* Animation for icon rotation */
+@keyframes iconRotate {
+    0% { transform: scale(1) rotateY(0deg); }
+    50% { transform: scale(1.15) rotateY(180deg); }
+    100% { transform: scale(1) rotateY(360deg); }
+}
+
+.quick-menu-card:hover .card-icon-box {
+    animation: iconRotate 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Responsive More Menu */
+@media (max-width: 360px) {
+    .more-menu-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .more-menu-panel {
+        border-radius: 24px;
+        margin-bottom: 16px;
+        padding-bottom: 20px;
+    }
+}
+
+/* ========================================
+   YOGA MODULE STYLES
+   ======================================== */
+
+/* Search Bar */
+.yoga-search-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.yoga-search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.yoga-search-bar {
+    width: 100%;
+    padding: 14px 16px 14px 44px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    font-size: 0.95rem;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.yoga-search-bar:focus {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+}
+
+.yoga-search-bar::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* Filter Bar */
+.yoga-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.yoga-filter-group {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.yoga-filter-group::-webkit-scrollbar {
+    display: none;
+}
+
+.yoga-filter-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: white;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.yoga-filter-btn:hover {
+    border-color: var(--primary-400);
+    color: var(--primary-500);
+    background: rgba(139, 92, 246, 0.05);
+}
+
+.yoga-filter-btn.active {
+    background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+}
+
+.yoga-category-select {
+    padding: 8px 32px 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: white;
+    color: var(--text-secondary);
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: all 0.25s ease;
+}
+
+.yoga-category-select:focus {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+}
+
+/* Pose Grid */
+.yoga-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 16px;
+}
+
+/* Pose Card */
+.yoga-pose-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+}
+
+.yoga-pose-card:hover,
+.yoga-pose-card:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(20, 184, 166, 0.15);
+    border-color: rgba(20, 184, 166, 0.3);
+}
+
+.yoga-pose-img-wrapper {
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.06) 0%, rgba(139, 92, 246, 0.06) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.yoga-pose-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.yoga-pose-info {
+    padding: 12px 14px 14px;
+}
+
+.yoga-pose-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 2px;
+    line-height: 1.3;
+}
+
+.yoga-pose-sanskrit {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin: 0 0 8px;
+}
+
+/* Difficulty Badge */
+.yoga-difficulty-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.yoga-difficulty-badge.beginner {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+}
+
+.yoga-difficulty-badge.intermediate {
+    background: rgba(245, 158, 11, 0.12);
+    color: #d97706;
+}
+
+.yoga-difficulty-badge.expert {
+    background: rgba(239, 68, 68, 0.12);
+    color: #dc2626;
+}
+
+.yoga-difficulty-badge.unknown {
+    background: rgba(100, 116, 139, 0.12);
+    color: var(--text-tertiary);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* Category Tag */
+.yoga-category-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 50px;
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--primary-500);
+}
+
+/* Empty State */
+.yoga-empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Skeleton Loading */
+.yoga-skeleton {
+    pointer-events: none;
+}
+
+.yoga-skeleton-img {
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: yogaShimmer 1.5s infinite;
+}
+
+.yoga-skeleton-text {
+    height: 14px;
+    margin: 12px 14px 0;
+    border-radius: 7px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: yogaShimmer 1.5s infinite;
+}
+
+.yoga-skeleton-text.short {
+    width: 60%;
+    height: 10px;
+    margin-top: 8px;
+    margin-bottom: 14px;
+}
+
+@keyframes yogaShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ========== Detail Overlay ========== */
+
+.yoga-detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.yoga-detail-overlay.show {
+    opacity: 1;
+}
+
+.yoga-detail-panel {
+    background: white;
+    border-radius: 24px 24px 0 0;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 24px 20px 40px;
+    position: relative;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.yoga-detail-overlay.show .yoga-detail-panel {
+    transform: translateY(0);
+}
+
+.yoga-detail-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 50%;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+.yoga-detail-close:hover {
+    background: rgba(0, 0, 0, 0.12);
+    color: var(--text-primary);
+}
+
+.yoga-detail-img-wrapper {
+    width: 100%;
+    height: 240px;
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.yoga-detail-img-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.yoga-detail-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.yoga-detail-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+}
+
+.yoga-detail-sanskrit {
+    font-size: 0.9rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin: 0 0 4px;
+}
+
+.yoga-detail-translation {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+    margin: 0 0 12px;
+}
+
+.yoga-detail-badges {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.yoga-detail-section {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.yoga-detail-section h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.yoga-detail-section h3 i {
+    color: #14b8a6;
+    font-size: 0.85rem;
+}
+
+.yoga-detail-section p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Enriched Badge */
+.yoga-enriched-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+    color: #14b8a6;
+}
+
+.yoga-enriched-badge i {
+    font-size: 0.6rem;
+}
+
+/* Detail Meta Pills (Duration & Target) */
+.yoga-detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+    justify-content: center;
+}
+
+.yoga-detail-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 50px;
+    background: rgba(20, 184, 166, 0.08);
+    color: #0d9488;
+    border: 1px solid rgba(20, 184, 166, 0.15);
+}
+
+.yoga-detail-meta span i {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+/* Steps List */
+.yoga-steps-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: yoga-step;
+}
+
+.yoga-steps-list li {
+    counter-increment: yoga-step;
+    position: relative;
+    padding: 10px 0 10px 36px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.yoga-steps-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.yoga-steps-list li::before {
+    content: counter(yoga-step);
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #14b8a6, #0d9488);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive */
+@media (min-width: 640px) {
+    .yoga-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .yoga-detail-panel {
+        border-radius: 24px;
+        margin-bottom: 20px;
+        max-height: 85vh;
+    }
+
+    .yoga-detail-overlay {
+        align-items: center;
+    }
+}
+
+@media (max-width: 380px) {
+    .yoga-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .yoga-pose-img-wrapper {
+        height: 120px;
+        padding: 12px;
+    }
+
+    .yoga-filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .yoga-category-select {
+        width: 100%;
+    }
+}
+
+/* ===== Academy Lesson Content ===== */
+.lesson-content h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.lesson-content h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.lesson-content p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.lesson-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 14px;
+}
+
+.lesson-content ul li {
+    position: relative;
+    padding: 6px 0 6px 20px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.lesson-content ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-500);
+}
+
+.lesson-highlight {
+    background: var(--primary-50, rgba(139,92,246,0.08));
+    border-radius: 12px;
+    padding: 16px;
+    margin: 14px 0;
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    border-left: 3px solid var(--primary-500);
+}
+
+.lesson-tip {
+    background: rgba(16,185,129,0.08);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 14px 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    border-left: 3px solid var(--success-500);
 }

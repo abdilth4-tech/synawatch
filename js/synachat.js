@@ -3,8 +3,69 @@
  * Powered by Google Gemini API
  */
 
-// Gemini API Configuration
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent';
+// Gemini API Configuration - stable models ordered by rate limit (lite first = higher RPM)
+const GEMINI_MODELS = [
+    'gemini-2.0-flash-lite',       // Stable, highest free-tier RPM
+    'gemini-2.5-flash-lite',       // Stable, high RPM
+    'gemini-2.0-flash',            // Stable
+    'gemini-2.5-flash',            // Stable, newest
+    'gemini-2.0-flash-lite-001',   // Stable pinned version
+    'gemini-2.0-flash-001'         // Stable pinned version
+];
+const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+
+// API Key rotation manager - auto-switches when a key hits rate limit
+const GeminiKeyManager = {
+    currentIndex: 0,
+    failedKeys: new Set(),
+    lastResetTime: Date.now(),
+    RESET_INTERVAL: 60 * 1000, // Reset failed keys after 60s
+
+    getKeys() {
+        return (typeof CONFIG !== 'undefined' && CONFIG.GEMINI_API_KEYS) || [];
+    },
+
+    getCurrentKey() {
+        const keys = this.getKeys();
+        if (keys.length === 0) {
+            return (typeof CONFIG !== 'undefined' && CONFIG.GEMINI_API_KEY) || '';
+        }
+
+        // Reset failed keys periodically
+        if (Date.now() - this.lastResetTime > this.RESET_INTERVAL) {
+            this.failedKeys.clear();
+            this.lastResetTime = Date.now();
+        }
+
+        // Find next available key
+        for (let i = 0; i < keys.length; i++) {
+            const idx = (this.currentIndex + i) % keys.length;
+            if (!this.failedKeys.has(idx)) {
+                this.currentIndex = idx;
+                return keys[idx];
+            }
+        }
+
+        // All keys failed - reset and use first
+        this.failedKeys.clear();
+        this.currentIndex = 0;
+        this.lastResetTime = Date.now();
+        return keys[0];
+    },
+
+    markFailed() {
+        const keys = this.getKeys();
+        if (keys.length === 0) return;
+        console.warn(`[GeminiKeyManager] Key #${this.currentIndex + 1} hit limit, switching...`);
+        this.failedKeys.add(this.currentIndex);
+        this.currentIndex = (this.currentIndex + 1) % keys.length;
+    },
+
+    getStatus() {
+        const keys = this.getKeys();
+        return `Key ${this.currentIndex + 1}/${keys.length} (${keys.length - this.failedKeys.size} available)`;
+    }
+};
 
 // System prompt for Dr. Synachat
 const SYSTEM_PROMPT = `You are Dr. Synachat, an empathetic, professional, and knowledgeable AI assistant who acts as both a psychologist and a medical advisor. You are part of a smartwatch health monitoring app called SYNAWATCH.
@@ -48,6 +109,95 @@ let avatarInitialized = false;
 let synachatInitialized = false;
 
 /**
+ * [GAP 6] Proactive Sensor Anomaly Detection
+ * Monitors real-time biosensor data and initiates conversation when anomalies detected
+ * Based on: He et al. 2023, Huang et al. 2024, Daley et al. 2022
+ */
+let proactiveAnomalyMonitor = {
+    enabled: true,
+    sensorHistory: [],
+    lastAnomalyPrompt: 0,
+    ANOMALY_COOLDOWN: 10 * 60 * 1000, // 10 minutes between proactive initiations
+
+    /**
+     * Check for biosensor anomalies that warrant proactive AI intervention
+     */
+    checkForAnomalies(sensorData) {
+        if (!this.enabled || !sensorData) return;
+
+        const now = Date.now();
+        if (now - this.lastAnomalyPrompt < this.ANOMALY_COOLDOWN) return;
+
+        // Track sensor history
+        this.sensorHistory.push({
+            stress: sensorData.stress || 0,
+            gsr: sensorData.gsr || 0,
+            hr: sensorData.hr || 0,
+            ts: now
+        });
+        if (this.sensorHistory.length > 50) this.sensorHistory.shift();
+
+        // Detect sustained elevation
+        if (this.sensorHistory.length >= 10) {
+            const recent = this.sensorHistory.slice(-10);
+            const avgStress = recent.reduce((s, r) => s + r.stress, 0) / recent.length;
+            const avgGSR = recent.reduce((s, r) => s + r.gsr, 0) / recent.length;
+
+            // Trigger if sustained high stress + high GSR
+            if (avgStress > 70 && avgGSR > 65 && sensorData.hr > 85) {
+                this.promptProactiveChat(sensorData, avgStress, avgGSR);
+                this.lastAnomalyPrompt = now;
+            }
+        }
+    },
+
+    /**
+     * Show non-intrusive proactive chat suggestion
+     */
+    promptProactiveChat(sensorData, avgStress, avgGSR) {
+        // Check if already in chat view
+        if (document.getElementById('chatWindow')) return;
+
+        const banner = document.createElement('div');
+        banner.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #6366f1 100%);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+            z-index: 1000;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        `;
+
+        banner.innerHTML = `
+            <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Dr. Synachat tersedia</div>
+                <div style="font-size: 0.85rem; opacity: 0.9;">Pola stres terdeteksi. Mau ngobrol sebentar?</div>
+            </div>
+            <button onclick="this.parentElement.remove(); Router.navigate('synachat');" style="background: white; color: #8B5CF6; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; flex-shrink: 0;">
+                Chat
+            </button>
+            <button onclick="this.parentElement.remove();" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 1.2rem;">
+                ✕
+            </button>
+        `;
+
+        document.body.appendChild(banner);
+        setTimeout(() => banner.style.opacity = '0.8', 100);
+        setTimeout(() => banner.remove(), 8000); // Auto-dismiss after 8s
+    }
+};
+
+window.proactiveAnomalyMonitor = proactiveAnomalyMonitor;
+
+/**
  * Initialize Synachat with 3D Avatar
  */
 async function initSynachat() {
@@ -68,7 +218,13 @@ async function initSynachat() {
 
     // Listen for BLE data updates to update health context
     if (typeof BLEConnection !== 'undefined') {
-        BLEConnection.onDataUpdate(updateHealthContext);
+        BLEConnection.onDataUpdate((data) => {
+            updateHealthContext(data);
+            // [GAP 6] Check for sensor anomalies that warrant proactive intervention
+            if (proactiveAnomalyMonitor) {
+                proactiveAnomalyMonitor.checkForAnomalies(data);
+            }
+        });
     }
 
     // Update health context display
@@ -80,6 +236,13 @@ async function initSynachat() {
 
     // Update TTS toggle button state
     updateTTSToggleUI();
+
+    // Check for proactive AI Chat trigger (Gap 6)
+    const proactiveTrigger = sessionStorage.getItem('synachat_proactive_trigger');
+    if (proactiveTrigger) {
+        sessionStorage.removeItem('synachat_proactive_trigger');
+        setTimeout(() => triggerProactiveAIChat(proactiveTrigger), 1500);
+    }
 }
 
 /**
@@ -241,26 +404,31 @@ function updateTTSToggleUI() {
 }
 
 /**
- * Speak response using TTS
+ * Speak response using TTS - sequential to avoid concurrent request errors
  */
-function speakResponse(text) {
+async function speakResponse(text) {
     if (!ttsEnabled || !text) return;
 
     if (typeof ElevenLabsTTS !== 'undefined') {
-        // Split into sentences for more natural speech
-        const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+        // Stop any currently playing audio first
+        if (typeof AudioQueue !== 'undefined') {
+            AudioQueue.clear();
+        }
+        if (typeof ElevenLabsTTS.stop === 'function') {
+            ElevenLabsTTS.stop();
+        }
 
-        sentences.forEach(sentence => {
-            const trimmed = sentence.trim();
-            if (trimmed) {
-                ElevenLabsTTS.speak(trimmed, (isSpeaking) => {
-                    if (avatarInitialized && typeof SynachatAvatar !== 'undefined') {
-                        SynachatAvatar.setSpeaking(isSpeaking);
-                    }
-                    updateAvatarStatus(isSpeaking);
-                });
-            }
-        });
+        // Send the full text as ONE request instead of splitting into sentences
+        // This avoids concurrent request 429 errors and produces more natural speech
+        const cleanText = text.replace(/\*\*/g, '').replace(/\*/g, '').trim();
+        if (cleanText) {
+            ElevenLabsTTS.speak(cleanText, (isSpeaking) => {
+                if (avatarInitialized && typeof SynachatAvatar !== 'undefined') {
+                    SynachatAvatar.setSpeaking(isSpeaking);
+                }
+                updateAvatarStatus(isSpeaking);
+            });
+        }
     }
 }
 
@@ -339,32 +507,35 @@ async function sendMessage() {
     } catch (error) {
         console.error('Error getting AI response:', error);
         hideTypingIndicator();
-        const errorMsg = 'Maaf, terjadi kesalahan. Silakan coba lagi nanti.';
+        let errorMsg = 'Maaf, terjadi kesalahan. Silakan coba lagi nanti.';
+        if (error.message && error.message.includes('API key')) {
+            errorMsg = 'Maaf, semua API key sedang dalam limit. Silakan tunggu beberapa saat dan coba lagi.';
+        }
         addMessage('assistant', errorMsg);
         speakResponse(errorMsg);
     }
 }
 
 /**
- * Send message to Gemini API
+ * Send message to Gemini API with automatic key rotation on rate limit
  */
 async function sendToGemini(userMessage) {
     isWaitingForResponse = true;
 
     try {
-        // Get current health context
+        // Get current health context (null-safe)
         let healthContext = '';
         if (typeof BLEConnection !== 'undefined') {
             const data = BLEConnection.getSensorData();
-            if (data.lastUpdate) {
+            if (data && data.lastUpdate) {
                 healthContext = `
 [Current Health Data from SYNAWATCH:]
 - Heart Rate: ${data.finger ? data.hr : 'Not detected'} BPM
 - SpO2: ${data.finger ? data.spo2 : 'Not detected'}%
-- Body Temperature: ${data.bt.toFixed(1)}°C
-- Stress Level: ${data.stress}%
-- GSR Level: ${data.gsr}% (${Utils.getGSRStatus(data.gsr).status})
-- Activity: ${Utils.getActivityLabel(data.act)}
+- Body Temperature: ${data.bt ? data.bt.toFixed(1) : '--'}°C
+- Stress Level: ${data.stress || 0}%
+- GSR Level: ${data.gsr || 0}%${typeof Utils !== 'undefined' && Utils.getGSRStatus ? ' (' + Utils.getGSRStatus(data.gsr).status + ')' : ''}
+- Activity: ${typeof Utils !== 'undefined' && Utils.getActivityLabel ? Utils.getActivityLabel(data.act) : 'Unknown'}
 - Finger Detected: ${data.finger ? 'Yes' : 'No'}
 `;
             }
@@ -381,7 +552,7 @@ async function sendToGemini(userMessage) {
             ? `${healthContext}\n\nUser message: ${userMessage}`
             : userMessage;
 
-        // Embed system prompt in conversation for compatibility
+        // Embed system prompt in conversation
         const contents = [
             {
                 role: 'user',
@@ -398,54 +569,96 @@ async function sendToGemini(userMessage) {
             }
         ];
 
-        // Make API request
-        const response = await fetch(`${GEMINI_API_URL}?key=${CONFIG.GEMINI_API_KEY}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+        const requestBody = JSON.stringify({
+            contents: contents,
+            generationConfig: {
+                temperature: 0.7,
+                topK: 40,
+                topP: 0.95,
+                maxOutputTokens: 1024
             },
-            body: JSON.stringify({
-                contents: contents,
-                generationConfig: {
-                    temperature: 0.7,
-                    topK: 40,
-                    topP: 0.95,
-                    maxOutputTokens: 1024
-                },
-                safetySettings: [
-                    {
-                        category: 'HARM_CATEGORY_HARASSMENT',
-                        threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                    },
-                    {
-                        category: 'HARM_CATEGORY_HATE_SPEECH',
-                        threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                    },
-                    {
-                        category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-                        threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                    },
-                    {
-                        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-                        threshold: 'BLOCK_MEDIUM_AND_ABOVE'
-                    }
-                ]
-            })
+            safetySettings: [
+                { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+                { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
+            ]
         });
 
-        if (!response.ok) {
-            const errorBody = await response.text();
-            console.error('Gemini API Response:', response.status, errorBody);
-            throw new Error(`API error: ${response.status} - ${errorBody}`);
+        // Try with model fallback + key rotation
+        // Strategy: for each model, try ALL keys before moving to next model
+        // Rate limits are per-model, so a different model may work with the same key
+        const keys = GeminiKeyManager.getKeys();
+        const totalKeys = keys.length || 1;
+        let lastError = null;
+
+        for (const model of GEMINI_MODELS) {
+            const apiUrl = `${GEMINI_API_BASE}/${model}:generateContent`;
+
+            // Reset keys for each new model (rate limits are per-model)
+            GeminiKeyManager.failedKeys.clear();
+            GeminiKeyManager.currentIndex = 0;
+
+            for (let keyAttempt = 0; keyAttempt < totalKeys; keyAttempt++) {
+                const apiKey = GeminiKeyManager.getCurrentKey();
+                if (!apiKey) break;
+
+                console.log(`[Synachat] ${model} | Key ${keyAttempt + 1}/${totalKeys}`);
+
+                try {
+                    const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: requestBody
+                    });
+
+                    // Rate limited → try next key for this model
+                    if (response.status === 429 || response.status === 403) {
+                        console.warn(`[Synachat] Key #${GeminiKeyManager.currentIndex + 1} → ${response.status} on ${model}`);
+                        GeminiKeyManager.markFailed();
+                        lastError = new Error(`API key limit: ${response.status}`);
+                        continue;
+                    }
+
+                    // Model not found → skip to next model entirely
+                    if (response.status === 404) {
+                        console.warn(`[Synachat] Model ${model} not available, skipping...`);
+                        break;
+                    }
+
+                    if (!response.ok) {
+                        const errorBody = await response.text();
+                        console.error('Gemini API error:', response.status, errorBody);
+                        throw new Error(`API error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                        console.log(`[Synachat] OK → ${model} Key #${GeminiKeyManager.currentIndex + 1}`);
+                        return data.candidates[0].content.parts[0].text;
+                    } else if (data.candidates && data.candidates[0] && data.candidates[0].finishReason === 'SAFETY') {
+                        return 'Maaf, saya tidak bisa merespons pertanyaan tersebut karena alasan keamanan. Silakan coba pertanyaan lain.';
+                    } else {
+                        throw new Error('Invalid response format');
+                    }
+                } catch (fetchError) {
+                    if (fetchError.message.includes('API key limit')) {
+                        lastError = fetchError;
+                        continue;
+                    }
+                    if (fetchError.message.includes('API error')) {
+                        lastError = fetchError;
+                        break; // Non-rate-limit API error → skip this model
+                    }
+                    throw fetchError; // Network error → throw immediately
+                }
+            }
         }
 
-        const data = await response.json();
+        // All models and keys exhausted
+        throw lastError || new Error('Semua API key dan model sedang limit. Coba lagi dalam 1 menit.');
 
-        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-            return data.candidates[0].content.parts[0].text;
-        } else {
-            throw new Error('Invalid response format');
-        }
     } catch (error) {
         console.error('Gemini API error:', error);
         throw error;
@@ -455,17 +668,73 @@ async function sendToGemini(userMessage) {
 }
 
 /**
+ * Escape value for HTML double-quoted attributes (e.g. photo URL, alt text)
+ */
+function escapeHtmlAttr(value) {
+    if (value == null || value === '') return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;');
+}
+
+/**
+ * Firestore may return Timestamp as { seconds, nanoseconds }, or compat .toDate(), or ISO string.
+ */
+function parseMessageTimestamp(ts) {
+    if (ts == null || ts === '') return null;
+    try {
+        if (ts instanceof Date && !isNaN(ts.getTime())) return ts;
+        if (typeof ts === 'object' && typeof ts.toDate === 'function') return ts.toDate();
+        if (typeof ts === 'object' && typeof ts.seconds === 'number') {
+            return new Date(ts.seconds * 1000 + (ts.nanoseconds || 0) / 1e6);
+        }
+        const d = new Date(ts);
+        return isNaN(d.getTime()) ? null : d;
+    } catch (e) {
+        return null;
+    }
+}
+
+/**
+ * Avatar markup: assistant = robot icon; user = Firebase photoURL when set, else user icon.
+ */
+function getMessageAvatarParts(role) {
+    if (role === 'assistant') {
+        return {
+            avatarClass: 'message-avatar',
+            inner: '<i class="fas fa-robot"></i>'
+        };
+    }
+    const user = typeof auth !== 'undefined' && auth.currentUser ? auth.currentUser : null;
+    if (user && user.photoURL) {
+        const src = escapeHtmlAttr(user.photoURL);
+        const alt = escapeHtmlAttr(user.displayName || user.email || 'You');
+        return {
+            avatarClass: 'message-avatar message-avatar--user-photo',
+            inner: `<img class="message-avatar-img" src="${src}" alt="${alt}" width="36" height="36" loading="lazy" referrerpolicy="no-referrer">`
+        };
+    }
+    return {
+        avatarClass: 'message-avatar',
+        inner: '<i class="fas fa-user"></i>'
+    };
+}
+
+/**
  * Add message to chat
  */
 function addMessage(role, content) {
     const container = document.getElementById('messagesContainer');
     const now = new Date();
     const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    const avatar = getMessageAvatarParts(role);
 
     const messageHtml = `
         <div class="message ${role}">
-            <div class="message-avatar">
-                <i class="fas ${role === 'assistant' ? 'fa-robot' : 'fa-user'}"></i>
+            <div class="${avatar.avatarClass}">
+                ${avatar.inner}
             </div>
             <div class="message-content">
                 <div class="message-bubble">${formatMessage(content)}</div>
@@ -589,14 +858,16 @@ function renderMessages() {
     container.innerHTML = '';
 
     chatHistory.forEach(msg => {
-        const time = msg.timestamp
-            ? new Date(msg.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+        const d = parseMessageTimestamp(msg.timestamp);
+        const time = d
+            ? d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
             : '';
+        const avatar = getMessageAvatarParts(msg.role);
 
         const messageHtml = `
             <div class="message ${msg.role}">
-                <div class="message-avatar">
-                    <i class="fas ${msg.role === 'assistant' ? 'fa-robot' : 'fa-user'}"></i>
+                <div class="${avatar.avatarClass}">
+                    ${avatar.inner}
                 </div>
                 <div class="message-content">
                     <div class="message-bubble">${formatMessage(msg.content)}</div>
@@ -665,17 +936,77 @@ function updateHealthContext(data) {
     document.getElementById('contextStress').textContent = data.stress;
     document.getElementById('contextGsr').textContent = data.gsr;
     document.getElementById('contextTemp').textContent = data.bt ? data.bt.toFixed(1) : '--';
+
+    // Gap 6: Proactive AI Chat Triggers - check realtime inside chat
+    checkRealtimeProactiveTriggers(data);
+}
+
+// Global variable for debounce to prevent spamming proactive triggers during chat
+let lastProactiveTriggerTime = 0;
+
+/**
+ * Check for real-time proactive triggers while the user is actively in the chat view
+ */
+function checkRealtimeProactiveTriggers(data) {
+    if (!data.finger) return;
+    
+    const now = Date.now();
+    // 5 minute cooldown for in-chat interruptions
+    if (now - lastProactiveTriggerTime < 5 * 60 * 1000) return;
+
+    if (data.stress > 85 && data.gsr > 80 && data.act === 0) {
+        lastProactiveTriggerTime = now;
+        triggerProactiveAIChat('acute_stress_spike');
+    }
+}
+
+/**
+ * Trigger Proactive AI Chat Message internally
+ */
+async function triggerProactiveAIChat(triggerReason) {
+    if (isWaitingForResponse) return;
+
+    hideWelcomeMessage();
+    showTypingIndicator();
+
+    try {
+        let triggerPrompt = "";
+        
+        switch (triggerReason) {
+            case 'high_stress_resting':
+                triggerPrompt = "[SYSTEM COMMAND: You are initiating this conversation. The user was resting but their stress and heart rate suddenly spiked consistently. Act proactively by asking if they are okay, mentioning their sudden stress spike gently without alarming them, and offering a quick relaxation tip.]";
+                break;
+            case 'acute_stress_spike':
+                triggerPrompt = "[SYSTEM COMMAND: The user is currently in chat. Their biometric data just detected an acute stress/panic level spike right now. Interrupt gently, acknowledge their physical reaction, and provide immediate calming grounding techniques (like 5-4-3-2-1) with empathetic support.]";
+                break;
+            default:
+                triggerPrompt = "[SYSTEM COMMAND: Hello, initiate a gentle check-in with the user based on their high biometric stress.]";
+        }
+
+        const response = await sendToGemini(triggerPrompt);
+        hideTypingIndicator();
+        addMessage('assistant', response);
+        await saveMessageToHistory('assistant', response);
+        speakResponse(response);
+    } catch (error) {
+        console.error('Proactive AI error:', error);
+        hideTypingIndicator();
+    }
 }
 
 /**
  * Clear chat
  */
 async function clearChat() {
-    if (!confirm('Are you sure you want to clear the chat history?')) return;
+    if (!confirm('Hapus semua riwayat chat?')) return;
+
+    // Stop any playing audio
+    if (typeof ElevenLabsTTS !== 'undefined') ElevenLabsTTS.stop();
+    if (typeof AudioQueue !== 'undefined') AudioQueue.clear();
 
     try {
-        const user = auth.currentUser;
-        if (user) {
+        const user = typeof auth !== 'undefined' && auth.currentUser;
+        if (user && typeof FirebaseService !== 'undefined') {
             await FirebaseService.clearChatHistory(user.uid);
         }
 
@@ -705,10 +1036,10 @@ async function clearChat() {
             </div>
         `;
 
-        Utils.showToast('Chat history cleared', 'success');
+        if (typeof Utils !== 'undefined') Utils.showToast('Riwayat chat dihapus', 'success');
     } catch (error) {
         console.error('Error clearing chat:', error);
-        Utils.showToast('Failed to clear chat', 'error');
+        if (typeof Utils !== 'undefined') Utils.showToast('Gagal menghapus chat', 'error');
     }
 }
 

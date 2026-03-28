@@ -51,9 +51,11 @@ const PWA = {
         if ('serviceWorker' in navigator) {
             try {
                 const registration = await navigator.serviceWorker.register('/sw.js', {
-                    scope: '/'
+                    scope: '/',
+                    updateViaCache: 'none'
                 });
 
+                this.swRegistration = registration;
                 console.log('[PWA] Service Worker registered:', registration.scope);
 
                 // Check for updates
@@ -63,16 +65,27 @@ const PWA = {
 
                     newWorker.addEventListener('statechange', () => {
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            // New version available
-                            this.showUpdateAvailable();
+                            // New version available - auto activate
+                            console.log('[PWA] New version ready, activating...');
+                            newWorker.postMessage({ type: 'SKIP_WAITING' });
                         }
                     });
                 });
 
-                // Handle controller change (update activated)
+                // Handle controller change - reload to apply new version
+                let refreshing = false;
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    console.log('[PWA] Controller changed, reloading...');
+                    if (refreshing) return;
+                    refreshing = true;
+                    console.log('[PWA] New version activated, reloading...');
+                    window.location.reload();
                 });
+
+                // Check for updates periodically (every 2 minutes)
+                setInterval(() => {
+                    registration.update();
+                    console.log('[PWA] Checking for updates...');
+                }, 2 * 60 * 1000);
 
             } catch (error) {
                 console.error('[PWA] Service Worker registration failed:', error);
@@ -147,7 +160,7 @@ const PWA = {
 
                 <div class="pwa-banner-header">
                     <div class="pwa-app-icon">
-                        <i class="fas fa-heartbeat"></i>
+                        <img src="images/logo.png" alt="SYNAWATCH" width="64" height="64" class="pwa-app-icon-img">
                     </div>
                     <div class="pwa-app-info">
                         <h3>Install SYNAWATCH</h3>
@@ -308,18 +321,24 @@ const PWA = {
             .pwa-app-icon {
                 width: 64px;
                 height: 64px;
-                background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+                background: #fff;
+                border: 1px solid rgba(139, 92, 246, 0.15);
                 border-radius: 16px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 8px 24px rgba(139, 92, 246, 0.35);
+                box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
                 flex-shrink: 0;
+                padding: 4px;
+                overflow: hidden;
             }
 
-            .pwa-app-icon i {
-                font-size: 1.75rem;
-                color: white;
+            .pwa-app-icon-img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                display: block;
+                border-radius: 12px;
             }
 
             .pwa-app-info h3 {
@@ -610,10 +629,6 @@ const PWA = {
                 .pwa-app-icon {
                     width: 72px;
                     height: 72px;
-                }
-
-                .pwa-app-icon i {
-                    font-size: 2rem;
                 }
 
                 .pwa-app-info h3 {

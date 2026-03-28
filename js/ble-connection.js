@@ -571,18 +571,21 @@ function updateConnectionStatus(status, message) {
         }
     }
 
-    // Update connect button
+    // Update connect button (fa-link = connect; fa-link-slash = disconnect)
     const connectBtn = document.getElementById('bleConnectBtn');
     if (connectBtn) {
         if (status === 'connected') {
-            connectBtn.innerHTML = '<i class="fas fa-bluetooth"></i> Disconnect';
+            connectBtn.innerHTML =
+                '<i class="fas fa-link-slash" aria-hidden="true"></i><span class="ble-status">Disconnect</span>';
             connectBtn.classList.remove('btn-primary');
             connectBtn.classList.add('btn-danger');
         } else if (status === 'connecting') {
-            connectBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+            connectBtn.innerHTML =
+                '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span class="ble-status">Connecting...</span>';
             connectBtn.disabled = true;
         } else {
-            connectBtn.innerHTML = '<i class="fas fa-bluetooth"></i> Connect';
+            connectBtn.innerHTML =
+                '<i class="fas fa-link" aria-hidden="true"></i><span class="ble-status">Connect</span>';
             connectBtn.classList.remove('btn-danger');
             connectBtn.classList.add('btn-primary');
             connectBtn.disabled = false;

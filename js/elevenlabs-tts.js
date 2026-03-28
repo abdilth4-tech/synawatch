@@ -7,6 +7,7 @@ const ElevenLabsTTS = {
     voiceId: 'JBFqnCBsd6RMkjVDRZzb', // George - free tier compatible
     modelId: 'eleven_turbo_v2_5', // New model for free tier
     isEnabled: true,
+    _isSpeaking: false, // Guard against concurrent speak calls
 
     /**
      * Check if TTS is configured
@@ -17,10 +18,17 @@ const ElevenLabsTTS = {
     },
 
     /**
-     * Speak text using ElevenLabs
+     * Speak text using ElevenLabs (with concurrency guard)
      */
     async speak(text, onSpeakingChange) {
         if (!text || !text.trim()) return;
+
+        // Stop any previous speech first
+        this.stop();
+
+        // Guard against overlapping speak calls
+        if (this._isSpeaking) return;
+        this._isSpeaking = true;
 
         // Set speaking callback
         if (onSpeakingChange) {
@@ -30,6 +38,7 @@ const ElevenLabsTTS = {
         // If not configured, use browser TTS as fallback
         if (!this.isConfigured()) {
             console.warn('ElevenLabs API key not configured, using browser TTS');
+            this._isSpeaking = false;
             this.browserSpeak(text, onSpeakingChange);
             return;
         }
@@ -59,18 +68,20 @@ const ElevenLabsTTS = {
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error('ElevenLabs API error:', response.status, errorText);
-                // Fallback to browser TTS
+                this._isSpeaking = false;
+                // Fallback to browser TTS only if not a concurrent error
                 this.browserSpeak(text, onSpeakingChange);
                 return;
             }
 
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);
+            this._isSpeaking = false;
             AudioQueue.enqueue(url);
 
         } catch (error) {
             console.error('ElevenLabs TTS error:', error);
-            // Fallback to browser TTS
+            this._isSpeaking = false;
             this.browserSpeak(text, onSpeakingChange);
         }
     },
@@ -83,6 +94,9 @@ const ElevenLabsTTS = {
             console.warn('Browser does not support speech synthesis');
             return;
         }
+
+        // Cancel any existing browser speech first
+        window.speechSynthesis.cancel();
 
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'id-ID'; // Indonesian
@@ -105,9 +119,10 @@ const ElevenLabsTTS = {
     },
 
     /**
-     * Stop speaking
+     * Stop all speaking
      */
     stop() {
+        this._isSpeaking = false;
         AudioQueue.clear();
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();

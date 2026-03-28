@@ -1,23 +1,24 @@
 /**
  * SYNAWATCH Configuration
- * Replace placeholder values with your actual API keys
+ * API keys are loaded from config.keys.js (excluded from git)
  */
 
 const CONFIG = {
     // Firebase Configuration - SYNAWACTH-ID
-    FIREBASE_API_KEY: 'AIzaSyCSfe6L9nYPLBCx4SsZ7Wb8vhh34VKexYc',
+    FIREBASE_API_KEY: (typeof API_KEYS !== 'undefined' && API_KEYS.FIREBASE_API_KEY) || '',
     FIREBASE_AUTH_DOMAIN: 'synawacth-id.firebaseapp.com',
     FIREBASE_PROJECT_ID: 'synawacth-id',
     FIREBASE_STORAGE_BUCKET: 'synawacth-id.firebasestorage.app',
     FIREBASE_MESSAGING_SENDER_ID: '362856081724',
     FIREBASE_APP_ID: '1:362856081724:web:56e6dd619d391adedc9639',
 
-    // Gemini AI Configuration
-    GEMINI_API_KEY: 'AIzaSyCAiJgXoqcN8IGGUzT5z0H-UhXWMfDaD5c',
+    // Gemini AI Configuration (multiple keys for auto-fallback)
+    GEMINI_API_KEY: (typeof API_KEYS !== 'undefined' && API_KEYS.GEMINI_API_KEY) || '',
+    GEMINI_API_KEYS: (typeof API_KEYS !== 'undefined' && API_KEYS.GEMINI_API_KEYS) || [],
 
     // ElevenLabs TTS Configuration
-    ELEVENLABS_API_KEY: 'e7639c34914b1734706406e174f9ae11e5e230c16ddb37a5a0af4e3496ec27f0',
-    ELEVENLABS_VOICE_ID: '9BWtsMINqrJLrRacOk9x', // Aria - multilingual female voice
+    ELEVENLABS_API_KEY: (typeof API_KEYS !== 'undefined' && API_KEYS.ELEVENLABS_API_KEY) || '',
+    ELEVENLABS_VOICE_ID: (typeof API_KEYS !== 'undefined' && API_KEYS.ELEVENLABS_VOICE_ID) || '',
 
     // BLE Configuration for ESP32 SYNAWATCH
     BLE_DEVICE_NAME: 'SYNAWATCH',
@@ -47,5 +48,6 @@ const CONFIG = {
 };
 
 // Freeze config to prevent modifications
-Object.freeze(CONFIG);
+Object.freeze(CONFIG.GEMINI_API_KEYS);
 Object.freeze(CONFIG.HEALTH_THRESHOLDS);
+Object.freeze(CONFIG);

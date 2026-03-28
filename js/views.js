@@ -5,6 +5,35 @@
 
 const Views = {
     /**
+     * Assessment View (PHQ-9 & UCLA)
+     */
+    assessment() {
+        return `
+            <div class="view-container" style="max-width: 600px; margin: 0 auto; padding-top: 40px;">
+                <div id="assessmentProgressWrapper" style="margin-bottom: 32px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Progres Evaluasi</span>
+                    </div>
+                    <div class="progress-bar" style="height: 8px; background: rgba(139, 92, 246, 0.1);">
+                        <div id="assessmentProgress" class="progress-fill" style="width: 0%; background: var(--primary-500); transition: width 0.4s ease;"></div>
+                    </div>
+                </div>
+
+                <div id="assessmentContent">
+                    <div style="text-align: center; animation: fadeIn 0.5s;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: white; font-size: 2.5rem; box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h2 style="font-size: var(--text-2xl); color: var(--text-primary); margin-bottom: 12px;">Selamat Datang!</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 32px; line-height: 1.6;">Untuk mempersonalisasi SYNAWATCH sesuai dengan kondisi Anda, kami perlu menanyakan beberapa hal (PHQ-9 & UCLA Loneliness Scale). Data ini dijamin kerahasiaannya.</p>
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 16px; font-size: 1.1rem;" onclick="Assessment.start()">Mulai Evaluasi</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
      * Dashboard View
      */
     dashboard() {
@@ -28,6 +57,144 @@ const Views = {
                         </div>
                         <div style="width: 64px; height: 64px; background: rgba(255,255,255,0.15); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-shield-heart" style="font-size: var(--text-2xl); color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Cepat / Quick Menu -->
+                <div style="margin-top: 32px; margin-bottom: 32px;">
+                    <h3 class="section-title" style="margin-bottom: 20px;">Menu Cepat</h3>
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
+                        <!-- Admin Panel (if admin) -->
+                        <div id="adminCardContainer" style="display: none;">
+                            <div class="quick-menu-card admin-card" onclick="Router.navigate('admin')" data-card="admin">
+                                <div class="card-decorative-bg"></div>
+                                <div class="card-icon-box admin-gradient">
+                                    <i class="fas fa-sliders-h"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Admin Panel</h4>
+                                    <p class="card-subtitle">Kelola Sistem</p>
+                                </div>
+                                <div class="card-hover-bg"></div>
+                            </div>
+                        </div>
+
+                        <!-- Assessment -->
+                        <div class="quick-menu-card assessment-card" onclick="Router.navigate('assessment')" data-card="assessment">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box assessment-gradient">
+                                <i class="fas fa-list-check"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Asesmen</h4>
+                                <p class="card-subtitle">PHQ-9 & UCLA</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- AI Chat -->
+                        <div class="quick-menu-card chat-card" onclick="Router.navigate('synachat')" data-card="chat">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box chat-gradient">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">AI Chat</h4>
+                                <p class="card-subtitle">Dr. Synachat</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Crisis Support -->
+                        <div class="quick-menu-card crisis-card" onclick="Router.navigate('support')" data-card="crisis">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box crisis-gradient">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Bantuan Krisis</h4>
+                                <p class="card-subtitle">Hubungi Sekarang</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Sleep Lab -->
+                        <div class="quick-menu-card sleep-card" onclick="Router.navigate('sleep')" data-card="sleep">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box sleep-gradient">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Sleep Lab</h4>
+                                <p class="card-subtitle">Pantau Tidur</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Journal -->
+                        <div class="quick-menu-card journal-card" onclick="Router.navigate('journal')" data-card="journal">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box journal-gradient">
+                                <i class="fas fa-pen-fancy"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Jurnal</h4>
+                                <p class="card-subtitle">Tulis Harian</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Mindfulness -->
+                        <div class="quick-menu-card mindful-card" onclick="Router.navigate('mindful')" data-card="mindful">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box mindful-gradient">
+                                <i class="fas fa-spa"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Mindful</h4>
+                                <p class="card-subtitle">Meditasi</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Mood Booster -->
+                        <div class="quick-menu-card mood-card" onclick="Router.navigate('moodbooster')" data-card="mood">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box mood-gradient">
+                                <i class="fas fa-music"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Mood Booster</h4>
+                                <p class="card-subtitle">Terapi Musik</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Academy -->
+                        <div class="quick-menu-card academy-card" onclick="Router.navigate('academy')" data-card="academy">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box academy-gradient">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Academy</h4>
+                                <p class="card-subtitle">Belajar</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
+                        </div>
+
+                        <!-- Games -->
+                        <div class="quick-menu-card games-card" onclick="Router.navigate('games')" data-card="games">
+                            <div class="card-decorative-bg"></div>
+                            <div class="card-icon-box games-gradient">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Games</h4>
+                                <p class="card-subtitle">Stress Relief</p>
+                            </div>
+                            <div class="card-hover-bg"></div>
                         </div>
                     </div>
                 </div>
@@ -95,6 +262,7 @@ const Views = {
                     </div>
                 </div>
 
+
                 <!-- Real-time Charts -->
                 <h3 class="section-title">
                     Real-time Charts
@@ -157,52 +325,6 @@ const Views = {
                     </div>
                 </div>
 
-                <!-- Additional Metrics -->
-                <h3 class="section-title">Additional Metrics</h3>
-                <div class="card-grid">
-                    <div class="card metric-card">
-                        <div class="metric-icon success">
-                            <i class="fas fa-temperature-half"></i>
-                        </div>
-                        <div class="metric-value">
-                            <span id="btValue">--</span>
-                            <span class="metric-unit">°C</span>
-                        </div>
-                        <div class="metric-label">Body Temp</div>
-                    </div>
-
-                    <div class="card metric-card">
-                        <div class="metric-icon info">
-                            <i class="fas fa-cloud-sun"></i>
-                        </div>
-                        <div class="metric-value">
-                            <span id="atValue">--</span>
-                            <span class="metric-unit">°C</span>
-                        </div>
-                        <div class="metric-label">Ambient Temp</div>
-                    </div>
-
-                    <div class="card metric-card">
-                        <div class="metric-icon primary">
-                            <i id="actIcon" class="fas fa-person"></i>
-                        </div>
-                        <div class="metric-value" style="font-size: var(--text-lg);">
-                            <span id="actValue">Resting</span>
-                        </div>
-                        <div class="metric-label">Activity</div>
-                    </div>
-
-                    <div class="card metric-card">
-                        <div class="metric-icon success">
-                            <i class="fas fa-fingerprint"></i>
-                        </div>
-                        <div class="metric-value" style="font-size: var(--text-sm);">
-                            <span id="fingerStatus" style="color: var(--danger-400);">Not Detected</span>
-                        </div>
-                        <div class="metric-label">Finger Detection</div>
-                    </div>
-                </div>
-
                 <!-- Quick Actions -->
                 <div style="margin-top: var(--space-6); display: flex; gap: var(--space-3); flex-wrap: wrap;">
                     <button class="btn btn-primary btn-sm" data-route="health">
@@ -230,7 +352,8 @@ const Views = {
                     <h3>Connect to SYNAWATCH</h3>
                     <p>Connect to your smartwatch via Bluetooth to start monitoring</p>
                     <button class="btn btn-primary" onclick="BLEConnection.toggle()">
-                        <i class="fas fa-link"></i>
+                        <!-- Explicit white: FA link glyph can inherit wrong color on some browsers -->
+                        <i class="fas fa-link" style="color: #fff;"></i>
                         Connect Device
                     </button>
                 </div>
@@ -552,7 +675,6 @@ const Views = {
                 <!-- Version -->
                 <div style="text-align: center; padding: var(--space-5); color: var(--text-muted); font-size: var(--text-xs);">
                     <p>SYNAWATCH v1.0.0</p>
-                    <p>Made with <i class="fas fa-heart" style="color: var(--danger-400);"></i> for better health</p>
                 </div>
             </div>
         `;
@@ -595,10 +717,15 @@ const Views = {
                         </div>
                     </div>
 
-                    <!-- Voice Toggle - Glass Style -->
-                    <button id="ttsToggle" class="tts-toggle active" onclick="toggleTTS()" aria-label="Toggle voice">
-                        <i class="fas fa-volume-high"></i>
-                    </button>
+                    <!-- Action Buttons -->
+                    <div class="synachat-action-btns">
+                        <button id="ttsToggle" class="tts-toggle active" onclick="toggleTTS()" aria-label="Toggle voice">
+                            <i class="fas fa-volume-high"></i>
+                        </button>
+                        <button class="tts-toggle" onclick="clearChat()" aria-label="Clear chat" title="Hapus riwayat chat">
+                            <i class="fas fa-trash-can"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Chat Section - Clean White -->
@@ -655,7 +782,394 @@ const Views = {
                                 aria-label="Type your message"
                             ></textarea>
                             <button id="sendBtn" class="send-btn" onclick="sendMessage()" aria-label="Send message">
-                                <i class="fas fa-arrow-up"></i>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Sleep Lab View
+     */
+    sleep() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto; padding-bottom: 80px;">
+                <!-- Header -->
+                <div class="health-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);">
+                    <i class="fas fa-moon" style="font-size: 2.5rem; margin-bottom: 12px; color: #a5b4fc;"></i>
+                    <div class="big-value" style="color: white; font-size: 3rem;"><span id="sleepScoreValue">--</span></div>
+                    <div class="label" style="color: #c7d2fe;">Est. Sleep Readiness</div>
+                </div>
+
+                <!-- Relaxation Audio -->
+                <h3 class="section-title">Audio Relaksasi</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
+                    <div class="card" style="text-align: center; cursor: pointer; padding: 16px;" onclick="SleepLab.playSound('rain')">
+                        <i class="fas fa-cloud-rain" style="font-size: 1.5rem; color: var(--info-500); margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.8rem; font-weight: 600;">Hujan</div>
+                    </div>
+                    <div class="card" style="text-align: center; cursor: pointer; padding: 16px;" onclick="SleepLab.playSound('forest')">
+                        <i class="fas fa-tree" style="font-size: 1.5rem; color: var(--success-500); margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.8rem; font-weight: 600;">Hutan</div>
+                    </div>
+                    <div class="card" style="text-align: center; cursor: pointer; padding: 16px;" onclick="SleepLab.playSound('noise')">
+                        <i class="fas fa-water" style="font-size: 1.5rem; color: var(--primary-500); margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.8rem; font-weight: 600;">Ombak</div>
+                    </div>
+                </div>
+
+                <!-- Bedtime Checklist -->
+                <h3 class="section-title">Rutinitas Malam</h3>
+                <div class="card" style="padding: 0; overflow: hidden;">
+                    <div class="list-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
+                        <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">Mandi Air Hangat</div>
+                        </div>
+                    </div>
+                    <div class="list-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
+                        <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">Matikan Layar (30m sblm tidur)</div>
+                        </div>
+                    </div>
+                    <div class="list-item" style="cursor: pointer; border-bottom: none;" onclick="SleepLab.toggleChecklist(this)">
+                        <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">Minum Air Susu/Teh Kamomil</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Mood Booster View
+     */
+    moodbooster() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto;">
+                <div id="moodboosterContent">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: var(--text-tertiary);">Memuat Mood Booster...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Mindful Moment View
+     */
+    mindful() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-primary);">
+                <div style="text-align: center; margin-bottom: 60px;">
+                    <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">Mindful Moment</h2>
+                    <p style="color: var(--text-secondary);">Ikuti ritme pernapasan 4-7-8 untuk rileks total.</p>
+                </div>
+                
+                <div style="position: relative; width: 250px; height: 250px; display: flex; align-items: center; justify-content: center; margin-bottom: 60px;">
+                    <div id="breathingCircle" style="position: absolute; width: 100px; height: 100px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; border: 2px solid var(--success-500); box-shadow: 0 0 30px rgba(16, 185, 129, 0.4); z-index: 1;"></div>
+                    <div id="breathingText" style="z-index: 2; font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">Mulai Latihan</div>
+                </div>
+
+                <button id="mindfulBtn" class="btn btn-primary" style="padding: 16px 32px; border-radius: 30px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);" onclick="Mindful.toggle()">
+                    <i class="fas fa-play"></i> Mulai Pernapasan
+                </button>
+            </div>
+        `;
+    },
+
+    /**
+     * Journal View
+     */
+    journal() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto;">
+                <div style="margin-bottom: 24px;">
+                    <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;"><i class="fas fa-book-open" style="color: var(--primary-500);"></i> Jurnal Refleksi</h2>
+                    <p style="color: var(--text-tertiary);">Tuliskan apa yang membebani pikiranmu hari ini.</p>
+                </div>
+                
+                <div class="card" style="margin-bottom: 24px;">
+                    <textarea id="journalInput" rows="5" placeholder="Hari ini saya merasa..." style="width: 100%; border: none; background: #f8fafc; padding: 16px; border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 1rem; color: var(--text-primary); resize: vertical; margin-bottom: 16px; outline: none;"></textarea>
+                    <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="Journal.save()">
+                        <i class="fas fa-save"></i> Simpan Jurnal
+                    </button>
+                </div>
+
+                <h3 class="section-title">Catatan Sebelumnya</h3>
+                <div id="journalList">
+                    <!-- Loaded dynamically -->
+                    <div style="text-align: center; padding: 20px;"><div class="loading-spinner"></div></div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Support Hub View
+     */
+    support() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto;">
+                <div id="supportContent">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: var(--text-tertiary);">Memuat Support Hub...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Academy View
+     */
+    academy() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto;">
+                <div id="academyContent">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: var(--text-tertiary);">Memuat Syna Academy...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Research Foundation View
+     */
+    research() {
+        return `
+            <div class="view-container" style="max-width: 1400px; margin: 0 auto; padding: 0;">
+                <div id="researchContent" style="background: white; border-radius: 0;">
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: var(--text-tertiary); font-size: 1.1em;">Memuat Halaman Dasar Penelitian Lengkap...</p>
+                        <p style="color: var(--text-secondary); font-size: 0.9em; margin-top: 10px;">50 Papers | 10 Domains | 7 Research Gaps</p>
+                    </div>
+                </div>
+                <iframe id="researchFrame" style="width: 100%; height: 100vh; border: none; display: none;"></iframe>
+            </div>
+        `;
+    },
+
+    /**
+     * Games View
+     */
+    games() {
+        return `
+            <div class="view-container" style="max-width: 800px; margin: 0 auto; padding-top: 20px;">
+                <!-- Games Header -->
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 style="font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px;">
+                        🎮 Wellness Games
+                    </h1>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem;">Relax, play, and reduce stress with fun games</p>
+                </div>
+
+                <!-- Game Selector -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+                    <!-- Game 1: Breathing -->
+                    <div class="card" style="padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="GamesModule.displayGame('breathing')" onmouseover="this.style.boxShadow='0 12px 30px rgba(139,92,246,0.3); transform: translateY(-4px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 3rem; margin-bottom: 12px;">🫁</div>
+                        <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">Breathing Exercise</div>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-tertiary);">2 min • Reduce stress instantly</p>
+                    </div>
+
+                    <!-- Game 2: Memory -->
+                    <div class="card" style="padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="GamesModule.displayGame('memory')" onmouseover="this.style.boxShadow='0 12px 30px rgba(139,92,246,0.3); transform: translateY(-4px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 3rem; margin-bottom: 12px;">🧩</div>
+                        <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">Memory Match Game</div>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-tertiary);">Varies • Improve focus</p>
+                    </div>
+
+                    <!-- Game 3: Challenge -->
+                    <div class="card" style="padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="GamesModule.displayGame('challenge')" onmouseover="this.style.boxShadow='0 12px 30px rgba(139,92,246,0.3); transform: translateY(-4px)'" onmouseout="this.style.boxShadow=''; this.style.transform=''">
+                        <div style="font-size: 3rem; margin-bottom: 12px;">🏆</div>
+                        <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">Daily Challenge</div>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-tertiary);">Daily • Earn points</p>
+                    </div>
+                </div>
+
+                <!-- Game Display Area -->
+                <div id="gameDisplay" style="background: white; border-radius: var(--radius-lg); padding: 20px; border: 1px solid var(--border-color);">
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                        <p style="font-size: 1.1rem;">👆 Select a game to get started!</p>
+                    </div>
+                </div>
+
+            </div>
+        `;
+    },
+
+    /**
+     * Yoga Studio View
+     */
+    yoga() {
+        return `
+            <div class="view-container" style="max-width: 700px; margin: 0 auto; padding-top: 20px;">
+                <!-- Header -->
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; box-shadow: 0 6px 20px rgba(20, 184, 166, 0.35);">
+                        <i class="fas fa-spa" style="font-size: 1.75rem; color: white;"></i>
+                    </div>
+                    <h2 style="font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Yoga Studio</h2>
+                    <p style="font-size: var(--text-sm); color: var(--text-tertiary);">Jelajahi pose yoga untuk ketenangan pikiran & tubuh</p>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="yoga-search-wrapper">
+                    <i class="fas fa-search yoga-search-icon"></i>
+                    <input type="text" id="yogaSearch" class="yoga-search-bar" placeholder="Cari pose yoga... (contoh: tree, warrior)">
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="yoga-filter-bar">
+                    <div class="yoga-filter-group">
+                        <button class="yoga-filter-btn active" data-level="all">Semua</button>
+                        <button class="yoga-filter-btn" data-level="pemula">Pemula</button>
+                        <button class="yoga-filter-btn" data-level="menengah">Menengah</button>
+                        <button class="yoga-filter-btn" data-level="ahli">Ahli</button>
+                    </div>
+                    <select id="yogaCategoryFilter" class="yoga-category-select">
+                        <option value="all">Semua Kategori</option>
+                    </select>
+                </div>
+
+                <!-- Results -->
+                <div id="yogaResults"></div>
+
+                <!-- Detail Modal Container -->
+                <div id="yogaPoseDetail" style="display: none;"></div>
+            </div>
+        `;
+    },
+
+    /**
+     * Admin Dashboard View
+     */
+    admin() {
+        return `
+            <div class="view-container" style="max-width: 1200px; margin: 0 auto; padding-top: 40px;">
+                <!-- Admin Header -->
+                <div style="margin-bottom: 32px;">
+                    <h1 style="font-size: var(--text-3xl); font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+                        <i class="fas fa-shield-alt" style="color: var(--primary-500); margin-right: 12px;"></i>Admin Dashboard
+                    </h1>
+                    <p style="color: var(--text-secondary);">Manage API Keys, Users, and System Settings</p>
+                </div>
+
+                <!-- Tabs Navigation -->
+                <div class="admin-tabs" style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color);">
+                    <button class="admin-tab-btn active" data-tab="dashboard" onclick="AdminUI.switchTab('dashboard')">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </button>
+                    <button class="admin-tab-btn" data-tab="api-keys" onclick="AdminUI.switchTab('api-keys')">
+                        <i class="fas fa-key"></i> API Keys
+                    </button>
+                    <button class="admin-tab-btn" data-tab="users" onclick="AdminUI.switchTab('users')">
+                        <i class="fas fa-users"></i> Users
+                    </button>
+                    <button class="admin-tab-btn" data-tab="settings" onclick="AdminUI.switchTab('settings')">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
+                </div>
+
+                <!-- Dashboard Tab -->
+                <div id="dashboard-tab" class="admin-tab-content" style="display: block;">
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 32px;">
+                        <div class="card" style="padding: 24px; border-left: 4px solid var(--primary-500);">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">Total Users</p>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary-500);" id="totalUsers">--</div>
+                            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 8px;"><i class="fas fa-arrow-up" style="color: #10b981;"></i> +12% this month</p>
+                        </div>
+                        <div class="card" style="padding: 24px; border-left: 4px solid var(--info-500);">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">API Calls</p>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--info-500);" id="totalApiCalls">--</div>
+                            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 8px;"><i class="fas fa-arrow-up" style="color: #10b981;"></i> +24% this month</p>
+                        </div>
+                        <div class="card" style="padding: 24px; border-left: 4px solid var(--success-500);">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">System Uptime</p>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--success-500);" id="systemUptime">--</div>
+                            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 8px;">Last 30 days</p>
+                        </div>
+                        <div class="card" style="padding: 24px; border-left: 4px solid var(--warning-500);">
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px;">Active API Keys</p>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--warning-500);" id="activeKeys">--</div>
+                            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 8px;"><i class="fas fa-circle" style="color: #10b981;"></i> All healthy</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card" style="padding: 24px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">Recent Activity</h3>
+                        <div id="recentActivity" style="space-y: 12px;">
+                            <div style="text-align: center; padding: 20px; color: var(--text-tertiary);">
+                                <p>Loading activity...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Keys Tab -->
+                <div id="api-keys-tab" class="admin-tab-content" style="display: none;">
+                    <div style="margin-bottom: 24px;">
+                        <button class="btn btn-primary" onclick="AdminUI.showCreateKeyModal()" style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-plus"></i> Create New API Key
+                        </button>
+                    </div>
+
+                    <div class="card" style="padding: 24px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">API Keys Management</h3>
+                        <div id="apiKeysTable" style="overflow-x: auto;">
+                            <div style="text-align: center; padding: 20px; color: var(--text-tertiary);">
+                                <div class="loading-spinner" style="margin: 0 auto 12px;"></div>
+                                <p>Loading API keys...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Tab -->
+                <div id="users-tab" class="admin-tab-content" style="display: none;">
+                    <div class="card" style="padding: 24px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">User Management</h3>
+                        <div id="usersTable" style="overflow-x: auto;">
+                            <div style="text-align: center; padding: 20px; color: var(--text-tertiary);">
+                                <div class="loading-spinner" style="margin: 0 auto 12px;"></div>
+                                <p>Loading users...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settings-tab" class="admin-tab-content" style="display: none;">
+                    <div class="card" style="padding: 24px;">
+                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 24px;">System Settings</h3>
+
+                        <div style="margin-bottom: 24px;">
+                            <label style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">API Key Rotation Policy</label>
+                            <div style="background: var(--bg-secondary); padding: 12px; border-radius: var(--radius-md); margin-bottom: 12px; color: var(--text-secondary);">
+                                <select id="rotationPolicy" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                                    <option value="30">Rotate every 30 days</option>
+                                    <option value="60">Rotate every 60 days</option>
+                                    <option value="90">Rotate every 90 days</option>
+                                    <option value="manual">Manual only</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="AdminUI.saveSettings()" style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-save"></i> Save Settings
                             </button>
                         </div>
                     </div>

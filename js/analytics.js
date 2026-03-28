@@ -91,7 +91,6 @@ const Analytics = {
 
             const sessionData = {
                 sessionId: this.sessionId,
-                userId: user.uid,
                 startTime: new Date(this.sessionStartTime).toISOString(),
                 endTime: new Date().toISOString(),
                 durationSeconds: duration,
@@ -99,7 +98,7 @@ const Analytics = {
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            await db.collection('sessions').add(sessionData);
+            await FirebaseService.userCol(user.uid, 'sessions').add(sessionData);
         } catch (error) {
             console.error('Error saving session summary:', error);
         }
@@ -127,7 +126,6 @@ const Analytics = {
             const stressAnalysis = sensorData.stressAnalysis || {};
 
             const healthData = {
-                userId: user.uid,
                 hr: sensorData.hr || 0,
                 spo2: sensorData.spo2 || 0,
                 bodyTemp: sensorData.bt || 0,
@@ -151,7 +149,7 @@ const Analytics = {
                 localTime: new Date().toISOString()
             };
 
-            const docRef = await db.collection('healthData').add(healthData);
+            const docRef = await FirebaseService.userCol(user.uid, 'healthData').add(healthData);
 
             this.lastSavedData = {
                 hr: sensorData.hr,
@@ -169,8 +167,7 @@ const Analytics = {
     async updateDailySummary(userId, healthData) {
         try {
             const today = new Date().toISOString().split('T')[0];
-            const docId = `${userId}_${today}`;
-            const docRef = db.collection('dailySummary').doc(docId);
+            const docRef = FirebaseService.userCol(userId, 'dailySummary').doc(today);
             const doc = await docRef.get();
 
             if (doc.exists) {
@@ -195,7 +192,6 @@ const Analytics = {
                 await docRef.update(updates);
             } else {
                 await docRef.set({
-                    userId,
                     date: today,
                     avgHr: healthData.hr,
                     avgSpo2: healthData.spo2,
@@ -290,8 +286,7 @@ async function loadAnalyticsData() {
             const endOfDay = new Date(today);
             endOfDay.setHours(23, 59, 59, 999);
 
-            const snapshot = await db.collection('healthData')
-                .where('userId', '==', user.uid)
+            const snapshot = await FirebaseService.userCol(user.uid, 'healthData')
                 .where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(startOfDay))
                 .where('timestamp', '<=', firebase.firestore.Timestamp.fromDate(endOfDay))
                 .orderBy('timestamp', 'asc')
@@ -305,8 +300,7 @@ async function loadAnalyticsData() {
         } else {
             // For week/month, fetch daily summaries
             for (const date of dates) {
-                const docId = `${user.uid}_${date}`;
-                const doc = await db.collection('dailySummary').doc(docId).get();
+                const doc = await FirebaseService.userCol(user.uid, 'dailySummary').doc(date).get();
                 if (doc.exists) {
                     healthReadings.push({
                         ...doc.data(),
