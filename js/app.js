@@ -11,7 +11,8 @@ const App = {
      * Initialize the application
      */
     async init() {
-        if (this.initialized) return;
+        if (this.initialized || this._initializing) return;
+        this._initializing = true;
 
         console.log('Initializing SYNAWATCH SPA...');
 
@@ -35,6 +36,7 @@ const App = {
         setInterval(() => this.updateTime(), 1000);
 
         this.initialized = true;
+        this._initializing = false;
         console.log('SYNAWATCH SPA initialized');
     },
 
@@ -82,9 +84,9 @@ const App = {
     setupRouter() {
         // Register routes
         Router.register('assessment', () => {
-            Router.render(Views.assessment());
             const nav = document.querySelector('.bottom-nav');
-            if (nav) nav.style.display = 'none'; // Hide nav during assessment
+            if (nav) nav.style.display = 'flex';
+            Router.render(Views.assessment());
         });
 
         Router.register('dashboard', () => {
@@ -301,7 +303,7 @@ const App = {
                         <span>Daily Journal</span>
                     </a>
                     <a class="more-menu-item" data-route="support" onclick="App.closeMoreMenu()">
-                        <div class="more-icon" style="background: rgba(239, 68, 68, 0.12); color: var(--danger-500);"><i class="fas fa-hands-holding-heart"></i></div>
+                        <div class="more-icon" style="background: rgba(239, 68, 68, 0.12); color: var(--danger-500);"><i class="fas fa-hand-holding-heart"></i></div>
                         <span>Support Hub</span>
                     </a>
                     <a class="more-menu-item" data-route="academy" onclick="App.closeMoreMenu()">
@@ -384,8 +386,9 @@ const App = {
         if (indicator) {
             indicator.className = connected ? 'ble-indicator connected' : 'ble-indicator disconnected';
         }
+        // Label matches toggle: connect vs disconnect (same as BLE status UI)
         if (bleStatus) {
-            bleStatus.textContent = connected ? 'Connected' : 'Connect';
+            bleStatus.textContent = connected ? 'Disconnect' : 'Connect';
         }
 
         // Update dashboard chart mode (if on dashboard)
@@ -669,9 +672,11 @@ const App = {
      * Cleanup previous view before switching
      */
     cleanupPreviousView(previousRoute) {
-        // Cleanup synachat if leaving that view
         if (previousRoute === 'synachat' && typeof cleanupSynachat === 'function') {
             cleanupSynachat();
+        }
+        if (previousRoute === 'moodbooster' && typeof MoodBooster !== 'undefined') {
+            MoodBooster.destroy();
         }
     }
 };

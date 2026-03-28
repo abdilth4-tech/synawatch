@@ -352,7 +352,8 @@ const Views = {
                     <h3>Connect to SYNAWATCH</h3>
                     <p>Connect to your smartwatch via Bluetooth to start monitoring</p>
                     <button class="btn btn-primary" onclick="BLEConnection.toggle()">
-                        <i class="fas fa-link"></i>
+                        <!-- Explicit white: FA link glyph can inherit wrong color on some browsers -->
+                        <i class="fas fa-link" style="color: #fff;"></i>
                         Connect Device
                     </button>
                 </div>
@@ -674,7 +675,6 @@ const Views = {
                 <!-- Version -->
                 <div style="text-align: center; padding: var(--space-5); color: var(--text-muted); font-size: var(--text-xs);">
                     <p>SYNAWATCH v1.0.0</p>
-                    <p>Made with <i class="fas fa-heart" style="color: var(--danger-400);"></i> for better health</p>
                 </div>
             </div>
         `;
@@ -717,10 +717,15 @@ const Views = {
                         </div>
                     </div>
 
-                    <!-- Voice Toggle - Glass Style -->
-                    <button id="ttsToggle" class="tts-toggle active" onclick="toggleTTS()" aria-label="Toggle voice">
-                        <i class="fas fa-volume-high"></i>
-                    </button>
+                    <!-- Action Buttons -->
+                    <div class="synachat-action-btns">
+                        <button id="ttsToggle" class="tts-toggle active" onclick="toggleTTS()" aria-label="Toggle voice">
+                            <i class="fas fa-volume-high"></i>
+                        </button>
+                        <button class="tts-toggle" onclick="clearChat()" aria-label="Clear chat" title="Hapus riwayat chat">
+                            <i class="fas fa-trash-can"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Chat Section - Clean White -->
@@ -777,7 +782,7 @@ const Views = {
                                 aria-label="Type your message"
                             ></textarea>
                             <button id="sendBtn" class="send-btn" onclick="sendMessage()" aria-label="Send message">
-                                <i class="fas fa-arrow-up"></i>
+                                <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
                     </div>
@@ -848,35 +853,10 @@ const Views = {
     moodbooster() {
         return `
             <div class="view-container" style="max-width: 700px; margin: 0 auto;">
-                <div style="text-align: center; padding: 32px 16px;">
-                    <i class="fas fa-music" style="font-size: 4rem; color: var(--primary-500); margin-bottom: 16px; animation: pulse 2s infinite;"></i>
-                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">Mood Booster</h2>
-                    <p style="color: var(--text-tertiary); margin-bottom: 32px;">Pilih musik atau frekuensi suara untuk meredakan emosi negatif Anda saat ini.</p>
-                </div>
-
-                <h3 class="section-title">Bagaimana Perasaan Anda Saat Ini?</h3>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 32px;">
-                    <button class="btn btn-outline mood-btn" style="flex: 1; margin: 0 4px; border-radius: 20px; font-size: 1.5rem;" onclick="MoodBooster.setMood('bad')">😢</button>
-                    <button class="btn btn-outline mood-btn" style="flex: 1; margin: 0 4px; border-radius: 20px; font-size: 1.5rem;" onclick="MoodBooster.setMood('neutral')">😐</button>
-                    <button class="btn btn-outline mood-btn" style="flex: 1; margin: 0 4px; border-radius: 20px; font-size: 1.5rem;" onclick="MoodBooster.setMood('good')">😃</button>
-                </div>
-
-                <div class="card" style="padding: 0; overflow: hidden;">
-                    <div class="list-item" onclick="MoodBooster.playTherapy('Binaural Beats (Alpha)')">
-                        <div class="list-item-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--primary-500);"><i class="fas fa-headphones"></i></div>
-                        <div class="list-item-content">
-                            <div class="list-item-title">Binaural Beats (Fokus & Tenang)</div>
-                            <div class="list-item-subtitle">15 Menit · Alpha Wave</div>
-                        </div>
-                        <i class="fas fa-play" style="color: var(--text-tertiary);"></i>
-                    </div>
-                    <div class="list-item" onclick="MoodBooster.playTherapy('Acoustic Uplift')" style="border-bottom: none;">
-                        <div class="list-item-icon" style="background: rgba(251, 191, 36, 0.15); color: var(--warning-500);"><i class="fas fa-guitar"></i></div>
-                        <div class="list-item-content">
-                            <div class="list-item-title">Acoustic Uplift</div>
-                            <div class="list-item-subtitle">10 Menit · Menambah Energi Positif</div>
-                        </div>
-                        <i class="fas fa-play" style="color: var(--text-tertiary);"></i>
+                <div id="moodboosterContent">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: var(--text-tertiary);">Memuat Mood Booster...</p>
                     </div>
                 </div>
             </div>
@@ -899,7 +879,7 @@ const Views = {
                     <div id="breathingText" style="z-index: 2; font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">Mulai Latihan</div>
                 </div>
 
-                <button class="btn btn-primary" style="padding: 16px 32px; border-radius: 30px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);" onclick="Mindful.start()">
+                <button id="mindfulBtn" class="btn btn-primary" style="padding: 16px 32px; border-radius: 30px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);" onclick="Mindful.toggle()">
                     <i class="fas fa-play"></i> Mulai Pernapasan
                 </button>
             </div>

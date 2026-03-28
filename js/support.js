@@ -35,7 +35,7 @@ const SupportHub = {
             operator: 'NGO',
             hours: '24/7',
             description: 'Pendampingan krisis dan pencegahan bunuh diri',
-            icon: 'fa-hands-holding-heart'
+            icon: 'fa-hand-holding-heart'
         },
         {
             name: 'Yayasan Pulih',
@@ -149,7 +149,7 @@ const SupportHub = {
         container.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0;">
-                    <i class="fas fa-hands-holding-heart" style="color: #ef4444;"></i> Support Hub
+                    <i class="fas fa-hand-holding-heart" style="color: #ef4444;"></i> Support Hub
                 </h2>
             </div>
 

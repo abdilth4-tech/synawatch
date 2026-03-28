@@ -13,15 +13,15 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "images/icons/icon.svg",
+      "src": "images/logo.png",
       "sizes": "any",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "images/icons/icon.svg",
+      "src": "images/logo.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
@@ -31,21 +31,21 @@
       "short_name": "Dashboard",
       "description": "View your health dashboard",
       "url": "/app.html#dashboard",
-      "icons": [{ "src": "images/icons/icon.svg", "sizes": "any" }]
+      "icons": [{ "src": "images/logo.png", "sizes": "any" }]
     },
     {
       "name": "Health Monitor",
       "short_name": "Health",
       "description": "Start health monitoring",
       "url": "/app.html#health",
-      "icons": [{ "src": "images/icons/icon.svg", "sizes": "any" }]
+      "icons": [{ "src": "images/logo.png", "sizes": "any" }]
     },
     {
       "name": "Dr. Synachat",
       "short_name": "AI Chat",
       "description": "Chat with AI health assistant",
       "url": "/app.html#synachat",
-      "icons": [{ "src": "images/icons/icon.svg", "sizes": "any" }]
+      "icons": [{ "src": "images/logo.png", "sizes": "any" }]
     }
   ],
   "related_applications": [],

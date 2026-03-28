@@ -270,7 +270,7 @@ const InterventionEngine = {
                         <i class="fas fa-comments"></i> Bicara dengan Dr. Synachat
                     </button>
                     <button id="btnCrisisPlan" style="width:100%;padding:14px;font-size:1rem;border-radius:16px;background:#f3f4f6;color:#374151;border:none;font-weight:600;cursor:pointer;">
-                        <i class="fas fa-hands-holding-heart"></i> Buka Support Hub
+                        <i class="fas fa-hand-holding-heart"></i> Buka Support Hub
                     </button>
                     <button id="btnCrisisDismiss" style="width:100%;padding:12px;font-size:0.9rem;border-radius:16px;background:transparent;color:#9ca3af;border:1px solid #e5e7eb;cursor:pointer;">
                         Saya baik-baik saja

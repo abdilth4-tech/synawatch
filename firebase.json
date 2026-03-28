@@ -6,8 +6,10 @@
       "**/.*",
       "**/node_modules/**",
       "**/*.bat",
+      "**/*.cmd",
       "**/*.exe",
-      "bkn utk spa/**"
+      "**/*.msi",
+      "**/*.dll"
     ]
   },
   "firestore": {

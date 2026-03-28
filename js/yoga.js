@@ -24,21 +24,41 @@ const YogaModule = {
     // ========== INITIALIZATION ==========
 
     async init() {
+        if (this.isLoading) return;
+        this.isLoading = true;
+        this.currentFilter = { difficulty: 'all', category: 'all', search: '' };
         this.showLoading();
+
         try {
-            await Promise.all([this.fetchAllPoses(), this.fetchCategories()]);
-            // Yogism enrichment - non-blocking, graceful degradation
+            // Retry up to 2 times for cold-start APIs
+            let retries = 2;
+            while (retries >= 0) {
+                try {
+                    await Promise.all([this.fetchAllPoses(), this.fetchCategories()]);
+                    break;
+                } catch (e) {
+                    if (retries === 0) throw e;
+                    retries--;
+                    console.warn(`Yoga API retry (${2 - retries}/2)...`);
+                    await new Promise(r => setTimeout(r, 3000));
+                }
+            }
+
+            // Yogism enrichment - non-blocking
             try {
                 await this.fetchYogismPoses();
                 this.mergePoses();
             } catch (e) {
                 console.warn('Yogism enrichment skipped:', e.message);
             }
+
             this.renderPoses(this.poses);
             this.setupEventListeners();
         } catch (error) {
             console.error('Yoga Module init error:', error);
-            this.showError('Gagal memuat data yoga. Periksa koneksi internet Anda.');
+            this.showError('Gagal memuat data yoga. API mungkin sedang cold-start.');
+        } finally {
+            this.isLoading = false;
         }
     },
 
@@ -98,21 +118,24 @@ const YogaModule = {
         if (!response.ok) throw new Error('Gagal memuat data Yogism');
         const data = await response.json();
 
-        // Extract poses from nested structure
+        // Extract poses from ALL sections (not just featured + yoga-flow)
         this.yogismPoses = [];
-        const sections = [...(data.featured || []), ...(data['yoga-flow'] || [])];
-        sections.forEach(section => {
-            if (section.scheduled) {
-                section.scheduled.forEach(pose => {
-                    // Avoid duplicates by english_name
-                    const exists = this.yogismPoses.some(p =>
-                        p.english_name.toLowerCase() === pose.english_name.toLowerCase()
-                    );
-                    if (!exists) {
-                        this.yogismPoses.push(pose);
-                    }
-                });
-            }
+        const sectionKeys = ['featured', 'yoga-flow', 'yoga-styles', 'yoga-levels', 'life-style-yoga', 'body_fitness_yoga'];
+        sectionKeys.forEach(key => {
+            const sections = data[key] || [];
+            sections.forEach(section => {
+                if (section.scheduled) {
+                    section.scheduled.forEach(pose => {
+                        if (!pose.english_name) return;
+                        const exists = this.yogismPoses.some(p =>
+                            p.english_name.toLowerCase() === pose.english_name.toLowerCase()
+                        );
+                        if (!exists) {
+                            this.yogismPoses.push(pose);
+                        }
+                    });
+                }
+            });
         });
 
         this.setCache(this.CACHE_YOGISM_KEY, this.yogismPoses);
@@ -123,6 +146,18 @@ const YogaModule = {
             .replace(/\s*pose\s*$/i, '')
             .replace(/^the\s+/i, '')
             .trim();
+    },
+
+    /**
+     * Yogism uses category: Beginner | Intermediate | Advanced.
+     * We map to difficulty_level so level filters match (Advanced → Expert for labels/CSS).
+     */
+    mapYogismCategoryToDifficulty(category) {
+        const c = (category || '').trim().toLowerCase();
+        if (c === 'beginner') return 'Beginner';
+        if (c === 'intermediate') return 'Intermediate';
+        if (c === 'advanced') return 'Expert';
+        return null;
     },
 
     mergePoses() {
@@ -141,6 +176,11 @@ const YogaModule = {
                 pose.duration = match.time || null;
                 pose.target = match.target || null;
                 pose.enriched = true;
+                // Main yoga API has no difficulty_level; take level from Yogism when possible
+                const fromYogism = this.mapYogismCategoryToDifficulty(match.category);
+                if (!pose.difficulty_level && fromYogism) {
+                    pose.difficulty_level = fromYogism;
+                }
             } else {
                 pose.steps = null;
                 pose.variations = null;
@@ -181,27 +221,29 @@ const YogaModule = {
     setupEventListeners() {
         const searchInput = document.getElementById('yogaSearch');
         if (searchInput) {
-            searchInput.addEventListener('input', () => {
+            // Property assignment so re-init / "Coba Lagi" does not stack listeners
+            searchInput.oninput = () => {
                 clearTimeout(this.debounceTimer);
                 this.debounceTimer = setTimeout(() => {
                     this.currentFilter.search = searchInput.value.trim();
                     this.applyFilters();
                 }, 300);
-            });
+            };
         }
 
         document.querySelectorAll('.yoga-filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.onclick = () => {
                 document.querySelectorAll('.yoga-filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                this.currentFilter.difficulty = btn.dataset.level;
+                this.currentFilter.difficulty = btn.dataset.level || 'all';
                 this.applyFilters();
-            });
+            };
         });
 
         const categorySelect = document.getElementById('yogaCategoryFilter');
         if (categorySelect) {
-            // Populate categories
+            // Rebuild options every init so categories never duplicate (retry / re-enter route)
+            categorySelect.innerHTML = '<option value="all">Semua Kategori</option>';
             this.categories.forEach(cat => {
                 const option = document.createElement('option');
                 option.value = cat.category_name;
@@ -209,16 +251,19 @@ const YogaModule = {
                 categorySelect.appendChild(option);
             });
 
-            categorySelect.addEventListener('change', () => {
+            categorySelect.onchange = () => {
                 this.currentFilter.category = categorySelect.value;
                 this.applyFilters();
-            });
+            };
         }
 
-        // Escape key closes detail
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') this.closeDetail();
-        });
+        // Escape key closes detail (one global listener is ok; guard duplicate)
+        if (!this._escapeHandlerBound) {
+            this._escapeHandlerBound = true;
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') this.closeDetail();
+            });
+        }
     },
 
     // ========== FILTERING ==========
@@ -230,17 +275,24 @@ const YogaModule = {
         if (search) {
             const q = search.toLowerCase();
             filtered = filtered.filter(p =>
-                p.english_name.toLowerCase().includes(q) ||
-                p.sanskrit_name_adapted.toLowerCase().includes(q) ||
-                p.sanskrit_name.toLowerCase().includes(q)
+                (p.english_name || '').toLowerCase().includes(q) ||
+                (p.sanskrit_name_adapted || '').toLowerCase().includes(q) ||
+                (p.sanskrit_name || '').toLowerCase().includes(q)
             );
         }
 
+        // difficulty_level comes from Yogism merge (main API omits it). Unknown = only in "Semua".
         if (difficulty !== 'all') {
-            const map = { pemula: 'Beginner', menengah: 'Intermediate', ahli: 'Expert' };
-            filtered = filtered.filter(p =>
-                p.difficulty_level.toLowerCase() === (map[difficulty] || '').toLowerCase()
-            );
+            const map = {
+                pemula: ['beginner'],
+                menengah: ['intermediate'],
+                ahli: ['expert', 'advanced']
+            };
+            const targets = map[difficulty] || [];
+            filtered = filtered.filter(p => {
+                const d = (p.difficulty_level || '').toString().trim().toLowerCase();
+                return targets.includes(d);
+            });
         }
 
         if (category !== 'all') {
@@ -302,18 +354,23 @@ const YogaModule = {
         const map = {
             'beginner': 'Pemula',
             'intermediate': 'Menengah',
-            'expert': 'Ahli'
+            'expert': 'Ahli',
+            'advanced': 'Ahli'
         };
-        return map[(level || '').toLowerCase()] || level;
+        const key = (level || '').toString().trim().toLowerCase();
+        return map[key] || (level ? String(level) : '—');
     },
 
     getDifficultyClass(level) {
+        const key = (level || '').toString().trim().toLowerCase();
+        if (!key) return 'unknown';
         const map = {
             'beginner': 'beginner',
             'intermediate': 'intermediate',
-            'expert': 'expert'
+            'expert': 'expert',
+            'advanced': 'expert'
         };
-        return map[(level || '').toLowerCase()] || 'beginner';
+        return map[key] || 'unknown';
     },
 
     renderPoses(poses) {
@@ -325,26 +382,35 @@ const YogaModule = {
             return;
         }
 
-        const cards = poses.map(pose => `
+        const cards = poses.map(pose => {
+            const imgSrc = pose.url_svg || pose.url_png || '';
+            const fallbackSrc = pose.url_png || pose.url_svg || '';
+            return `
             <div class="yoga-pose-card" tabindex="0" role="button"
                  onclick="YogaModule.showDetail(${pose.id})"
                  onkeydown="if(event.key==='Enter') YogaModule.showDetail(${pose.id})">
                 <div class="yoga-pose-img-wrapper">
+                    ${imgSrc ? `
                     <img class="yoga-pose-img"
-                         src="${pose.url_svg}"
-                         alt="${pose.english_name}"
+                         src="${imgSrc}"
+                         alt="${pose.english_name || ''}"
                          loading="lazy"
-                         onerror="this.onerror=null; this.src='${pose.url_png}';">
+                         onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                    ` : `
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:2rem;">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    `}
                 </div>
                 <div class="yoga-pose-info">
-                    <h4 class="yoga-pose-name">${pose.english_name}</h4>
-                    <p class="yoga-pose-sanskrit">${pose.sanskrit_name_adapted}</p>
+                    <h4 class="yoga-pose-name">${pose.english_name || 'Pose'}</h4>
+                    <p class="yoga-pose-sanskrit">${pose.sanskrit_name_adapted || ''}</p>
                     <span class="yoga-difficulty-badge ${this.getDifficultyClass(pose.difficulty_level)}">
                         ${this.getDifficultyLabel(pose.difficulty_level)}
                     </span>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
 
         container.innerHTML = `<div class="yoga-grid">${cards}</div>`;
     },
@@ -408,14 +474,20 @@ const YogaModule = {
                     </button>
 
                     <div class="yoga-detail-img-wrapper">
-                        <img src="${pose.url_svg}" alt="${pose.english_name}"
-                             onerror="this.onerror=null; this.src='${pose.url_png}';">
+                        ${(pose.url_svg || pose.url_png) ? `
+                        <img src="${pose.url_svg || pose.url_png}" alt="${pose.english_name || ''}"
+                             onerror="this.onerror=null; this.src='${pose.url_png || pose.url_svg || ''}';">
+                        ` : `
+                        <div style="width:100%;height:200px;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:3rem;">
+                            <i class="fas fa-spa"></i>
+                        </div>
+                        `}
                     </div>
 
                     <div class="yoga-detail-header">
-                        <h2 class="yoga-detail-name">${pose.english_name}</h2>
-                        <p class="yoga-detail-sanskrit">${pose.sanskrit_name_adapted} &bull; ${pose.sanskrit_name}</p>
-                        <p class="yoga-detail-translation">${pose.translation_name}</p>
+                        <h2 class="yoga-detail-name">${pose.english_name || 'Pose'}</h2>
+                        <p class="yoga-detail-sanskrit">${pose.sanskrit_name_adapted || ''} ${pose.sanskrit_name ? '&bull; ' + pose.sanskrit_name : ''}</p>
+                        ${pose.translation_name ? `<p class="yoga-detail-translation">${pose.translation_name}</p>` : ''}
                         <div class="yoga-detail-badges">
                             <span class="yoga-difficulty-badge ${this.getDifficultyClass(pose.difficulty_level)}">
                                 ${this.getDifficultyLabel(pose.difficulty_level)}
@@ -427,17 +499,21 @@ const YogaModule = {
 
                     ${metaHtml}
 
+                    ${pose.pose_description ? `
                     <div class="yoga-detail-section">
                         <h3><i class="fas fa-list-ol"></i> Cara Melakukan</h3>
                         <p>${pose.pose_description}</p>
                     </div>
+                    ` : ''}
 
                     ${stepsHtml}
 
+                    ${pose.pose_benefits ? `
                     <div class="yoga-detail-section">
                         <h3><i class="fas fa-heart"></i> Manfaat</h3>
                         <p>${pose.pose_benefits}</p>
                     </div>
+                    ` : ''}
 
                     ${variationsHtml}
 
@@ -468,13 +544,24 @@ const YogaModule = {
                 detailContainer.style.display = 'none';
                 detailContainer.innerHTML = '';
                 document.body.style.overflow = '';
+                document.body.style.position = '';
                 window.scrollTo(0, this.savedScrollY);
             }, 300);
         } else {
             detailContainer.style.display = 'none';
             detailContainer.innerHTML = '';
             document.body.style.overflow = '';
+            document.body.style.position = '';
         }
+    },
+
+    // ========== CLEANUP ==========
+    destroy() {
+        this.closeDetail();
+        this.poses = [];
+        this.categories = [];
+        this.yogismPoses = [];
+        this.isLoading = false;
     }
 };
 

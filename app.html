@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <meta name="description" content="SYNAWATCH - Smart Health Monitoring System. Monitor heart rate, SpO2, stress levels with AI-powered health assistant.">
     <title>SYNAWATCH - Smart Health Monitoring</title>
 
@@ -21,9 +21,9 @@
     <link rel="manifest" href="manifest.json">
 
     <!-- Favicon & Icons -->
-    <link rel="icon" type="image/svg+xml" href="images/icons/icon.svg">
-    <link rel="apple-touch-icon" href="images/icons/icon.svg">
-    <link rel="mask-icon" href="images/icons/icon.svg" color="#8B5CF6">
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="apple-touch-icon" href="images/logo.png">
+    <link rel="mask-icon" href="images/logo.png" color="#8B5CF6">
 
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,7 +48,7 @@
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-content">
             <div class="loading-logo">
-                <i class="fas fa-heartbeat"></i>
+                <img src="images/logo.png" alt="SYNAWATCH" style="width:100%;height:100%;object-fit:contain;">
             </div>
             <h1 class="loading-title">SYNAWATCH</h1>
             <div class="loading-spinner"></div>
@@ -62,7 +62,7 @@
         <header class="app-header">
             <div class="header-left">
                 <div class="app-logo">
-                    <i class="fas fa-heartbeat"></i>
+                    <img src="images/logo.png" alt="S" style="width:100%;height:100%;object-fit:contain;">
                 </div>
                 <div class="header-info">
                     <span id="currentTime" class="header-time">--:--</span>
@@ -70,8 +70,8 @@
                 </div>
             </div>
             <div class="header-right">
-                <button id="bleConnectBtn" class="ble-button" aria-label="Connect Bluetooth">
-                    <i class="fas fa-bluetooth-b"></i>
+                <button id="bleConnectBtn" class="ble-button" aria-label="Connect device">
+                    <i class="fas fa-link" aria-hidden="true"></i>
                     <span class="ble-status">Connect</span>
                 </button>
                 <div id="bleIndicator" class="ble-indicator disconnected">
@@ -209,21 +209,14 @@
         }
 
         .loading-logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-            border-radius: 20px;
+            width: 130px;
+            height: 130px;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
             animation: pulse 2s ease-in-out infinite;
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.35);
-        }
-
-        .loading-logo i {
-            font-size: 2rem;
-            color: white;
         }
 
         .loading-title {
@@ -267,18 +260,25 @@
             to { opacity: 1; }
         }
 
+        /* Hide scrollbar globally */
+        html, body, * { scrollbar-width: none; -ms-overflow-style: none; }
+        ::-webkit-scrollbar { display: none; }
+
         /* App Container - Responsive */
         .app-container {
             min-height: 100vh;
-            min-height: 100dvh; /* Dynamic viewport height for mobile */
+            min-height: 100dvh;
             background: linear-gradient(180deg, #F0F4F7 0%, #F5F3FF 100%);
+            padding-top: 60px;
             padding-bottom: 100px;
         }
 
-        /* App Header - Responsive */
+        /* App Header - Fixed */
         .app-header {
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 100;
             background: rgba(255, 255, 255, 0.95);
             border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -298,20 +298,13 @@
         }
 
         .app-logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
             flex-shrink: 0;
-        }
-
-        .app-logo i {
-            font-size: 1.125rem;
-            color: white;
         }
 
         .header-info {
@@ -398,6 +391,21 @@
             padding: 12px;
             min-height: calc(100vh - 130px);
             min-height: calc(100dvh - 130px);
+        }
+
+        .view-container.synachat-active,
+        .view-container:has(.synachat-container) {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            min-height: 0 !important;
+        }
+
+        body.synachat-view .app-container {
+            padding-bottom: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
         }
 
         /* Responsive: Medium phones (380px+) */
@@ -528,6 +536,13 @@
             .view-container {
                 padding: 40px 64px;
             }
+        }
+
+        /* Synachat: override all responsive .view-container paddings above */
+        body.synachat-view #view-container.view-container {
+            padding: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
         }
     </style>
 </body>

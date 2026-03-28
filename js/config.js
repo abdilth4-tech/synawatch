@@ -12,8 +12,15 @@ const CONFIG = {
     FIREBASE_MESSAGING_SENDER_ID: '362856081724',
     FIREBASE_APP_ID: '1:362856081724:web:56e6dd619d391adedc9639',
 
-    // Gemini AI Configuration
-    GEMINI_API_KEY: 'AIzaSyCAiJgXoqcN8IGGUzT5z0H-UhXWMfDaD5c',
+    // Gemini AI Configuration (multiple keys for auto-fallback)
+    GEMINI_API_KEY: 'AIzaSyDdORtZtn2gbtjv12FKDRmp5OVK_gjBzMk',
+    GEMINI_API_KEYS: [
+        'AIzaSyDdORtZtn2gbtjv12FKDRmp5OVK_gjBzMk',
+        'AIzaSyBhsre6Q_CJvT1vl5noZlBEQUtSm4k4TAg',
+        'AIzaSyCcs9YahYuGGSo0uIqh2R_2nmN1OqzMh2o',
+        'AIzaSyDmPUE1RWaQkxQEo5vVJuRNzXRn8wzR0x0',
+        'AIzaSyD9f8x6GnnE0-6k9ePFsGkDfGeXoRf4UIQ'
+    ],
 
     // ElevenLabs TTS Configuration
     ELEVENLABS_API_KEY: 'e7639c34914b1734706406e174f9ae11e5e230c16ddb37a5a0af4e3496ec27f0',
@@ -47,5 +54,6 @@ const CONFIG = {
 };
 
 // Freeze config to prevent modifications
-Object.freeze(CONFIG);
+Object.freeze(CONFIG.GEMINI_API_KEYS);
 Object.freeze(CONFIG.HEALTH_THRESHOLDS);
+Object.freeze(CONFIG);
