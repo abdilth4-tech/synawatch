@@ -10,9 +10,11 @@ const I18n = {
         id: {
             // Navigation
             'nav.home': 'Home',
+            'nav.dashboard': 'Dashboard',
             'nav.health': 'Health',
-            'nav.chat': 'AI Chat',
+            'nav.chat': 'Synachat',
             'nav.analytics': 'Analitik',
+            'nav.profile': 'Profil',
             'nav.more': 'Lainnya',
 
             // Common
@@ -241,9 +243,11 @@ const I18n = {
         en: {
             // Navigation
             'nav.home': 'Home',
+            'nav.dashboard': 'Dashboard',
             'nav.health': 'Health',
-            'nav.chat': 'AI Chat',
+            'nav.chat': 'Synachat',
             'nav.analytics': 'Analytics',
+            'nav.profile': 'Profile',
             'nav.more': 'More',
 
             // Common

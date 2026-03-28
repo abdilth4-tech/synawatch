@@ -12,7 +12,7 @@ const Views = {
             <div class="view-container" style="max-width: 600px; margin: 0 auto; padding-top: 40px;">
                 <div id="assessmentProgressWrapper" style="margin-bottom: 32px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Progres Evaluasi</span>
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">${t('assessment.progress')}</span>
                     </div>
                     <div class="progress-bar" style="height: 8px; background: rgba(139, 92, 246, 0.1);">
                         <div id="assessmentProgress" class="progress-fill" style="width: 0%; background: var(--primary-500); transition: width 0.4s ease;"></div>
@@ -24,12 +24,12 @@ const Views = {
                         <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; color: white; font-size: 2.5rem; box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);">
                             <i class="fas fa-clipboard-list"></i>
                         </div>
-                        <h2 style="font-size: var(--text-2xl); color: var(--text-primary); margin-bottom: 12px;">Selamat Datang!</h2>
-                        <p style="color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">Kami akan membantu mengidentifikasi kondisi kesehatan mental Anda dan memberikan rekomendasi yang tepat melalui 2 evaluasi singkat.</p>
-                        <p style="color: var(--text-tertiary); font-size: 0.8rem; margin-bottom: 8px;"><i class="fas fa-clock"></i> Estimasi waktu: ~5 menit (29 pertanyaan)</p>
-                        <p style="color: var(--text-tertiary); font-size: 0.75rem; margin-bottom: 24px;"><i class="fas fa-lock"></i> Data Anda dienkripsi dan dilindungi. <a href="#" style="color:var(--primary-500);text-decoration:underline;">Kebijakan Privasi</a></p>
-                        <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 16px; font-size: 1.1rem;" onclick="Assessment.start()">Mulai Evaluasi</button>
-                        <button class="btn btn-outline" style="width: 100%; justify-content: center; padding: 12px; margin-top: 12px; font-size: 0.9rem;" onclick="Router.navigate('dashboard')">Lewati Dulu</button>
+                        <h2 style="font-size: var(--text-2xl); color: var(--text-primary); margin-bottom: 12px;">${t('assessment.welcome_title')}</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">${t('assessment.welcome_desc')}</p>
+                        <p style="color: var(--text-tertiary); font-size: 0.8rem; margin-bottom: 8px;"><i class="fas fa-clock"></i> ${t('assessment.time_estimate')}</p>
+                        <p style="color: var(--text-tertiary); font-size: 0.75rem; margin-bottom: 24px;"><i class="fas fa-lock"></i> ${t('assessment.privacy')} <a href="#" style="color:var(--primary-500);text-decoration:underline;">${t('assessment.privacy_link')}</a></p>
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 16px; font-size: 1.1rem;" onclick="Assessment.start()">${t('assessment.start_btn')}</button>
+                        <button class="btn btn-outline" style="width: 100%; justify-content: center; padding: 12px; margin-top: 12px; font-size: 0.9rem;" onclick="Router.navigate('dashboard')">${t('assessment.skip_btn')}</button>
                     </div>
                 </div>
             </div>
@@ -216,7 +216,7 @@ const Views = {
                         <!-- HEROIC Program — Psikologi Positif 6-Dimensi -->
                         <div class="quick-menu-card heroic-card" onclick="Router.navigate('heroic')" data-card="heroic">
                             <div class="card-decorative-bg"></div>
-                            <div class="card-icon-box" style="background: linear-gradient(135deg, #4F46E5, #9333EA); border-radius: 14px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem;">
+                            <div class="card-icon-box heroic-gradient">
                                 <i class="fas fa-star-half-stroke"></i>
                             </div>
                             <div class="card-content">
@@ -240,8 +240,8 @@ const Views = {
                             <span id="hrValue">--</span>
                             <span class="metric-unit">BPM</span>
                         </div>
-                        <div class="metric-label">Heart Rate</div>
-                        <span id="hrStatus" class="metric-status gray">No Data</span>
+                        <div class="metric-label">${t('dashboard.heart_rate')}</div>
+                        <span id="hrStatus" class="metric-status gray">${t('metric.no_data')}</span>
                     </div>
 
                     <!-- SpO2 -->
@@ -253,8 +253,8 @@ const Views = {
                             <span id="spo2Value">--</span>
                             <span class="metric-unit">%</span>
                         </div>
-                        <div class="metric-label">SpO2</div>
-                        <span id="spo2Status" class="metric-status gray">No Data</span>
+                        <div class="metric-label">${t('dashboard.spo2')}</div>
+                        <span id="spo2Status" class="metric-status gray">${t('metric.no_data')}</span>
                     </div>
 
                     <!-- Stress Level -->
@@ -265,7 +265,7 @@ const Views = {
                         <div class="metric-value">
                             <span id="stressValue">0%</span>
                         </div>
-                        <div class="metric-label">Stress Level</div>
+                        <div class="metric-label">${t('dashboard.stress')}</div>
                         <span id="stressLabel" class="metric-status success" style="margin-bottom: var(--space-2);">Rendah</span>
                         <div class="progress-container">
                             <div class="progress-bar">
@@ -282,7 +282,7 @@ const Views = {
                         <div class="metric-value">
                             <span id="gsrValue">0%</span>
                         </div>
-                        <div class="metric-label">GSR Activity</div>
+                        <div class="metric-label">${t('dashboard.gsr')}</div>
                         <div class="progress-container">
                             <div class="progress-bar">
                                 <div id="gsrBar" class="progress-fill" style="width: 0%;"></div>
@@ -407,8 +407,8 @@ const Views = {
                             <span id="spo2Value">--</span>
                             <span class="metric-unit">%</span>
                         </div>
-                        <div class="metric-label">SpO2</div>
-                        <span id="spo2Status" class="metric-status gray">No Data</span>
+                        <div class="metric-label">${t('dashboard.spo2')}</div>
+                        <span id="spo2Status" class="metric-status gray">${t('metric.no_data')}</span>
                     </div>
 
                     <div class="card metric-card">
@@ -661,8 +661,8 @@ const Views = {
                             <i class="fas fa-user-edit"></i>
                         </div>
                         <div class="list-item-content">
-                            <div class="list-item-title">Edit Profile</div>
-                            <div class="list-item-subtitle">Update your name and photo</div>
+                            <div class="list-item-title">${t('profile.edit')}</div>
+                            <div class="list-item-subtitle">${I18n.getLang() === 'id' ? 'Perbarui nama dan foto' : 'Update your name and photo'}</div>
                         </div>
                         <i class="fas fa-chevron-right list-item-action"></i>
                     </div>
@@ -671,8 +671,8 @@ const Views = {
                             <i class="fas fa-lock"></i>
                         </div>
                         <div class="list-item-content">
-                            <div class="list-item-title">Change Password</div>
-                            <div class="list-item-subtitle">Update your security credentials</div>
+                            <div class="list-item-title">${t('profile.change_password')}</div>
+                            <div class="list-item-subtitle">${I18n.getLang() === 'id' ? 'Perbarui keamanan akun' : 'Update your security credentials'}</div>
                         </div>
                         <i class="fas fa-chevron-right list-item-action"></i>
                     </div>
@@ -681,8 +681,8 @@ const Views = {
                             <i class="fas fa-comments"></i>
                         </div>
                         <div class="list-item-content">
-                            <div class="list-item-title">Health Assistant</div>
-                            <div class="list-item-subtitle">Chat with Synachat</div>
+                            <div class="list-item-title">${t('profile.health_assistant')}</div>
+                            <div class="list-item-subtitle">${I18n.getLang() === 'id' ? 'Ngobrol dengan Synachat' : 'Chat with Synachat'}</div>
                         </div>
                         <i class="fas fa-chevron-right list-item-action"></i>
                     </div>
@@ -890,7 +890,7 @@ const Views = {
                         </div>
                         <div class="avatar-status">
                             <span class="status-dot"></span>
-                            <span id="avatarStatusText">Ready to help</span>
+                            <span id="avatarStatusText">${t('synachat.ready')}</span>
                         </div>
                     </div>
 
@@ -976,7 +976,7 @@ const Views = {
                 <div class="health-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);">
                     <i class="fas fa-moon" style="font-size: 2.5rem; margin-bottom: 12px; color: #a5b4fc;"></i>
                     <div class="big-value" style="color: white; font-size: 3rem;"><span id="sleepScoreValue">--</span></div>
-                    <div class="label" style="color: #c7d2fe;">Est. Sleep Readiness</div>
+                    <div class="label" style="color: #c7d2fe;">${t('sleep.title')}</div>
                     <div id="sleepScoreLabel" style="margin-top: 8px; font-size: 0.9rem; font-weight: 700; padding: 4px 14px; background: rgba(255,255,255,0.15); border-radius: 20px; display: inline-block;"></div>
                 </div>
 
@@ -984,13 +984,13 @@ const Views = {
                 <div class="card" style="border-left: 4px solid var(--primary-500); padding: 14px 16px; margin-bottom: 20px;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
                         <i class="fas fa-lightbulb" style="color: var(--primary-500);"></i>
-                        <strong style="font-size: 0.85rem; color: var(--primary-600);">Saran untuk Anda</strong>
+                        <strong style="font-size: 0.85rem; color: var(--primary-600);">${t('sleep.tips_title')}</strong>
                     </div>
                     <p id="sleepTips" style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">Memuat saran...</p>
                 </div>
 
                 <!-- Sleep History -->
-                <h3 class="section-title">Riwayat Tidur (7 Hari)</h3>
+                <h3 class="section-title">${t('sleep.history_title')}</h3>
                 <div class="card" style="margin-bottom: 20px; padding: 16px;">
                     <div id="sleepHistory">
                         <p style="font-size:0.8rem;color:var(--text-tertiary);text-align:center;">Memuat riwayat...</p>
@@ -998,45 +998,45 @@ const Views = {
                 </div>
 
                 <!-- Relaxation Audio -->
-                <h3 class="section-title">Audio Relaksasi</h3>
+                <h3 class="section-title">${t('sleep.audio_title')}</h3>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
                     <div class="card sleep-audio-btn" data-type="rain" style="text-align: center; cursor: pointer; padding: 16px; position: relative;" onclick="SleepLab.playSound('rain')">
                         <i class="fas fa-cloud-rain" style="font-size: 1.5rem; color: var(--info-500); margin-bottom: 8px;"></i>
-                        <div style="font-size: 0.8rem; font-weight: 600;">Hujan</div>
+                        <div style="font-size: 0.8rem; font-weight: 600;">${t('sleep.audio_rain')}</div>
                         <i class="fas fa-play audio-play-icon" style="position: absolute; bottom: 8px; right: 8px; font-size: 0.7rem; color: var(--text-tertiary); background: rgba(139,92,246,0.1); padding: 4px 6px; border-radius: 50%;"></i>
                     </div>
                     <div class="card sleep-audio-btn" data-type="forest" style="text-align: center; cursor: pointer; padding: 16px; position: relative;" onclick="SleepLab.playSound('forest')">
                         <i class="fas fa-tree" style="font-size: 1.5rem; color: var(--success-500); margin-bottom: 8px;"></i>
-                        <div style="font-size: 0.8rem; font-weight: 600;">Hutan</div>
+                        <div style="font-size: 0.8rem; font-weight: 600;">${t('sleep.audio_forest')}</div>
                         <i class="fas fa-play audio-play-icon" style="position: absolute; bottom: 8px; right: 8px; font-size: 0.7rem; color: var(--text-tertiary); background: rgba(139,92,246,0.1); padding: 4px 6px; border-radius: 50%;"></i>
                     </div>
                     <div class="card sleep-audio-btn" data-type="noise" style="text-align: center; cursor: pointer; padding: 16px; position: relative;" onclick="SleepLab.playSound('noise')">
                         <i class="fas fa-water" style="font-size: 1.5rem; color: var(--primary-500); margin-bottom: 8px;"></i>
-                        <div style="font-size: 0.8rem; font-weight: 600;">Ombak</div>
+                        <div style="font-size: 0.8rem; font-weight: 600;">${t('sleep.audio_waves')}</div>
                         <i class="fas fa-play audio-play-icon" style="position: absolute; bottom: 8px; right: 8px; font-size: 0.7rem; color: var(--text-tertiary); background: rgba(139,92,246,0.1); padding: 4px 6px; border-radius: 50%;"></i>
                     </div>
                 </div>
 
                 <!-- Bedtime Checklist -->
-                <h3 class="section-title">Rutinitas Malam</h3>
-                <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 12px;">Setiap rutinitas yang diselesaikan menambah +5 poin Sleep Readiness</p>
+                <h3 class="section-title">${t('sleep.routine_title')}</h3>
+                <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 12px;">${t('sleep.routine_hint')}</p>
                 <div class="card" style="padding: 0; overflow: hidden;">
                     <div class="list-item sleep-checklist-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
                         <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
                         <div class="list-item-content">
-                            <div class="list-item-title">Mandi Air Hangat</div>
+                            <div class="list-item-title">${t('sleep.routine_bath')}</div>
                         </div>
                     </div>
                     <div class="list-item sleep-checklist-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
                         <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
                         <div class="list-item-content">
-                            <div class="list-item-title">Matikan Layar (30m sblm tidur)</div>
+                            <div class="list-item-title">${t('sleep.routine_screen')}</div>
                         </div>
                     </div>
                     <div class="list-item sleep-checklist-item" style="cursor: pointer; border-bottom: none;" onclick="SleepLab.toggleChecklist(this)">
                         <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
                         <div class="list-item-content">
-                            <div class="list-item-title">Minum Air Susu/Teh Kamomil</div>
+                            <div class="list-item-title">${t('sleep.routine_drink')}</div>
                         </div>
                     </div>
                 </div>
@@ -1050,35 +1050,10 @@ const Views = {
     moodbooster() {
         return `
             <div class="view-container" style="max-width: 700px; margin: 0 auto;">
-                <div style="text-align: center; padding: 32px 16px;">
-                    <i class="fas fa-music" style="font-size: 4rem; color: var(--primary-500); margin-bottom: 16px; animation: pulse 2s infinite;"></i>
-                    <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">Mood Booster</h2>
-                    <p style="color: var(--text-tertiary); margin-bottom: 32px;">Pilih musik atau frekuensi suara untuk meredakan emosi negatif Anda saat ini.</p>
-                </div>
-
-                <h3 class="section-title">Bagaimana Perasaan Anda Saat Ini?</h3>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 32px;">
-                    <button class="btn btn-outline mood-btn" style="flex: 1; margin: 0 4px; border-radius: 20px; font-size: 1.5rem;" onclick="MoodBooster.setMood('bad')">😢</button>
-                    <button class="btn btn-outline mood-btn" style="flex: 1; margin: 0 4px; border-radius: 20px; font-size: 1.5rem;" onclick="MoodBooster.setMood('neutral')">😐</button>
-                    <button class="btn btn-outline mood-btn" style="flex: 1; margin: 0 4px; border-radius: 20px; font-size: 1.5rem;" onclick="MoodBooster.setMood('good')">😃</button>
-                </div>
-
-                <div class="card" style="padding: 0; overflow: hidden;">
-                    <div class="list-item" onclick="MoodBooster.playTherapy('Binaural Beats (Alpha)')">
-                        <div class="list-item-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--primary-500);"><i class="fas fa-headphones"></i></div>
-                        <div class="list-item-content">
-                            <div class="list-item-title">Binaural Beats (Fokus & Tenang)</div>
-                            <div class="list-item-subtitle">15 Menit · Alpha Wave</div>
-                        </div>
-                        <i class="fas fa-play" style="color: var(--text-tertiary);"></i>
-                    </div>
-                    <div class="list-item" onclick="MoodBooster.playTherapy('Acoustic Uplift')" style="border-bottom: none;">
-                        <div class="list-item-icon" style="background: rgba(251, 191, 36, 0.15); color: var(--warning-500);"><i class="fas fa-guitar"></i></div>
-                        <div class="list-item-content">
-                            <div class="list-item-title">Acoustic Uplift</div>
-                            <div class="list-item-subtitle">10 Menit · Menambah Energi Positif</div>
-                        </div>
-                        <i class="fas fa-play" style="color: var(--text-tertiary);"></i>
+                <div id="moodboosterContent">
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                        <p style="color: var(--text-tertiary);">Memuat Mood Booster...</p>
                     </div>
                 </div>
             </div>
@@ -1196,26 +1171,26 @@ const Views = {
                     <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; box-shadow: 0 6px 20px rgba(20, 184, 166, 0.35);">
                         <i class="fas fa-spa" style="font-size: 1.75rem; color: white;"></i>
                     </div>
-                    <h2 style="font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Yoga Studio</h2>
-                    <p style="font-size: var(--text-sm); color: var(--text-tertiary);">Jelajahi pose yoga untuk ketenangan pikiran & tubuh</p>
+                    <h2 style="font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">${t('yoga.title')}</h2>
+                    <p style="font-size: var(--text-sm); color: var(--text-tertiary);">${t('yoga.subtitle')}</p>
                 </div>
 
                 <!-- Search Bar -->
                 <div class="yoga-search-wrapper">
                     <i class="fas fa-search yoga-search-icon"></i>
-                    <input type="text" id="yogaSearch" class="yoga-search-bar" placeholder="Cari pose yoga... (contoh: tree, warrior)">
+                    <input type="text" id="yogaSearch" class="yoga-search-bar" placeholder="${t('yoga.search')}">
                 </div>
 
                 <!-- Filter Bar -->
                 <div class="yoga-filter-bar">
                     <div class="yoga-filter-group">
-                        <button class="yoga-filter-btn active" data-level="all">Semua</button>
-                        <button class="yoga-filter-btn" data-level="pemula">Pemula</button>
-                        <button class="yoga-filter-btn" data-level="menengah">Menengah</button>
-                        <button class="yoga-filter-btn" data-level="ahli">Ahli</button>
+                        <button class="yoga-filter-btn active" data-level="all">${t('yoga.filter_all')}</button>
+                        <button class="yoga-filter-btn" data-level="pemula">${t('yoga.filter_beginner')}</button>
+                        <button class="yoga-filter-btn" data-level="menengah">${t('yoga.filter_intermediate')}</button>
+                        <button class="yoga-filter-btn" data-level="ahli">${t('yoga.filter_advanced')}</button>
                     </div>
                     <select id="yogaCategoryFilter" class="yoga-category-select">
-                        <option value="all">Semua Kategori</option>
+                        <option value="all">${t('yoga.filter_category')}</option>
                     </select>
                 </div>
 
@@ -1368,6 +1343,7 @@ const Views = {
                         <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">User Management</h3>
                         <div id="usersTable" style="overflow-x: auto;">
                             <div style="text-align: center; padding: 20px; color: var(--text-tertiary);">
+                 
                                 <div class="loading-spinner" style="margin: 0 auto 12px;"></div>
                                 <p>Loading users...</p>
                             </div>
@@ -1378,28 +1354,19 @@ const Views = {
                 <!-- Settings Tab -->
                 <div id="settings-tab" class="admin-tab-content" style="display: none;">
                     <div class="card" style="padding: 24px;">
-                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 24px;">System Settings</h3>
-
-                        <div style="margin-bottom: 24px;">
-                            <label style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">API Key Rotation Policy</label>
-                            <div style="background: var(--bg-secondary); padding: 12px; border-radius: var(--radius-md); margin-bottom: 12px; color: var(--text-secondary);">
-                                <select id="rotationPolicy" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
-                                    <option value="30">Rotate every 30 days</option>
-                                    <option value="60">Rotate every 60 days</option>
-                                    <option value="90">Rotate every 90 days</option>
-                                    <option value="manual">Manual only</option>
-                                </select>
+                        <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">System Settings</h3>
+                        <div id="settingsContent">
+                            <div style="text-align: center; padding: 20px; color: var(--text-tertiary);">
+                                <div class="loading-spinner" style="margin: 0 auto 12px;"></div>
+                                <p>Loading settings...</p>
                             </div>
-                            <button class="btn btn-primary" onclick="AdminUI.saveSettings()" style="display: flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-save"></i> Save Settings
-                            </button>
                         </div>
                     </div>
                 </div>
+
             </div>
         `;
     }
 };
 
-// Make it globally available
 window.Views = Views;

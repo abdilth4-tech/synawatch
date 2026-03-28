@@ -30,7 +30,7 @@ const Navbar = {
                 <div class="nav-icon">
                     <i class="fas ${item.icon}"></i>
                 </div>
-                <span class="nav-label">${item.label}</span>
+                <span class="nav-label">${typeof t !== 'undefined' ? t('nav.' + item.id) : item.label}</span>
             </a>
         `).join('');
 

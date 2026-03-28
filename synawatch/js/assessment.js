@@ -122,12 +122,12 @@ const Assessment = {
         if (progressWrapper) {
             const counterEl = progressWrapper.querySelector('.progress-counter');
             if (counterEl) {
-                counterEl.textContent = `Pertanyaan ${currentOverallIndex + 1} dari ${totalQuestions}`;
+                counterEl.textContent = t('assessment.question_counter', {current: currentOverallIndex + 1, total: totalQuestions});
             } else {
                 const span = document.createElement('span');
                 span.className = 'progress-counter';
                 span.style.cssText = 'font-size:0.8rem;font-weight:600;color:var(--primary-500);';
-                span.textContent = `Pertanyaan ${currentOverallIndex + 1} dari ${totalQuestions}`;
+                span.textContent = t('assessment.question_counter', {current: currentOverallIndex + 1, total: totalQuestions});
                 progressWrapper.querySelector('div').appendChild(span);
             }
         }
@@ -136,32 +136,32 @@ const Assessment = {
         if (this.currentStage === 'phq9') {
             html = `
                 <div class="assessment-header" style="margin-bottom: var(--space-6); text-align: center;">
-                    <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: var(--primary-500); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; display: inline-block;">Bagian 1: Kesejahteraan Mental</span>
-                    <p style="color: var(--text-tertiary); font-size: var(--text-sm);">Dalam 2 minggu terakhir, seberapa sering Anda terganggu oleh masalah berikut?</p>
+                    <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: var(--primary-500); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; display: inline-block;">${t('assessment.phq9_header')}</span>
+                    <p style="color: var(--text-tertiary); font-size: var(--text-sm);">${t('assessment.phq9_instruction')}</p>
                 </div>
                 <div class="question-card" style="background: white; padding: var(--space-6); border-radius: var(--radius-xl); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: var(--space-6);">
-                    <h3 style="font-size: var(--text-lg); color: var(--text-primary); margin-bottom: var(--space-6); text-align: center;">${this.phq9[this.currentIndex]}</h3>
+                    <h3 style="font-size: var(--text-lg); color: var(--text-primary); margin-bottom: var(--space-6); text-align: center;">${t('phq9.q' + this.currentIndex)}</h3>
                     <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(0, this)">Tidak pernah sama sekali</button>
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(1, this)">Beberapa hari</button>
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(2, this)">Lebih dari separuh waktu</button>
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(3, this)">Hampir setiap hari</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(0, this)">${t('assessment.phq9_a0')}</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(1, this)">${t('assessment.phq9_a1')}</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(2, this)">${t('assessment.phq9_a2')}</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(3, this)">${t('assessment.phq9_a3')}</button>
                     </div>
                 </div>
             `;
         } else if (this.currentStage === 'ucla') {
             html = `
                 <div class="assessment-header" style="margin-bottom: var(--space-6); text-align: center;">
-                    <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--success-500); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; display: inline-block;">Bagian 2: Interaksi Sosial</span>
-                    <p style="color: var(--text-tertiary); font-size: var(--text-sm);">Seberapa sering Anda merasakan hal berikut?</p>
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--success-500); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; display: inline-block;">${t('assessment.ucla_header')}</span>
+                    <p style="color: var(--text-tertiary); font-size: var(--text-sm);">${t('assessment.ucla_instruction')}</p>
                 </div>
                 <div class="question-card" style="background: white; padding: var(--space-6); border-radius: var(--radius-xl); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: var(--space-6);">
-                    <h3 style="font-size: var(--text-lg); color: var(--text-primary); margin-bottom: var(--space-6); text-align: center;">${this.ucla[this.currentIndex]}</h3>
+                    <h3 style="font-size: var(--text-lg); color: var(--text-primary); margin-bottom: var(--space-6); text-align: center;">${t('ucla.q' + this.currentIndex)}</h3>
                     <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(1, this)">Tidak pernah</button>
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(2, this)">Jarang</button>
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(3, this)">Kadang-kadang</button>
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(4, this)">Sering</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(1, this)">${t('assessment.ucla_a1')}</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(2, this)">${t('assessment.ucla_a2')}</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(3, this)">${t('assessment.ucla_a3')}</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(4, this)">${t('assessment.ucla_a4')}</button>
                     </div>
                 </div>
             `;
@@ -193,18 +193,18 @@ const Assessment = {
         // Determine Categories
         // PHQ-9 Categories
         let phq9Category = "";
-        if (phq9Score <= 4) phq9Category = "Minimal";        // Minimal -> mode pemantauan pasif
-        else if (phq9Score <= 9) phq9Category = "Ringan";    // Ringan -> intervensi mandiri (Sleep Lab, Mood Booster)
-        else if (phq9Score <= 14) phq9Category = "Sedang";   // Sedang -> SynaBuddy proaktif + Support Hub disarankan
-        else if (phq9Score <= 19) phq9Category = "Sedang-Berat"; // Sedang-Berat -> Alert + Referral System
-        else phq9Category = "Berat";                         // Berat -> Crisis Support otomatis tampil
+        if (phq9Score <= 4) phq9Category = t('assessment.cat_minimal');
+        else if (phq9Score <= 9) phq9Category = t('assessment.cat_mild');
+        else if (phq9Score <= 14) phq9Category = t('assessment.cat_moderate');
+        else if (phq9Score <= 19) phq9Category = t('assessment.cat_mod_severe');
+        else phq9Category = t('assessment.cat_severe');                         // Berat -> Crisis Support otomatis tampil
 
         // UCLA Categories (20-80)
         let uclaCategory = "";
-        if (uclaScore <= 34) uclaCategory = "Rendah";
-        else if (uclaScore <= 49) uclaCategory = "Sedang";
-        else if (uclaScore <= 64) uclaCategory = "Cukup Tinggi";
-        else uclaCategory = "Tinggi";
+        if (uclaScore <= 34) uclaCategory = t('assessment.cat_low');
+        else if (uclaScore <= 49) uclaCategory = t('assessment.cat_moderate_u');
+        else if (uclaScore <= 64) uclaCategory = t('assessment.cat_mod_high');
+        else uclaCategory = t('assessment.cat_high');
 
         const container = document.getElementById('assessmentContent');
         if (container) {
