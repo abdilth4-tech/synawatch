@@ -3819,7 +3819,7 @@ img, video, canvas {
 /* Icon box styling - Light & Subtle */
 /* Icon box styling - Light & Minimalist */
 .quick-menu-card .card-icon-box {
-    width: 40px;
+    width: 20px;
     height: 40px;
     border-radius: 10px;
     display: flex;
@@ -4633,4 +4633,22 @@ img, video, canvas {
 .quick-menu-card .card-icon-box {
     box-shadow: 0 4px 16px rgba(124, 58, 237, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Avatar thinking animation for AI Chat */
+.avatar-thinking {
+    animation: avatarThinking 1.5s ease-in-out infinite;
+}
+
+@keyframes avatarThinking {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.2)); }
+    50% { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5)); }
+}
+
+/* Assessment answer selected state */
+.assessment-answer-btn.selected {
+    background: #8B5CF6 !important;
+    color: white !important;
+    border-color: #7C3AED !important;
+    transform: scale(0.97) !important;
 }

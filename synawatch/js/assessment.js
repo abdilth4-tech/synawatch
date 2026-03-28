@@ -6,38 +6,38 @@
 const Assessment = {
     // PHQ-9 Questions (Over the last 2 weeks, how often have you been bothered by any of the following problems?)
     phq9: [
-        "Little interest or pleasure in doing things",
-        "Feeling down, depressed, or hopeless",
-        "Trouble falling or staying asleep, or sleeping too much",
-        "Feeling tired or having little energy",
-        "Poor appetite or overeating",
-        "Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
-        "Trouble concentrating on things, such as reading the newspaper or watching television",
-        "Moving or speaking so slowly that other people could have noticed. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual",
-        "Thoughts that you would be better off dead, or of hurting yourself"
+        "Kurang minat atau kesenangan dalam melakukan sesuatu",
+        "Merasa sedih, tertekan, atau putus asa",
+        "Sulit tidur atau tetap tertidur, atau terlalu banyak tidur",
+        "Merasa lelah atau kurang berenergi",
+        "Kurang nafsu makan atau makan berlebihan",
+        "Merasa buruk tentang diri sendiri — atau merasa gagal atau mengecewakan diri sendiri maupun keluarga",
+        "Sulit berkonsentrasi pada hal-hal seperti membaca atau menonton televisi",
+        "Bergerak atau berbicara sangat lambat sehingga orang lain menyadarinya, atau sebaliknya — sangat gelisah sehingga bergerak lebih banyak dari biasanya",
+        "Pikiran bahwa Anda lebih baik mati, atau ingin menyakiti diri sendiri"
     ],
     // UCLA Loneliness Scale V3 (20 items)
     ucla: [
-        "How often do you feel that you are 'in tune' with the people around you?", // *Reversed
-        "How often do you feel that you lack companionship?",
-        "How often do you feel that there is no one you can turn to?",
-        "How often do you feel alone?",
-        "How often do you feel part of a group of friends?", // *Reversed
-        "How often do you feel that you have a lot in common with the people around you?", // *Reversed
-        "How often do you feel that you are no longer close to anyone?",
-        "How often do you feel that your interests and ideas are not shared by those around you?",
-        "How often do you feel outgoing and friendly?", // *Reversed
-        "How often do you feel close to people?", // *Reversed
-        "How often do you feel left out?",
-        "How often do you feel that your relationships with others are not meaningful?",
-        "How often do you feel that no one really knows you well?",
-        "How often do you feel isolated from others?",
-        "How often do you feel you can find companionship when you want it?", // *Reversed
-        "How often do you feel that there are people who really understand you?", // *Reversed
-        "How often do you feel shy?",
-        "How often do you feel that people are around you but not with you?",
-        "How often do you feel that there are people you can talk to?", // *Reversed
-        "How often do you feel that there are people you can turn to?" // *Reversed
+        "Seberapa sering Anda merasa 'sejalan' dengan orang-orang di sekitar Anda?", // *Reversed
+        "Seberapa sering Anda merasa kekurangan teman dekat?",
+        "Seberapa sering Anda merasa tidak ada orang yang bisa diandalkan?",
+        "Seberapa sering Anda merasa sendirian?",
+        "Seberapa sering Anda merasa menjadi bagian dari sekelompok teman?", // *Reversed
+        "Seberapa sering Anda merasa memiliki banyak kesamaan dengan orang-orang di sekitar?", // *Reversed
+        "Seberapa sering Anda merasa tidak lagi dekat dengan siapa pun?",
+        "Seberapa sering Anda merasa minat dan ide Anda tidak dipahami orang sekitar?",
+        "Seberapa sering Anda merasa ramah dan mudah bergaul?", // *Reversed
+        "Seberapa sering Anda merasa dekat dengan orang lain?", // *Reversed
+        "Seberapa sering Anda merasa dikucilkan?",
+        "Seberapa sering Anda merasa hubungan Anda dengan orang lain tidak bermakna?",
+        "Seberapa sering Anda merasa tidak ada yang benar-benar mengenal Anda?",
+        "Seberapa sering Anda merasa terisolasi dari orang lain?",
+        "Seberapa sering Anda merasa bisa menemukan teman saat menginginkannya?", // *Reversed
+        "Seberapa sering Anda merasa ada orang yang benar-benar memahami Anda?", // *Reversed
+        "Seberapa sering Anda merasa pemalu?",
+        "Seberapa sering Anda merasa orang ada di sekitar tapi tidak bersama Anda?",
+        "Seberapa sering Anda merasa ada orang yang bisa diajak bicara?", // *Reversed
+        "Seberapa sering Anda merasa ada orang yang bisa diandalkan?" // *Reversed
     ],
     uclaReversedIndices: [0, 4, 5, 8, 9, 14, 15, 18, 19],
 
@@ -112,10 +112,25 @@ const Assessment = {
         let totalQuestions = this.phq9.length + this.ucla.length;
         let currentOverallIndex = this.currentStage === 'phq9' ? this.currentIndex : this.phq9.length + this.currentIndex;
         let progress = Math.round((currentOverallIndex / totalQuestions) * 100);
-        
+
         // Update progress bar
         const progressBar = document.getElementById('assessmentProgress');
         if (progressBar) progressBar.style.width = progress + '%';
+
+        // Update progress counter text
+        const progressWrapper = document.getElementById('assessmentProgressWrapper');
+        if (progressWrapper) {
+            const counterEl = progressWrapper.querySelector('.progress-counter');
+            if (counterEl) {
+                counterEl.textContent = `Pertanyaan ${currentOverallIndex + 1} dari ${totalQuestions}`;
+            } else {
+                const span = document.createElement('span');
+                span.className = 'progress-counter';
+                span.style.cssText = 'font-size:0.8rem;font-weight:600;color:var(--primary-500);';
+                span.textContent = `Pertanyaan ${currentOverallIndex + 1} dari ${totalQuestions}`;
+                progressWrapper.querySelector('div').appendChild(span);
+            }
+        }
 
         let html = '';
         if (this.currentStage === 'phq9') {
@@ -143,10 +158,10 @@ const Assessment = {
                 <div class="question-card" style="background: white; padding: var(--space-6); border-radius: var(--radius-xl); box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: var(--space-6);">
                     <h3 style="font-size: var(--text-lg); color: var(--text-primary); margin-bottom: var(--space-6); text-align: center;">${this.ucla[this.currentIndex]}</h3>
                     <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(1, this)">Tidak pernah (Never)</button>
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(2, this)">Jarang (Rarely)</button>
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(3, this)">Kadang-kadang (Sometimes)</button>
-                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(4, this)">Sering (Often)</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(1, this)">Tidak pernah</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(2, this)">Jarang</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(3, this)">Kadang-kadang</button>
+                        <button class="assessment-answer-btn" style="justify-content: flex-start; text-align: left; padding: 16px; background: #f0f4f8; border: 2px solid #e0e7f1; color: #333; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500;" onmouseover="this.style.background='#e8f0ff'; this.style.borderColor='#667eea'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.2)';" onmouseout="this.style.background='#f0f4f8'; this.style.borderColor='#e0e7f1'; this.style.transform='translateY(0)'; this.style.boxShadow='none';" onclick="Assessment.selectAnswer(4, this)">Sering</button>
                     </div>
                 </div>
             `;
@@ -186,10 +201,10 @@ const Assessment = {
 
         // UCLA Categories (20-80)
         let uclaCategory = "";
-        if (uclaScore <= 34) uclaCategory = "Low";
-        else if (uclaScore <= 49) uclaCategory = "Moderate";
-        else if (uclaScore <= 64) uclaCategory = "Moderately High";
-        else uclaCategory = "High";
+        if (uclaScore <= 34) uclaCategory = "Rendah";
+        else if (uclaScore <= 49) uclaCategory = "Sedang";
+        else if (uclaScore <= 64) uclaCategory = "Cukup Tinggi";
+        else uclaCategory = "Tinggi";
 
         const container = document.getElementById('assessmentContent');
         if (container) {
@@ -443,12 +458,24 @@ const Assessment = {
 
         // [GAP 1] Calculate Fusion Score
         const fusion = this.calculateFusionScore(phq9Score, uclaScore);
+        // Gauge visualization using conic-gradient
+        const gaugePercent = fusion.fusionScore;
         const fusionHtml = `
             <div style="background: linear-gradient(135deg, ${fusion.fusionColor}15, ${fusion.fusionColor}08); padding: 20px; border-radius: 16px; border: 2px solid ${fusion.fusionColor}30; margin-bottom: 16px;">
-                <p style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">SynaScore (Bio-Psycho Fusion)</p>
-                <p style="font-size: 3rem; font-weight: 800; color: ${fusion.fusionColor}; margin-bottom: 4px;">${fusion.fusionScore}</p>
+                <p style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">SynaScore (Bio-Psycho Fusion)</p>
+                <div style="width:120px;height:120px;border-radius:50%;background:conic-gradient(${fusion.fusionColor} ${gaugePercent * 3.6}deg, #e5e7eb ${gaugePercent * 3.6}deg);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+                    <div style="width:90px;height:90px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                        <span style="font-size:2rem;font-weight:800;color:${fusion.fusionColor};">${fusion.fusionScore}</span>
+                        <span style="font-size:0.6rem;color:var(--text-tertiary);">dari 100</span>
+                    </div>
+                </div>
                 <p style="font-size: var(--text-sm); font-weight: 600; color: ${fusion.fusionColor};">${fusion.fusionCategory}</p>
-                <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 4px;">${fusion.hasSensorData ? 'Sensor + Psikometrik' : 'Psikometrik saja (hubungkan sensor untuk akurasi lebih)'}</p>
+                <div style="margin-top:12px;padding:10px;background:rgba(255,255,255,0.6);border-radius:8px;">
+                    <p style="font-size:0.72rem;color:var(--text-tertiary);margin:0;">
+                        <strong>Skala:</strong> 80-100 Sangat Baik · 60-79 Baik · 40-59 Waspada · 20-39 Perlu Perhatian · 0-19 Kritis
+                    </p>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 8px;">${fusion.hasSensorData ? 'Sensor + Psikometrik' : 'Psikometrik saja (hubungkan sensor untuk akurasi lebih)'}</p>
             </div>
         `;
 
@@ -487,8 +514,9 @@ const Assessment = {
 
                 <div id="longitudinalContainer"></div>
 
-                <div style="margin-top: 32px;">
-                    <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="Router.navigate('dashboard')">Lewati ke Dashboard</button>
+                <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 12px;">
+                    <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="Router.navigate('dashboard')"><i class="fas fa-home"></i> Lanjut ke Dashboard</button>
+                    <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="window.print()"><i class="fas fa-file-pdf"></i> Simpan / Cetak Hasil</button>
                 </div>
             </div>
         `;

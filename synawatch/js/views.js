@@ -25,8 +25,11 @@ const Views = {
                             <i class="fas fa-clipboard-list"></i>
                         </div>
                         <h2 style="font-size: var(--text-2xl); color: var(--text-primary); margin-bottom: 12px;">Selamat Datang!</h2>
-                        <p style="color: var(--text-secondary); margin-bottom: 32px; line-height: 1.6;">Untuk mempersonalisasi SYNAWATCH sesuai dengan kondisi Anda, kami perlu menanyakan beberapa hal (PHQ-9 & UCLA Loneliness Scale). Data ini dijamin kerahasiaannya.</p>
+                        <p style="color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">Kami akan membantu mengidentifikasi kondisi kesehatan mental Anda dan memberikan rekomendasi yang tepat melalui 2 evaluasi singkat.</p>
+                        <p style="color: var(--text-tertiary); font-size: 0.8rem; margin-bottom: 8px;"><i class="fas fa-clock"></i> Estimasi waktu: ~5 menit (29 pertanyaan)</p>
+                        <p style="color: var(--text-tertiary); font-size: 0.75rem; margin-bottom: 24px;"><i class="fas fa-lock"></i> Data Anda dienkripsi dan dilindungi. <a href="#" style="color:var(--primary-500);text-decoration:underline;">Kebijakan Privasi</a></p>
                         <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 16px; font-size: 1.1rem;" onclick="Assessment.start()">Mulai Evaluasi</button>
+                        <button class="btn btn-outline" style="width: 100%; justify-content: center; padding: 12px; margin-top: 12px; font-size: 0.9rem;" onclick="Router.navigate('dashboard')">Lewati Dulu</button>
                     </div>
                 </div>
             </div>
@@ -101,7 +104,7 @@ const Views = {
                             </div>
                             <div class="card-content">
                                 <h4 class="card-title">AI Chat</h4>
-                                <p class="card-subtitle">Dr. Synachat</p>
+                                <p class="card-subtitle">Synachat</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -666,7 +669,7 @@ const Views = {
                         </div>
                         <div class="list-item-content">
                             <div class="list-item-title">Health Assistant</div>
-                            <div class="list-item-subtitle">Chat with Dr. Synachat</div>
+                            <div class="list-item-subtitle">Chat with Synachat</div>
                         </div>
                         <i class="fas fa-chevron-right list-item-action"></i>
                     </div>
@@ -853,7 +856,7 @@ const Views = {
                     <div class="avatar-info">
                         <div class="avatar-name">
                             <i class="fas fa-sparkles"></i>
-                            <span>Dr. Synachat</span>
+                            <span>Synachat</span>
                         </div>
                         <div class="avatar-status">
                             <span class="status-dot"></span>
@@ -862,8 +865,11 @@ const Views = {
                     </div>
 
                     <!-- Voice Toggle - Glass Style -->
-                    <button id="ttsToggle" class="tts-toggle active" onclick="toggleTTS()" aria-label="Toggle voice">
+                    <button id="ttsToggle" class="tts-toggle active" onclick="toggleTTS()" title="Putar/Hentikan Suara" aria-label="Toggle voice">
                         <i class="fas fa-volume-high"></i>
+                    </button>
+                    <button class="tts-toggle" onclick="clearChat()" title="Hapus Riwayat Chat" aria-label="Clear chat" style="background:rgba(239,68,68,0.1);color:#ef4444;">
+                        <i class="fas fa-trash"></i>
                     </button>
                 </div>
 
@@ -889,7 +895,7 @@ const Views = {
                             <div class="welcome-icon">
                                 <i class="fas fa-robot"></i>
                             </div>
-                            <h3>Hello, I'm Dr. Synachat</h3>
+                            <h3>Hello, I'm Synachat</h3>
                             <p>Your personal AI health companion. I can analyze your vitals, offer wellness advice, and support your health journey.</p>
                             <div class="quick-actions">
                                 <button class="quick-action" onclick="sendQuickMessage('Analyze my current heart rate')">

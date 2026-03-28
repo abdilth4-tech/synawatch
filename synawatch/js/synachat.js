@@ -6,8 +6,8 @@
 // Gemini API Configuration
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent';
 
-// System prompt for Dr. Synachat
-const SYSTEM_PROMPT = `You are Dr. Synachat, an empathetic, professional, and knowledgeable AI assistant who acts as both a psychologist and a medical advisor. You are part of a smartwatch health monitoring app called SYNAWATCH.
+// System prompt for Synachat
+const SYSTEM_PROMPT = `You are Synachat, an empathetic, professional, and knowledgeable AI assistant who acts as both a psychologist and a medical advisor. You are part of a smartwatch health monitoring app called SYNAWATCH.
 
 Your role:
 1. Provide emotional support and mental health guidance
@@ -37,7 +37,12 @@ Guidelines:
 7. Keep responses concise but helpful (2-3 paragraphs max)
 8. Include a disclaimer when giving medical information
 
-Important: You are an AI assistant, not a real doctor. Always remind users of this when discussing medical advice.`;
+Important: You are an AI assistant, not a real doctor. Always remind users of this when discussing medical advice.
+
+CRITICAL RULES:
+- NEVER output template placeholders like [sebutkan...], [insert...], or [masukkan...] in your responses. Always use actual data values provided in the health context.
+- If health data is not available, say "data belum tersedia" instead of using placeholder brackets.
+- Respond in Bahasa Indonesia by default unless the user writes in English.`;
 
 // Chat state
 let chatHistory = [];
@@ -117,7 +122,7 @@ let proactiveAnomalyMonitor = {
 
         banner.innerHTML = `
             <div style="flex: 1;">
-                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Dr. Synachat tersedia</div>
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;">Synachat tersedia</div>
                 <div style="font-size: 0.85rem; opacity: 0.9;">Pola stres terdeteksi. Mau ngobrol sebentar?</div>
             </div>
             <button onclick="this.parentElement.remove(); Router.navigate('synachat');" style="background: white; color: #8B5CF6; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; flex-shrink: 0;">
@@ -265,7 +270,7 @@ function showAvatarFallback(container) {
             <div class="avatar-fallback-icon">
                 <i class="fas fa-robot"></i>
             </div>
-            <p>Dr. Synachat</p>
+            <p>Synachat</p>
         </div>
     `;
 }
@@ -335,10 +340,12 @@ function updateTTSToggleUI() {
         toggle.classList.add('active');
         toggle.classList.remove('muted');
         toggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+        toggle.title = 'Suara Aktif — Klik untuk matikan';
     } else {
         toggle.classList.remove('active');
         toggle.classList.add('muted');
         toggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        toggle.title = 'Suara Mati — Klik untuk aktifkan';
     }
 }
 
@@ -487,11 +494,11 @@ async function sendToGemini(userMessage) {
         const contents = [
             {
                 role: 'user',
-                parts: [{ text: `${SYSTEM_PROMPT}\n\nPlease acknowledge and respond as Dr. Synachat.` }]
+                parts: [{ text: `${SYSTEM_PROMPT}\n\nPlease acknowledge and respond as Synachat.` }]
             },
             {
                 role: 'model',
-                parts: [{ text: 'Understood. I am Dr. Synachat, your AI health assistant from SYNAWATCH. I will provide empathetic support, help you understand your health data, and offer wellness guidance. How can I help you today?' }]
+                parts: [{ text: 'Understood. I am Synachat, your AI health assistant from SYNAWATCH. I will provide empathetic support, help you understand your health data, and offer wellness guidance. How can I help you today?' }]
             },
             ...conversationHistory,
             {
@@ -661,6 +668,10 @@ function showTypingIndicator() {
         top: container.scrollHeight,
         behavior: 'smooth'
     });
+
+    // Add thinking animation to avatar
+    const avatarContainer = document.querySelector('.synachat-avatar-section');
+    if (avatarContainer) avatarContainer.classList.add('avatar-thinking');
 }
 
 /**
@@ -671,6 +682,9 @@ function hideTypingIndicator() {
     if (indicator) {
         indicator.remove();
     }
+    // Remove thinking animation from avatar
+    const avatarContainer = document.querySelector('.synachat-avatar-section');
+    if (avatarContainer) avatarContainer.classList.remove('avatar-thinking');
 }
 
 /**
@@ -829,7 +843,7 @@ async function triggerProactiveAIChat(triggerReason) {
  * Clear chat
  */
 async function clearChat() {
-    if (!confirm('Are you sure you want to clear the chat history?')) return;
+    if (!confirm('Hapus semua riwayat chat? Tindakan ini tidak dapat dibatalkan.')) return;
 
     try {
         const user = auth.currentUser;
@@ -844,7 +858,7 @@ async function clearChat() {
                 <div class="welcome-icon">
                     <i class="fas fa-robot"></i>
                 </div>
-                <h3>Hello, I'm Dr. Synachat</h3>
+                <h3>Hello, I'm Synachat</h3>
                 <p>Your personal AI health companion. I can analyze your vitals, offer wellness advice, and support your health journey.</p>
                 <div class="quick-actions">
                     <button class="quick-action" onclick="sendQuickMessage('Analyze my current heart rate')">
