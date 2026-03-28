@@ -50,9 +50,9 @@ const SupportHub = {
 
     // Professional referral system
     professionals: [
-        { type: 'Psikolog', icon: 'fa-user-tie', platform: 'Halodoc', link: '#' },
-        { type: 'Psikiater', icon: 'fa-stethoscope', platform: 'Alodokter', link: '#' },
-        { type: 'Konselor', icon: 'fa-comments', platform: 'Telepsikologi', link: '#' }
+        { type: 'Psikolog', icon: 'fa-user-tie', platform: 'Halodoc', link: 'https://www.halodoc.com/tanya-dokter/psikolog' },
+        { type: 'Psikiater', icon: 'fa-stethoscope', platform: 'Alodokter', link: 'https://www.alodokter.com/cari-dokter/psikiater' },
+        { type: 'Konselor', icon: 'fa-comments', platform: 'Into The Light', link: 'https://www.intothelightid.org/' }
     ],
 
     initSupportHub() {
@@ -129,7 +129,7 @@ const SupportHub = {
                     <div style="font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">${p.type}</div>
                     <div style="font-size: 0.8rem; color: var(--text-tertiary);">via ${p.platform}</div>
                 </div>
-                <button class="btn btn-outline btn-sm" style="flex-shrink: 0; border-radius: 10px;">Cari</button>
+                <a href="${p.link}" target="_blank" rel="noopener" class="btn btn-outline btn-sm" style="flex-shrink: 0; border-radius: 10px; text-decoration: none;">Cari</a>
             </div>
         `).join('');
 
@@ -168,10 +168,11 @@ const SupportHub = {
 
             ${resourcesHTML}
 
-            <div style="background: #f8f9ff; padding: 12px; border-radius: 12px; margin-top: 16px;">
-                <p style="font-size: 0.75rem; color: var(--text-tertiary); text-align: center; margin: 0;">
-                    <i class="fas fa-flask"></i> Safety Planning berbasis: Digital Safety Plans (Melvin et al., 2024),
-                    SafePlan (Nuij et al., 2020)
+            <div style="background: #f0f0ff; padding: 16px; border-radius: 12px; margin-top: 16px; border: 1px solid rgba(139,92,246,0.15);">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin: 0; line-height: 1.6;">
+                    <i class="fas fa-flask" style="color: var(--primary-500);"></i> <strong>Referensi Ilmiah:</strong><br>
+                    <a href="https://scholar.google.com/scholar?q=Digital+Safety+Plans+Melvin+2024" target="_blank" rel="noopener" style="color: var(--primary-500); text-decoration: underline;">Digital Safety Plans (Melvin et al., 2024)</a> ·
+                    <a href="https://scholar.google.com/scholar?q=SafePlan+Nuij+2020" target="_blank" rel="noopener" style="color: var(--primary-500); text-decoration: underline;">SafePlan (Nuij et al., 2020)</a>
                 </p>
             </div>
         `;

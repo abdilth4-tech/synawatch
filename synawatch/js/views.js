@@ -936,46 +936,68 @@ const Views = {
     sleep() {
         return `
             <div class="view-container" style="max-width: 700px; margin: 0 auto; padding-bottom: 80px;">
-                <!-- Header -->
+                <!-- Header with Score -->
                 <div class="health-hero" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);">
                     <i class="fas fa-moon" style="font-size: 2.5rem; margin-bottom: 12px; color: #a5b4fc;"></i>
                     <div class="big-value" style="color: white; font-size: 3rem;"><span id="sleepScoreValue">--</span></div>
                     <div class="label" style="color: #c7d2fe;">Est. Sleep Readiness</div>
+                    <div id="sleepScoreLabel" style="margin-top: 8px; font-size: 0.9rem; font-weight: 700; padding: 4px 14px; background: rgba(255,255,255,0.15); border-radius: 20px; display: inline-block;"></div>
+                </div>
+
+                <!-- Sleep Tips -->
+                <div class="card" style="border-left: 4px solid var(--primary-500); padding: 14px 16px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <i class="fas fa-lightbulb" style="color: var(--primary-500);"></i>
+                        <strong style="font-size: 0.85rem; color: var(--primary-600);">Saran untuk Anda</strong>
+                    </div>
+                    <p id="sleepTips" style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">Memuat saran...</p>
+                </div>
+
+                <!-- Sleep History -->
+                <h3 class="section-title">Riwayat Tidur (7 Hari)</h3>
+                <div class="card" style="margin-bottom: 20px; padding: 16px;">
+                    <div id="sleepHistory">
+                        <p style="font-size:0.8rem;color:var(--text-tertiary);text-align:center;">Memuat riwayat...</p>
+                    </div>
                 </div>
 
                 <!-- Relaxation Audio -->
                 <h3 class="section-title">Audio Relaksasi</h3>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
-                    <div class="card" style="text-align: center; cursor: pointer; padding: 16px;" onclick="SleepLab.playSound('rain')">
+                    <div class="card sleep-audio-btn" data-type="rain" style="text-align: center; cursor: pointer; padding: 16px; position: relative;" onclick="SleepLab.playSound('rain')">
                         <i class="fas fa-cloud-rain" style="font-size: 1.5rem; color: var(--info-500); margin-bottom: 8px;"></i>
                         <div style="font-size: 0.8rem; font-weight: 600;">Hujan</div>
+                        <i class="fas fa-play audio-play-icon" style="position: absolute; bottom: 8px; right: 8px; font-size: 0.7rem; color: var(--text-tertiary); background: rgba(139,92,246,0.1); padding: 4px 6px; border-radius: 50%;"></i>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; padding: 16px;" onclick="SleepLab.playSound('forest')">
+                    <div class="card sleep-audio-btn" data-type="forest" style="text-align: center; cursor: pointer; padding: 16px; position: relative;" onclick="SleepLab.playSound('forest')">
                         <i class="fas fa-tree" style="font-size: 1.5rem; color: var(--success-500); margin-bottom: 8px;"></i>
                         <div style="font-size: 0.8rem; font-weight: 600;">Hutan</div>
+                        <i class="fas fa-play audio-play-icon" style="position: absolute; bottom: 8px; right: 8px; font-size: 0.7rem; color: var(--text-tertiary); background: rgba(139,92,246,0.1); padding: 4px 6px; border-radius: 50%;"></i>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; padding: 16px;" onclick="SleepLab.playSound('noise')">
+                    <div class="card sleep-audio-btn" data-type="noise" style="text-align: center; cursor: pointer; padding: 16px; position: relative;" onclick="SleepLab.playSound('noise')">
                         <i class="fas fa-water" style="font-size: 1.5rem; color: var(--primary-500); margin-bottom: 8px;"></i>
                         <div style="font-size: 0.8rem; font-weight: 600;">Ombak</div>
+                        <i class="fas fa-play audio-play-icon" style="position: absolute; bottom: 8px; right: 8px; font-size: 0.7rem; color: var(--text-tertiary); background: rgba(139,92,246,0.1); padding: 4px 6px; border-radius: 50%;"></i>
                     </div>
                 </div>
 
                 <!-- Bedtime Checklist -->
                 <h3 class="section-title">Rutinitas Malam</h3>
+                <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 12px;">Setiap rutinitas yang diselesaikan menambah +5 poin Sleep Readiness</p>
                 <div class="card" style="padding: 0; overflow: hidden;">
-                    <div class="list-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
+                    <div class="list-item sleep-checklist-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
                         <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
                         <div class="list-item-content">
                             <div class="list-item-title">Mandi Air Hangat</div>
                         </div>
                     </div>
-                    <div class="list-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
+                    <div class="list-item sleep-checklist-item" style="cursor: pointer;" onclick="SleepLab.toggleChecklist(this)">
                         <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
                         <div class="list-item-content">
                             <div class="list-item-title">Matikan Layar (30m sblm tidur)</div>
                         </div>
                     </div>
-                    <div class="list-item" style="cursor: pointer; border-bottom: none;" onclick="SleepLab.toggleChecklist(this)">
+                    <div class="list-item sleep-checklist-item" style="cursor: pointer; border-bottom: none;" onclick="SleepLab.toggleChecklist(this)">
                         <div class="list-item-icon" style="background: transparent; color: var(--text-tertiary);"><i class="far fa-circle"></i></div>
                         <div class="list-item-content">
                             <div class="list-item-title">Minum Air Susu/Teh Kamomil</div>
