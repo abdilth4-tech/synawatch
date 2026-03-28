@@ -18,154 +18,28 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    function ownsResource() {
-      return isAuthenticated() && resource.data.userId == request.auth.uid;
-    }
-
-    function ownsNewResource() {
-      return isAuthenticated() && request.resource.data.userId == request.auth.uid;
-    }
-
-    // ===== USERS =====
+    // ===== USERS & ALL SUBCOLLECTIONS =====
+    // All user data is stored under users/{userId}/{subcollection}
     match /users/{userId} {
-      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+      allow read, write: if isOwner(userId);
       allow read, write: if isAdmin();
 
-      match /{sub=**} {
-        allow read, write: if isAuthenticated() && request.auth.uid == userId;
+      // Wildcard match for all subcollections:
+      // healthReadings, healthData, dailySummary, analyticsSummary,
+      // recordingHistory, chatHistory, assessments, interventionLogs,
+      // emergencyPlans, academyProgress, safetyPlans, moodLogs,
+      // musicTherapyLogs, sessions, journals, interventions
+      match /{subcollection}/{docId} {
+        allow read, write: if isOwner(userId);
+        allow read: if isAdmin();
       }
-    }
-
-    // ===== ASSESSMENTS =====
-    match /assessments/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== BIOMETRIC DATA =====
-    match /biometricData/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== JOURNALS =====
-    match /journals/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== JOURNAL ENTRIES (legacy) =====
-    match /journalEntries/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== MOOD LOGS =====
-    match /moodLogs/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== MUSIC THERAPY LOGS =====
-    match /musicTherapyLogs/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== HEALTH DATA =====
-    match /healthData/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== HEALTH READINGS =====
-    match /healthReadings/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== SESSIONS =====
-    match /sessions/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== RECORDING HISTORY =====
-    match /recordingHistory/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== INTERVENTION LOGS =====
-    match /interventionLogs/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== INTERVENTIONS =====
-    match /interventions/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
-    }
-
-    // ===== CRISIS LOGS =====
-    match /crisisLogs/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow read, write, delete: if isAdmin();
-    }
-
-    // ===== SAFETY PLANS =====
-    match /safetyPlans/{userId} {
-      allow read, write: if isOwner(userId) || isAdmin();
-    }
-
-    // ===== EMERGENCY PLANS =====
-    match /emergencyPlans/{userId} {
-      allow read, write: if isOwner(userId) || isAdmin();
-    }
-
-    // ===== CHAT HISTORY =====
-    match /chatHistory/{userId} {
-      allow read, write: if isOwner(userId) || isAdmin();
-    }
-
-    // ===== USER SETTINGS =====
-    match /userSettings/{userId} {
-      allow read, write: if isOwner(userId) || isAdmin();
-    }
-
-    // ===== DAILY SUMMARY =====
-    match /dailySummary/{docId} {
-      allow read, write: if isAuthenticated();
-    }
-
-    // ===== ANALYTICS SUMMARY =====
-    match /analyticsSummary/{docId} {
-      allow read, write: if isAuthenticated();
-    }
-
-    // ===== ACADEMY PROGRESS =====
-    match /academyProgress/{docId} {
-      allow read, write: if isAuthenticated();
     }
 
     // ===== GAMES PROGRESS =====
     match /gamesProgress/{gameId} {
-      allow read: if ownsResource() || isAdmin();
-      allow write: if ownsNewResource() || isAdmin();
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow write: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow read, write: if isAdmin();
 
       match /{sub=**} {
         allow read, write: if isAuthenticated();
@@ -174,16 +48,18 @@ service cloud.firestore {
 
     // ===== MEDITATION SESSIONS =====
     match /meditationSessions/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow read, write: if isAdmin();
     }
 
     // ===== SLEEP RECORDS =====
     match /sleepRecords/{docId} {
-      allow read: if ownsResource() || isAdmin();
-      allow create: if ownsNewResource();
-      allow update, delete: if ownsResource() || isAdmin();
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow read, write: if isAdmin();
     }
 
     // ===== MINDFULNESS PROGRAMS =====

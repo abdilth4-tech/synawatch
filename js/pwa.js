@@ -51,9 +51,11 @@ const PWA = {
         if ('serviceWorker' in navigator) {
             try {
                 const registration = await navigator.serviceWorker.register('/sw.js', {
-                    scope: '/'
+                    scope: '/',
+                    updateViaCache: 'none'
                 });
 
+                this.swRegistration = registration;
                 console.log('[PWA] Service Worker registered:', registration.scope);
 
                 // Check for updates
@@ -63,16 +65,27 @@ const PWA = {
 
                     newWorker.addEventListener('statechange', () => {
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            // New version available
-                            this.showUpdateAvailable();
+                            // New version available - auto activate
+                            console.log('[PWA] New version ready, activating...');
+                            newWorker.postMessage({ type: 'SKIP_WAITING' });
                         }
                     });
                 });
 
-                // Handle controller change (update activated)
+                // Handle controller change - reload to apply new version
+                let refreshing = false;
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    console.log('[PWA] Controller changed, reloading...');
+                    if (refreshing) return;
+                    refreshing = true;
+                    console.log('[PWA] New version activated, reloading...');
+                    window.location.reload();
                 });
+
+                // Check for updates periodically (every 2 minutes)
+                setInterval(() => {
+                    registration.update();
+                    console.log('[PWA] Checking for updates...');
+                }, 2 * 60 * 1000);
 
             } catch (error) {
                 console.error('[PWA] Service Worker registration failed:', error);

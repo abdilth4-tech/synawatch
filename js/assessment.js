@@ -197,8 +197,7 @@ const Assessment = {
             // Save to Firestore
             const user = auth?.currentUser;
             if (user && typeof db !== 'undefined') {
-                await db.collection('assessments').add({
-                    userId: user.uid,
+                await FirebaseService.userCol(user.uid, 'assessments').add({
                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                     date: new Date().toISOString(),
                     phq9: {
@@ -308,8 +307,7 @@ const Assessment = {
         if (!user || typeof db === 'undefined') return;
 
         try {
-            const snapshot = await db.collection('assessments')
-                .where('userId', '==', user.uid)
+            const snapshot = await FirebaseService.userCol(user.uid, 'assessments')
                 .orderBy('timestamp', 'desc')
                 .limit(12)
                 .get();

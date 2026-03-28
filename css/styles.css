@@ -1810,9 +1810,9 @@ html {
     font-size: clamp(14px, 2vw, 16px);
 }
 
-/* Safe area padding for notched devices (skip Synachat — it manages its own insets) */
+/* Safe area padding for notched devices */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
-    body:not(.synachat-view) .app-container {
+    .app-container {
         padding-bottom: calc(100px + env(safe-area-inset-bottom));
     }
 }
@@ -2489,9 +2489,9 @@ img, video, canvas {
     min-height: 0 !important;
 }
 
-/* Remove app-container padding & hide bottom nav when synachat is open */
+/* Remove app-container side padding when synachat is open, keep bottom for nav */
 body.synachat-view .app-container {
-    padding-bottom: 0 !important;
+    padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 16px) !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     display: flex;
@@ -2514,7 +2514,7 @@ body.synachat-view .app-container > main.view-container {
     margin-left: 0 !important;
     margin-right: 0 !important;
     /* Explicit min height so %-heights inside synachat resolve on desktop (was collapsing to 0) */
-    min-height: calc(100dvh - var(--header-height));
+    min-height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
 }
 
 /*
@@ -2523,20 +2523,18 @@ body.synachat-view .app-container > main.view-container {
  */
 body.synachat-view .synachat-container {
     flex: 1 1 auto;
-    min-height: calc(100dvh - var(--header-height));
-    height: calc(100dvh - var(--header-height)) !important;
-    max-height: calc(100dvh - var(--header-height));
+    min-height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
+    height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px) !important;
+    max-height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
 }
 
-body.synachat-view .bottom-nav {
-    display: none !important;
-}
+/* Bottom nav stays visible on synachat */
 
 .synachat-container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - var(--header-height));
-    height: calc(100dvh - var(--header-height));
+    height: calc(100vh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
+    height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -3158,8 +3156,8 @@ body.synachat-view .bottom-nav {
 /* Synachat Responsive - Mobile Small */
 @media (max-width: 380px) {
     .synachat-container {
-        height: calc(100vh - var(--header-height));
-        height: calc(100dvh - var(--header-height));
+        height: calc(100vh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
+        height: calc(100dvh - var(--header-height) - var(--nav-height) - var(--safe-area-bottom) - 16px);
     }
 
     .synachat-avatar-section {

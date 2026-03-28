@@ -298,8 +298,7 @@ const InterventionEngine = {
         const user = auth?.currentUser;
         if (user && typeof db !== 'undefined') {
             try {
-                await db.collection('interventions').add({
-                    userId: user.uid,
+                await FirebaseService.userCol(user.uid, 'interventions').add({
                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                     type: type,
                     baselineState: this.baseline

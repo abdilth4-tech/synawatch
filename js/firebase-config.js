@@ -47,8 +47,17 @@ auth.onAuthStateChanged((user) => {
 
 /**
  * Firebase Helper Functions
+ * All user data is stored as subcollections under users/{uid}/
  */
 const FirebaseService = {
+
+    /**
+     * Get a subcollection reference under the user's document
+     */
+    userCol(userId, collectionName) {
+        return db.collection('users').doc(userId).collection(collectionName);
+    },
+
     // ===== User Management =====
 
     /**
@@ -103,7 +112,6 @@ const FirebaseService = {
      */
     async saveHealthReading(userId, data) {
         const reading = {
-            userId,
             ...data,
             heartRateStatus: Utils.getHeartRateStatus(data.hr).status,
             spo2Status: Utils.getSpO2Status(data.spo2).status,
@@ -113,15 +121,14 @@ const FirebaseService = {
             readingType: 'realtime'
         };
 
-        return await db.collection('healthReadings').add(reading);
+        return await this.userCol(userId, 'healthReadings').add(reading);
     },
 
     /**
      * Get recent health readings
      */
     async getHealthReadings(userId, limit = 50) {
-        const snapshot = await db.collection('healthReadings')
-            .where('userId', '==', userId)
+        const snapshot = await this.userCol(userId, 'healthReadings')
             .orderBy('readingTime', 'desc')
             .limit(limit)
             .get();
@@ -133,8 +140,7 @@ const FirebaseService = {
      * Get health readings for date range
      */
     async getHealthReadingsForRange(userId, startDate, endDate) {
-        const snapshot = await db.collection('healthReadings')
-            .where('userId', '==', userId)
+        const snapshot = await this.userCol(userId, 'healthReadings')
             .where('readingTime', '>=', startDate)
             .where('readingTime', '<=', endDate)
             .orderBy('readingTime', 'desc')
@@ -149,8 +155,7 @@ const FirebaseService = {
      * Save aggregated health data
      */
     async saveHealthData(userId, data) {
-        return await db.collection('healthData').add({
-            userId,
+        return await this.userCol(userId, 'healthData').add({
             ...data,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -160,8 +165,7 @@ const FirebaseService = {
      * Get health data
      */
     async getHealthData(userId, limit = 100) {
-        const snapshot = await db.collection('healthData')
-            .where('userId', '==', userId)
+        const snapshot = await this.userCol(userId, 'healthData')
             .orderBy('createdAt', 'desc')
             .limit(limit)
             .get();
@@ -175,11 +179,9 @@ const FirebaseService = {
      * Save or update analytics summary
      */
     async saveAnalyticsSummary(userId, date, data) {
-        const docId = `${userId}_${date}`;
-        const docRef = db.collection('analyticsSummary').doc(docId);
+        const docRef = this.userCol(userId, 'analyticsSummary').doc(date);
 
         await docRef.set({
-            userId,
             date,
             ...data,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -192,8 +194,7 @@ const FirebaseService = {
      * Get analytics summary for date
      */
     async getAnalyticsSummary(userId, date) {
-        const docId = `${userId}_${date}`;
-        const snapshot = await db.collection('analyticsSummary').doc(docId).get();
+        const snapshot = await this.userCol(userId, 'analyticsSummary').doc(date).get();
         return snapshot.exists ? { id: snapshot.id, ...snapshot.data() } : null;
     },
 
@@ -201,8 +202,7 @@ const FirebaseService = {
      * Get analytics summaries for range
      */
     async getAnalyticsSummaries(userId, startDate, endDate) {
-        const snapshot = await db.collection('analyticsSummary')
-            .where('userId', '==', userId)
+        const snapshot = await this.userCol(userId, 'analyticsSummary')
             .where('date', '>=', startDate)
             .where('date', '<=', endDate)
             .orderBy('date', 'desc')
@@ -217,8 +217,7 @@ const FirebaseService = {
      * Save recording session
      */
     async saveRecordingSession(userId, data) {
-        return await db.collection('recordingHistory').add({
-            userId,
+        return await this.userCol(userId, 'recordingHistory').add({
             ...data,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -228,8 +227,7 @@ const FirebaseService = {
      * Get recording history
      */
     async getRecordingHistory(userId, limit = 20) {
-        const snapshot = await db.collection('recordingHistory')
-            .where('userId', '==', userId)
+        const snapshot = await this.userCol(userId, 'recordingHistory')
             .orderBy('createdAt', 'desc')
             .limit(limit)
             .get();
@@ -243,7 +241,7 @@ const FirebaseService = {
      * Save chat message
      */
     async saveChatMessage(userId, message) {
-        const chatRef = db.collection('chatHistory').doc(userId);
+        const chatRef = this.userCol(userId, 'chatHistory').doc('main');
         const snapshot = await chatRef.get();
 
         if (snapshot.exists) {
@@ -253,7 +251,6 @@ const FirebaseService = {
             });
         } else {
             await chatRef.set({
-                userId,
                 messages: [message],
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -265,7 +262,7 @@ const FirebaseService = {
      * Get chat history
      */
     async getChatHistory(userId) {
-        const snapshot = await db.collection('chatHistory').doc(userId).get();
+        const snapshot = await this.userCol(userId, 'chatHistory').doc('main').get();
         return snapshot.exists ? snapshot.data().messages || [] : [];
     },
 
@@ -273,7 +270,7 @@ const FirebaseService = {
      * Clear chat history
      */
     async clearChatHistory(userId) {
-        await db.collection('chatHistory').doc(userId).delete();
+        await this.userCol(userId, 'chatHistory').doc('main').delete();
     },
 
     // ===== Statistics =====
@@ -315,8 +312,7 @@ const FirebaseService = {
      * Save assessment result
      */
     async saveAssessment(userId, data) {
-        return await db.collection('assessments').add({
-            userId,
+        return await this.userCol(userId, 'assessments').add({
             ...data,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -326,8 +322,7 @@ const FirebaseService = {
      * Get latest assessment for user
      */
     async getLatestAssessment(userId) {
-        const snapshot = await db.collection('assessments')
-            .where('userId', '==', userId)
+        const snapshot = await this.userCol(userId, 'assessments')
             .orderBy('timestamp', 'desc')
             .limit(1)
             .get();
@@ -338,8 +333,7 @@ const FirebaseService = {
      * Get all assessments for user
      */
     async getAssessmentHistory(userId, limit = 10) {
-        const snapshot = await db.collection('assessments')
-            .where('userId', '==', userId)
+        const snapshot = await this.userCol(userId, 'assessments')
             .orderBy('timestamp', 'desc')
             .limit(limit)
             .get();
@@ -352,8 +346,7 @@ const FirebaseService = {
      * Log an intervention event
      */
     async logIntervention(userId, data) {
-        return await db.collection('interventionLogs').add({
-            userId,
+        return await this.userCol(userId, 'interventionLogs').add({
             ...data,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -363,8 +356,7 @@ const FirebaseService = {
      * Get intervention logs
      */
     async getInterventionLogs(userId, limit = 50) {
-        const snapshot = await db.collection('interventionLogs')
-            .where('userId', '==', userId)
+        const snapshot = await this.userCol(userId, 'interventionLogs')
             .orderBy('timestamp', 'desc')
             .limit(limit)
             .get();
@@ -377,9 +369,8 @@ const FirebaseService = {
      * Save or update emergency plan
      */
     async saveEmergencyPlan(userId, data) {
-        const docRef = db.collection('emergencyPlans').doc(userId);
+        const docRef = this.userCol(userId, 'emergencyPlans').doc('plan');
         await docRef.set({
-            userId,
             ...data,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
@@ -390,7 +381,7 @@ const FirebaseService = {
      * Get emergency plan
      */
     async getEmergencyPlan(userId) {
-        const snapshot = await db.collection('emergencyPlans').doc(userId).get();
+        const snapshot = await this.userCol(userId, 'emergencyPlans').doc('plan').get();
         return snapshot.exists ? { id: snapshot.id, ...snapshot.data() } : null;
     },
 
@@ -400,8 +391,7 @@ const FirebaseService = {
      * Mark lesson as complete
      */
     async markLessonComplete(userId, courseId, lessonId) {
-        const docId = `${userId}_${courseId}`;
-        const docRef = db.collection('academyProgress').doc(docId);
+        const docRef = this.userCol(userId, 'academyProgress').doc(courseId);
         const snapshot = await docRef.get();
 
         if (snapshot.exists) {
@@ -411,7 +401,6 @@ const FirebaseService = {
             });
         } else {
             await docRef.set({
-                userId,
                 courseId,
                 completedLessons: [lessonId],
                 startedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -424,9 +413,7 @@ const FirebaseService = {
      * Get academy progress for all courses
      */
     async getAcademyProgress(userId) {
-        const snapshot = await db.collection('academyProgress')
-            .where('userId', '==', userId)
-            .get();
+        const snapshot = await this.userCol(userId, 'academyProgress').get();
         const progress = {};
         snapshot.docs.forEach(doc => {
             const data = doc.data();

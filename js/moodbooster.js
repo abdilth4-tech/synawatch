@@ -445,8 +445,7 @@ const MoodBooster = {
         const user = typeof auth !== 'undefined' && auth.currentUser;
         if (!user || typeof db === 'undefined') return;
         try {
-            await db.collection('moodLogs').add({
-                userId: user.uid,
+            await FirebaseService.userCol(user.uid, 'moodLogs').add({
                 mood: level,
                 sensorState: this.getSensorState(),
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -458,8 +457,7 @@ const MoodBooster = {
         const user = typeof auth !== 'undefined' && auth.currentUser;
         if (!user || typeof db === 'undefined') return;
         try {
-            await db.collection('musicTherapyLogs').add({
-                userId: user.uid,
+            await FirebaseService.userCol(user.uid, 'musicTherapyLogs').add({
                 category,
                 trackName: track.name,
                 bpm: track.bpm,

@@ -117,8 +117,7 @@ const Journal = {
         const user = auth?.currentUser;
         if (!user || typeof db === 'undefined') return;
         try {
-            const snps = await db.collection('journals')
-                .where('userId', '==', user.uid)
+            const snps = await FirebaseService.userCol(user.uid, 'journals')
                 .orderBy('timestamp', 'desc')
                 .limit(5)
                 .get();
@@ -186,8 +185,7 @@ const Journal = {
         const user = auth?.currentUser;
         if (user && typeof db !== 'undefined') {
             try {
-                await db.collection('journals').add({
-                    userId: user.uid,
+                await FirebaseService.userCol(user.uid, 'journals').add({
                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                     date: new Date().toISOString(),
                     text: text.trim(),

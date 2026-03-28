@@ -321,8 +321,7 @@ const SupportHub = {
         if (!user || typeof db === 'undefined') return;
 
         try {
-            await db.collection('safetyPlans').doc(user.uid).set({
-                userId: user.uid,
+            await FirebaseService.userCol(user.uid, 'safetyPlans').doc('plan').set({
                 ...plan,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
