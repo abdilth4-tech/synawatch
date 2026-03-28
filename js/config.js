@@ -1,11 +1,11 @@
 /**
  * SYNAWATCH Configuration
- * Replace placeholder values with your actual API keys
+ * API keys are loaded from config.keys.js (excluded from git)
  */
 
 const CONFIG = {
     // Firebase Configuration - SYNAWACTH-ID
-    FIREBASE_API_KEY: 'AIzaSyCSfe6L9nYPLBCx4SsZ7Wb8vhh34VKexYc',
+    FIREBASE_API_KEY: (typeof API_KEYS !== 'undefined' && API_KEYS.FIREBASE_API_KEY) || '',
     FIREBASE_AUTH_DOMAIN: 'synawacth-id.firebaseapp.com',
     FIREBASE_PROJECT_ID: 'synawacth-id',
     FIREBASE_STORAGE_BUCKET: 'synawacth-id.firebasestorage.app',
@@ -13,18 +13,12 @@ const CONFIG = {
     FIREBASE_APP_ID: '1:362856081724:web:56e6dd619d391adedc9639',
 
     // Gemini AI Configuration (multiple keys for auto-fallback)
-    GEMINI_API_KEY: 'AIzaSyDdORtZtn2gbtjv12FKDRmp5OVK_gjBzMk',
-    GEMINI_API_KEYS: [
-        'AIzaSyDdORtZtn2gbtjv12FKDRmp5OVK_gjBzMk',
-        'AIzaSyBhsre6Q_CJvT1vl5noZlBEQUtSm4k4TAg',
-        'AIzaSyCcs9YahYuGGSo0uIqh2R_2nmN1OqzMh2o',
-        'AIzaSyDmPUE1RWaQkxQEo5vVJuRNzXRn8wzR0x0',
-        'AIzaSyD9f8x6GnnE0-6k9ePFsGkDfGeXoRf4UIQ'
-    ],
+    GEMINI_API_KEY: (typeof API_KEYS !== 'undefined' && API_KEYS.GEMINI_API_KEY) || '',
+    GEMINI_API_KEYS: (typeof API_KEYS !== 'undefined' && API_KEYS.GEMINI_API_KEYS) || [],
 
     // ElevenLabs TTS Configuration
-    ELEVENLABS_API_KEY: 'e7639c34914b1734706406e174f9ae11e5e230c16ddb37a5a0af4e3496ec27f0',
-    ELEVENLABS_VOICE_ID: '9BWtsMINqrJLrRacOk9x', // Aria - multilingual female voice
+    ELEVENLABS_API_KEY: (typeof API_KEYS !== 'undefined' && API_KEYS.ELEVENLABS_API_KEY) || '',
+    ELEVENLABS_VOICE_ID: (typeof API_KEYS !== 'undefined' && API_KEYS.ELEVENLABS_VOICE_ID) || '',
 
     // BLE Configuration for ESP32 SYNAWATCH
     BLE_DEVICE_NAME: 'SYNAWATCH',
