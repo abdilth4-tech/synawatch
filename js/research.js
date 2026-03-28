@@ -5,21 +5,19 @@
  */
 
 const ResearchFoundation = {
-  // Research Domains mapped to SynaWatch features
   domains: {
-    1: { id: 1, label: 'Wearable Biosensors & Mental Health', icon: '📊', features: ['BLE Sensor', 'Dashboard', 'Health Page'] },
-    2: { id: 2, label: 'PHQ-9 Digital Screening', icon: '🧠', features: ['Assessment Module'] },
-    3: { id: 3, label: 'Loneliness & Social Isolation', icon: '🤝', features: ['UCLA Assessment', 'Support Hub'] },
-    4: { id: 4, label: 'Closed-Loop Interventions', icon: '🔄', features: ['Intervention Engine'] },
-    5: { id: 5, label: 'Sleep Monitoring & Treatment', icon: '😴', features: ['Sleep Lab'] },
-    6: { id: 6, label: 'Music Therapy & Mood', icon: '🎵', features: ['Mood Booster'] },
-    7: { id: 7, label: 'Digital Mindfulness & Meditation', icon: '🧘', features: ['Mindful Moment'] },
-    8: { id: 8, label: 'Digital Journaling', icon: '📝', features: ['Refleksi Harian'] },
-    9: { id: 9, label: 'AI Chatbots & Conversation', icon: '🤖', features: ['SynaCHAT AI'] },
-    10: { id: 10, label: 'Crisis Support & Safety Planning', icon: '🆘', features: ['Support Hub'] }
+    1: { id: 1, label: 'Wearable Biosensors & Mental Health', icon: 'fa-microchip', color: '#8B5CF6', features: ['BLE Sensor', 'Dashboard', 'Health Page'] },
+    2: { id: 2, label: 'PHQ-9 Digital Screening', icon: 'fa-brain', color: '#6366f1', features: ['Assessment Module'] },
+    3: { id: 3, label: 'Loneliness & Social Isolation', icon: 'fa-people-arrows', color: '#ec4899', features: ['UCLA Assessment', 'Support Hub'] },
+    4: { id: 4, label: 'Closed-Loop Interventions', icon: 'fa-rotate', color: '#14b8a6', features: ['Intervention Engine'] },
+    5: { id: 5, label: 'Sleep Monitoring & Treatment', icon: 'fa-moon', color: '#6366f1', features: ['Sleep Lab'] },
+    6: { id: 6, label: 'Music Therapy & Mood', icon: 'fa-music', color: '#f59e0b', features: ['Mood Booster'] },
+    7: { id: 7, label: 'Digital Mindfulness', icon: 'fa-spa', color: '#10b981', features: ['Mindful Moment'] },
+    8: { id: 8, label: 'Digital Journaling', icon: 'fa-book-open', color: '#f97316', features: ['Refleksi Harian'] },
+    9: { id: 9, label: 'AI Chatbots & Conversation', icon: 'fa-robot', color: '#3b82f6', features: ['SynaCHAT AI'] },
+    10: { id: 10, label: 'Crisis Support & Safety Planning', icon: 'fa-shield-heart', color: '#ef4444', features: ['Support Hub'] }
   },
 
-  // 50 Peer-Reviewed Papers
   papers: [
     // Domain 1: Wearable Biosensors (1-6)
     { id: 1, domain: 1, title: 'Smart Devices and Wearable Technologies to Detect and Monitor Mental Health Conditions and Stress: A Systematic Review', authors: 'Hickey et al.', year: 2021, journal: 'Sensors', citations: 201, url: 'https://consensus.app/papers/details/5d72277604235cf48d72e26b0d2ebb77/', relevanceNote: 'Comprehensive SLR establishing wearable efficacy for mental health monitoring' },
@@ -32,7 +30,7 @@ const ResearchFoundation = {
     // Domain 2: PHQ-9 Digital Screening (7-11)
     { id: 7, domain: 2, title: 'Screening for depression in primary care with PHQ-9: A systematic review', authors: 'Levis et al.', year: 2020, journal: 'J Affective Disorders', citations: 503, url: 'https://consensus.app/papers/details/487cffa920e451a097391ae0ad070134/', relevanceNote: 'Gold-standard validation of PHQ-9 as digital screening instrument' },
     { id: 8, domain: 2, title: '14-day smartphone ambulatory assessment vs PHQ-9 depression screening', authors: 'Moshe et al.', year: 2021, journal: 'PLoS ONE', citations: 28, url: 'https://consensus.app/papers/details/234237c03cfa58ed96240de422077468/', relevanceNote: 'Real-time mobile PHQ-9 assessment validation' },
-    { id: 9, domain: 2, title: 'ML Approach for Detecting Digital Behavioral Patterns of Depression Using Smartphone Data (Complementary to PHQ-9)', authors: 'Morgiève et al.', year: 2022, journal: 'JMIR Formative Research', citations: 19, url: 'https://consensus.app/papers/details/76ff7e542cd858ffad4149c9b5fc1f7f/', relevanceNote: 'Behavioral signals complement traditional PHQ-9 assessment' },
+    { id: 9, domain: 2, title: 'ML Approach for Detecting Digital Behavioral Patterns of Depression Using Smartphone Data', authors: 'Morgiève et al.', year: 2022, journal: 'JMIR Formative Research', citations: 19, url: 'https://consensus.app/papers/details/76ff7e542cd858ffad4149c9b5fc1f7f/', relevanceNote: 'Behavioral signals complement traditional PHQ-9 assessment' },
     { id: 10, domain: 2, title: 'Youth screening depression: Validation of PHQ-9 in adolescents', authors: 'Garabiles et al.', year: 2023, journal: 'Psychiatry Research', citations: 57, url: 'https://consensus.app/papers/details/0b4cc22f8faf51b4bdae14d163814032/', relevanceNote: 'PHQ-9 validation in younger demographics' },
     { id: 11, domain: 2, title: 'Screening for Depression in Mobile Devices Using PHQ-9: Diagnostic Meta-Analysis via ML', authors: 'Kim et al.', year: 2021, journal: 'Neuropsychiatric Disease and Treatment', citations: 11, url: 'https://consensus.app/papers/details/25ff613a89055ad6b0e4febcab476555/', relevanceNote: 'Mobile-optimized PHQ-9 with ML interpretation' },
 
@@ -92,487 +90,285 @@ const ResearchFoundation = {
     { id: 50, domain: 10, title: 'The Effect of Digital Mental Health Literacy Interventions on Mental Health: SR and Meta-Analysis', authors: 'Goel et al.', year: 2023, journal: 'JMIR', citations: 35, url: 'https://consensus.app/papers/details/7c8f40b7406a5b9da0f9a54142879475/', relevanceNote: 'Health literacy components in digital mental health crisis support' }
   ],
 
-  // Research Gaps & Upgrade Recommendations
   gaps: [
-    {
-      id: 1,
-      title: 'Integrated Multimodal Bio-Psycho Assessment',
-      currentState: 'Existing studies use EITHER biosensors (GSR/HRV/SpO2) OR questionnaires (PHQ-9, UCLA), not both integrated.',
-      description: 'SynaWatch uniquely combines GSR, HRV, SpO2 WITH PHQ-9 + UCLA in a single assessment framework.',
-      upgrade: 'Implement real-time fusion scoring algorithm that weights sensor anomalies against baseline psychological profiles—enabling detection of discordance between reported mood and physiological state.',
-      priority: 'CRITICAL',
-      domain: 1
-    },
-    {
-      id: 2,
-      title: 'Closed-Loop with Personalized Thresholds',
-      currentState: 'Most JITAIs are time-based or EMA-prompted; few trigger on physiological thresholds.',
-      description: 'Current JITAI literature shows limited bio-signal-triggered intervention protocols.',
-      upgrade: 'Implement ML-based threshold calibration per-user over time—stress threshold should decrease for high-PHQ-9 users, rising for those in remission—creating adaptive intervention sensitivity.',
-      priority: 'HIGH',
-      domain: 4
-    },
-    {
-      id: 3,
-      title: 'Music Therapy Selection via Biofeedback',
-      currentState: 'No published study combines real-time GSR/HRV to dynamically select music tempo/genre.',
-      description: 'Music therapy literature is rich but static; biofeedback integration is unexplored.',
-      upgrade: 'Add biofeedback-driven playlist selection in Mood Booster—calm music (60-80 BPM) when GSR is high, upbeat (120+ BPM) when low mood detected.',
-      priority: 'HIGH',
-      domain: 6
-    },
-    {
-      id: 4,
-      title: 'Journaling + Sensor Context Auto-Tagging',
-      currentState: 'MindScape (2024) is the only study integrating behavioral sensing with journaling; no apps implement this.',
-      description: 'Journaling entries lack physiological context despite clear relevance to mood reconstruction.',
-      upgrade: 'Auto-tag journal entries with sensor state at time of writing—display stress level, heart rate, activity status, sleep quality—enabling pattern discovery in journaling outcomes.',
-      priority: 'MEDIUM',
-      domain: 8
-    },
-    {
-      id: 5,
-      title: 'Longitudinal Psychometric Tracking with Trend Analysis',
-      currentState: 'Few digital apps track PHQ-9/UCLA over months with visual trend analytics; most show only latest score.',
-      description: 'Longitudinal assessment tracking is underutilized despite strong evidence for chronic disease monitoring.',
-      upgrade: 'Add assessment history chart showing PHQ-9 and UCLA score trends over 3, 6, 12 months with intervention correlation markers—connecting depression score drops to Mood Booster or Mindful Moment usage.',
-      priority: 'MEDIUM',
-      domain: 2
-    },
-    {
-      id: 6,
-      title: 'AI Chatbot + Wearable Data Fusion',
-      currentState: 'Chatbot studies show no integration with real-time physiological data; SynaCHAT has access to live sensor data.',
-      description: 'Most AI chatbots operate in isolation from wearable contexts; SynaWatch has unique opportunity.',
-      upgrade: 'Enable SynaCHAT to proactively initiate conversations when sensor anomalies detected (sustained GSR elevation + high HR + elevated PHQ-9)—not just user-initiated chat.',
-      priority: 'HIGH',
-      domain: 9
-    },
-    {
-      id: 7,
-      title: 'Safety Planning with Bio-Signal Triggers',
-      currentState: 'Digital safety plans require manual user activation; no published app auto-triggers crisis protocols.',
-      description: 'Crisis intervention timing is reactive; physiological early warning is underexploited.',
-      upgrade: 'Auto-activate crisis protocol when sustained high stress (GSR + HR + cortisol proxy) AND elevated PHQ-9 score AND UCLA loneliness detected—with user consent, escalate to peer/professional support.',
-      priority: 'CRITICAL',
-      domain: 10
-    }
+    { id: 1, title: 'Integrated Multimodal Bio-Psycho Assessment', currentState: 'Studi yang ada menggunakan biosensor (GSR/HRV/SpO2) ATAU kuesioner (PHQ-9, UCLA) secara terpisah, belum terintegrasi.', description: 'SynaWatch secara unik menggabungkan GSR, HRV, SpO2 DENGAN PHQ-9 + UCLA dalam satu framework penilaian terpadu.', upgrade: 'Implementasi algoritma fusion scoring real-time yang menimbang anomali sensor terhadap profil psikologis baseline - mendeteksi ketidaksesuaian antara mood yang dilaporkan dan kondisi fisiologis.', priority: 'CRITICAL', domain: 1, status: 'implemented' },
+    { id: 2, title: 'Closed-Loop with Personalized Thresholds', currentState: 'Sebagian besar JITAI berbasis waktu atau dipicu EMA; sedikit yang dipicu ambang fisiologis.', description: 'Literatur JITAI saat ini menunjukkan protokol intervensi yang terbatas berbasis sinyal bio.', upgrade: 'Implementasi kalibrasi threshold berbasis ML per-pengguna - threshold stres menurun untuk pengguna PHQ-9 tinggi, meningkat untuk yang dalam remisi.', priority: 'HIGH', domain: 4, status: 'implemented' },
+    { id: 3, title: 'Music Therapy Selection via Biofeedback', currentState: 'Belum ada studi yang menggabungkan GSR/HRV real-time untuk memilih tempo/genre musik secara dinamis.', description: 'Literatur terapi musik kaya namun statis; integrasi biofeedback belum dieksplorasi.', upgrade: 'Seleksi playlist berbasis biofeedback - musik tenang (60-80 BPM) saat GSR tinggi, upbeat (120+ BPM) saat mood rendah terdeteksi.', priority: 'HIGH', domain: 6, status: 'implemented' },
+    { id: 4, title: 'Journaling + Sensor Context Auto-Tagging', currentState: 'MindScape (2024) satu-satunya studi yang mengintegrasikan behavioral sensing dengan journaling.', description: 'Entri jurnal tidak memiliki konteks fisiologis meskipun relevan untuk rekonstruksi mood.', upgrade: 'Auto-tag entri jurnal dengan status sensor saat penulisan - menampilkan tingkat stres, detak jantung, status aktivitas.', priority: 'MEDIUM', domain: 8, status: 'implemented' },
+    { id: 5, title: 'Longitudinal Psychometric Tracking', currentState: 'Sedikit aplikasi digital melacak PHQ-9/UCLA selama berbulan-bulan dengan analitik tren visual.', description: 'Pelacakan penilaian longitudinal kurang dimanfaatkan meskipun terbukti untuk pemantauan penyakit kronis.', upgrade: 'Grafik riwayat assessment menampilkan tren skor PHQ-9 dan UCLA 3, 6, 12 bulan dengan marker korelasi intervensi.', priority: 'MEDIUM', domain: 2, status: 'implemented' },
+    { id: 6, title: 'AI Chatbot + Wearable Data Fusion', currentState: 'Studi chatbot tidak menunjukkan integrasi dengan data fisiologis real-time.', description: 'Sebagian besar chatbot AI beroperasi tanpa konteks wearable; SynaWatch memiliki kesempatan unik.', upgrade: 'SynaCHAT proaktif memulai percakapan saat anomali sensor terdeteksi (GSR tinggi + HR tinggi + PHQ-9 elevasi).', priority: 'HIGH', domain: 9, status: 'implemented' },
+    { id: 7, title: 'Safety Planning with Bio-Signal Triggers', currentState: 'Rencana keselamatan digital memerlukan aktivasi manual; belum ada aplikasi yang auto-trigger protokol krisis.', description: 'Timing intervensi krisis bersifat reaktif; peringatan dini fisiologis belum dieksploitasi.', upgrade: 'Auto-aktivasi protokol krisis saat stres tinggi berkelanjutan (GSR + HR) DAN PHQ-9 elevasi DAN kesepian UCLA terdeteksi.', priority: 'CRITICAL', domain: 10, status: 'implemented' }
   ],
+
+  activeDomain: null,
+  methodologyOpen: false,
 
   /**
    * Initialize Research page
    */
-  initResearch: function() {
+  initResearch() {
     const container = document.getElementById('researchContent');
     if (!container) return;
 
+    const totalCitations = this.papers.reduce((sum, p) => sum + p.citations, 0);
+
     container.innerHTML = `
-      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
-        <h1 style="color: white; margin: 0 0 0.5rem 0; font-size: 2.5rem; font-weight: 700;">📚 Dasar Penelitian SynaWatch</h1>
-        <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 1.1rem;">Systematic Literature Review: 50 Peer-Reviewed Papers Across 10 Mental Health Domains</p>
-      </div>
-
-      <div id="methodologySection" style="margin-bottom: 3rem;"></div>
-      <div id="filterSection" style="margin-bottom: 2rem;"></div>
-      <div id="papersSection" style="margin-bottom: 3rem;"></div>
-      <div id="gapSection" style="margin-bottom: 2rem;"></div>
-    `;
-
-    this.renderMethodology();
-    this.renderFilterButtons();
-    this.renderPapersByDomain(null);
-    this.renderGapAnalysis();
-  },
-
-  /**
-   * Render PRISMA Methodology Section
-   */
-  renderMethodology: function() {
-    const section = document.getElementById('methodologySection');
-    if (!section) return;
-
-    section.innerHTML = `
-      <div style="background: white; border-radius: 12px; padding: 2rem; border-left: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <h2 style="color: #333; margin: 0 0 1rem 0; font-size: 1.5rem;">🔬 Metodologi SLR (PRISMA Guidelines)</h2>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
-          <div style="padding: 1rem; background: #f8f9ff; border-radius: 8px;">
-            <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">Sumber Penelitian</div>
-            <div style="font-size: 0.95rem; color: #666;">Consensus, PubMed, Semantic Scholar, ArXiv</div>
+      <!-- Hero -->
+      <div style="background:linear-gradient(135deg,#7C3AED 0%,#4F46E5 50%,#2563EB 100%);padding:28px 20px;border-radius:20px;margin-bottom:20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,0.08);border-radius:50%;"></div>
+        <div style="position:absolute;bottom:-20px;left:40px;width:80px;height:80px;background:rgba(255,255,255,0.05);border-radius:50%;"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+            <i class="fas fa-flask" style="color:rgba(255,255,255,0.9);font-size:1.1rem;"></i>
+            <span style="color:rgba(255,255,255,0.7);font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;">Research Foundation</span>
           </div>
-
-          <div style="padding: 1rem; background: #f8f9ff; border-radius: 8px;">
-            <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">Total Publikasi</div>
-            <div style="font-size: 0.95rem; color: #666;">50 peer-reviewed papers (2019-2025)</div>
-          </div>
-
-          <div style="padding: 1rem; background: #f8f9ff; border-radius: 8px;">
-            <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">Domain Penelitian</div>
-            <div style="font-size: 0.95rem; color: #666;">10 areas yang terkait dengan fitur SynaWatch</div>
-          </div>
-
-          <div style="padding: 1rem; background: #f8f9ff; border-radius: 8px;">
-            <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">Tipe Studi</div>
-            <div style="font-size: 0.95rem; color: #666;">RCT, SR, Meta-analysis, Cohort Studies</div>
+          <h1 style="color:white;margin:0 0 6px;font-size:1.5rem;font-weight:800;line-height:1.2;">Dasar Penelitian SynaWatch</h1>
+          <p style="color:rgba(255,255,255,0.8);margin:0 0 20px;font-size:0.88rem;line-height:1.5;">Systematic Literature Review mengikuti PRISMA Guidelines</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+            <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);padding:14px 12px;border-radius:14px;text-align:center;">
+              <div style="font-size:1.6rem;font-weight:800;color:white;">50</div>
+              <div style="font-size:0.72rem;color:rgba(255,255,255,0.75);font-weight:500;">Paper Ilmiah</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);padding:14px 12px;border-radius:14px;text-align:center;">
+              <div style="font-size:1.6rem;font-weight:800;color:white;">10</div>
+              <div style="font-size:0.72rem;color:rgba(255,255,255,0.75);font-weight:500;">Domain Riset</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);padding:14px 12px;border-radius:14px;text-align:center;">
+              <div style="font-size:1.6rem;font-weight:800;color:white;">${totalCitations.toLocaleString()}</div>
+              <div style="font-size:0.72rem;color:rgba(255,255,255,0.75);font-weight:500;">Total Sitasi</div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div style="margin-top: 1.5rem; padding: 1rem; background: #fffbf0; border-left: 4px solid #f59e0b; border-radius: 8px;">
-          <div style="font-weight: 600; color: #d97706; margin-bottom: 0.5rem;">💡 Panduan Navigasi</div>
-          <ul style="margin: 0.5rem 0 0 1.5rem; padding: 0; font-size: 0.95rem; color: #666; line-height: 1.6;">
-            <li>Gunakan filter domain di bawah untuk melihat penelitian per fitur</li>
-            <li>Klik judul paper untuk membaca di Consensus API</li>
-            <li>Lihat "Research Gaps" untuk peluang inovasi SynaWatch</li>
-          </ul>
+      <!-- Methodology Toggle -->
+      <div id="methodologyCard" style="background:white;border-radius:16px;margin-bottom:16px;border:1px solid var(--border-color);overflow:hidden;">
+        <button onclick="ResearchFoundation.toggleMethodology()" style="width:100%;padding:16px 18px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,#EDE9FE,#DDD6FE);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <i class="fas fa-microscope" style="color:#7C3AED;font-size:0.9rem;"></i>
+            </div>
+            <div style="text-align:left;">
+              <div style="font-weight:700;color:var(--text-primary);font-size:0.92rem;">Metodologi PRISMA</div>
+              <div style="font-size:0.78rem;color:var(--text-tertiary);">Sumber data, kriteria seleksi & tipe studi</div>
+            </div>
+          </div>
+          <i id="methodologyChevron" class="fas fa-chevron-down" style="color:var(--text-tertiary);transition:transform 0.3s;"></i>
+        </button>
+        <div id="methodologyBody" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;"></div>
+      </div>
+
+      <!-- Domain Filters -->
+      <div style="margin-bottom:16px;">
+        <h3 style="font-size:0.88rem;font-weight:700;color:var(--text-primary);margin-bottom:10px;"><i class="fas fa-filter" style="color:var(--primary-400);margin-right:6px;"></i>Filter Domain</h3>
+        <div id="domainFilters" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      </div>
+
+      <!-- Papers -->
+      <div id="papersSection" style="margin-bottom:24px;"></div>
+
+      <!-- Research Gaps -->
+      <div id="gapSection" style="margin-bottom:16px;"></div>
+    `;
+
+    this.renderMethodologyContent();
+    this.renderDomainFilters();
+    this.renderPapers(null);
+    this.renderGaps();
+  },
+
+  toggleMethodology() {
+    this.methodologyOpen = !this.methodologyOpen;
+    const body = document.getElementById('methodologyBody');
+    const chevron = document.getElementById('methodologyChevron');
+    if (!body) return;
+
+    if (this.methodologyOpen) {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      chevron.style.transform = 'rotate(180deg)';
+    } else {
+      body.style.maxHeight = '0';
+      chevron.style.transform = 'rotate(0)';
+    }
+  },
+
+  renderMethodologyContent() {
+    const body = document.getElementById('methodologyBody');
+    if (!body) return;
+
+    body.innerHTML = `
+      <div style="padding:0 18px 18px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div style="padding:12px;background:var(--bg-secondary);border-radius:12px;">
+            <div style="font-weight:700;color:var(--primary-600);font-size:0.8rem;margin-bottom:4px;"><i class="fas fa-database"></i> Sumber</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Consensus, PubMed, Semantic Scholar, ArXiv</div>
+          </div>
+          <div style="padding:12px;background:var(--bg-secondary);border-radius:12px;">
+            <div style="font-weight:700;color:var(--primary-600);font-size:0.8rem;margin-bottom:4px;"><i class="fas fa-calendar"></i> Periode</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">2019 - 2025 (peer-reviewed)</div>
+          </div>
+          <div style="padding:12px;background:var(--bg-secondary);border-radius:12px;">
+            <div style="font-weight:700;color:var(--primary-600);font-size:0.8rem;margin-bottom:4px;"><i class="fas fa-layer-group"></i> Tipe Studi</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">RCT, SR, Meta-analysis, Cohort</div>
+          </div>
+          <div style="padding:12px;background:var(--bg-secondary);border-radius:12px;">
+            <div style="font-weight:700;color:var(--primary-600);font-size:0.8rem;margin-bottom:4px;"><i class="fas fa-check-double"></i> Seleksi</div>
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Relevansi fitur, impact factor, sitasi</div>
+          </div>
+        </div>
+        <div style="padding:12px;background:#FFFBEB;border-left:3px solid #F59E0B;border-radius:0 10px 10px 0;font-size:0.82rem;color:#92400E;line-height:1.5;">
+          <strong>Catatan:</strong> Klik judul paper untuk membaca abstrak lengkap. Gunakan filter domain untuk melihat penelitian per fitur SynaWatch.
         </div>
       </div>
     `;
   },
 
-  /**
-   * Render Filter Buttons
-   */
-  renderFilterButtons: function() {
-    const section = document.getElementById('filterSection');
-    if (!section) return;
+  renderDomainFilters() {
+    const container = document.getElementById('domainFilters');
+    if (!container) return;
 
-    let filterHTML = `
-      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
-        <button onclick="ResearchFoundation.filterByDomain(null)" style="
-          padding: 0.75rem 1.25rem;
-          background: #667eea;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: 600;
-          font-size: 0.95rem;
-          transition: all 0.2s;
-        " onmouseover="this.style.background='#5568d3'" onmouseout="this.style.background='#667eea'">
-          🔄 Semua Domain
-        </button>
-    `;
+    let html = `<button onclick="ResearchFoundation.filterDomain(null)" class="rf-chip rf-chip-active" id="rfChipAll" style="padding:8px 14px;border-radius:10px;border:1.5px solid var(--primary-500);background:var(--primary-500);color:white;font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;">Semua (50)</button>`;
 
-    for (let domainId in this.domains) {
-      const domain = this.domains[domainId];
-      filterHTML += `
-        <button onclick="ResearchFoundation.filterByDomain(${domainId})" style="
-          padding: 0.75rem 1.25rem;
-          background: #f3f4f6;
-          color: #333;
-          border: 2px solid #e5e7eb;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: 500;
-          font-size: 0.9rem;
-          transition: all 0.2s;
-        " onmouseover="this.style.borderColor='#667eea'; this.style.color='#667eea'" onmouseout="this.style.borderColor='#e5e7eb'; this.style.color='#333'">
-          ${domain.icon} ${domain.label}
-        </button>
-      `;
+    for (const [id, d] of Object.entries(this.domains)) {
+      const count = this.papers.filter(p => p.domain == id).length;
+      html += `<button onclick="ResearchFoundation.filterDomain(${id})" class="rf-chip" id="rfChip${id}" style="padding:8px 14px;border-radius:10px;border:1.5px solid var(--border-color);background:white;color:var(--text-secondary);font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all 0.2s;display:flex;align-items:center;gap:5px;"><i class="fas ${d.icon}" style="color:${d.color};font-size:0.72rem;"></i>${d.label.split(' ')[0]} (${count})</button>`;
     }
 
-    filterHTML += '</div>';
-    section.innerHTML = filterHTML;
+    container.innerHTML = html;
   },
 
-  /**
-   * Render Papers by Domain (with filter)
-   */
-  renderPapersByDomain: function(domainFilter) {
+  filterDomain(domainId) {
+    this.activeDomain = domainId;
+
+    // Update chip styles
+    document.querySelectorAll('.rf-chip').forEach(chip => {
+      chip.style.background = 'white';
+      chip.style.color = 'var(--text-secondary)';
+      chip.style.borderColor = 'var(--border-color)';
+    });
+
+    const activeChip = domainId ? document.getElementById(`rfChip${domainId}`) : document.getElementById('rfChipAll');
+    if (activeChip) {
+      activeChip.style.background = 'var(--primary-500)';
+      activeChip.style.color = 'white';
+      activeChip.style.borderColor = 'var(--primary-500)';
+    }
+
+    this.renderPapers(domainId);
+
+    const section = document.getElementById('papersSection');
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  },
+
+  renderPapers(domainFilter) {
     const section = document.getElementById('papersSection');
     if (!section) return;
 
-    let filteredPapers = domainFilter
-      ? this.papers.filter(p => p.domain === parseInt(domainFilter))
-      : this.papers;
-
-    let filterLabel = domainFilter ? this.domains[domainFilter].label : 'Semua Domain';
-    let filterIcon = domainFilter ? this.domains[domainFilter].icon : '📚';
+    const filtered = domainFilter ? this.papers.filter(p => p.domain === domainFilter) : this.papers;
+    const label = domainFilter ? this.domains[domainFilter].label : 'Semua Domain';
 
     let html = `
-      <h2 style="color: #333; margin-bottom: 1.5rem; font-size: 1.5rem;">
-        ${filterIcon} Publikasi Ilmiah: ${filterLabel}
-        <span style="color: #999; font-size: 0.9rem; margin-left: 0.5rem;">
-          (${filteredPapers.length} paper)
-        </span>
-      </h2>
-
-      <div style="display: grid; gap: 1.5rem;">
-    `;
-
-    filteredPapers.forEach(paper => {
-      const domain = this.domains[paper.domain];
-      html += `
-        <div style="
-          background: white;
-          border-radius: 12px;
-          padding: 1.5rem;
-          border-left: 4px solid #667eea;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-          transition: all 0.2s;
-        " onmouseover="this.style.boxShadow='0 4px 16px rgba(102,126,234,0.15)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
-
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-            <div>
-              <a href="${paper.url}" target="_blank" style="
-                text-decoration: none;
-                color: #667eea;
-                font-weight: 600;
-                font-size: 1.05rem;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                transition: color 0.2s;
-              " onmouseover="this.style.color='#764ba2'" onmouseout="this.style.color='#667eea'">
-                ${paper.title}
-                <span style="font-size: 1rem;">🔗</span>
-              </a>
-            </div>
-          </div>
-
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.75rem; font-size: 0.9rem; color: #666;">
-            <span style="font-weight: 500;">${paper.authors}</span>
-            <span>•</span>
-            <span>${paper.year}</span>
-            <span>•</span>
-            <span style="font-style: italic;">${paper.journal}</span>
-          </div>
-
-          <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
-            <span style="
-              display: inline-block;
-              background: #667eea;
-              color: white;
-              padding: 0.4rem 0.8rem;
-              border-radius: 6px;
-              font-size: 0.85rem;
-              font-weight: 600;
-            ">
-              📊 ${paper.citations} citations
-            </span>
-            <span style="
-              display: inline-block;
-              background: #f3f4f6;
-              color: #667eea;
-              padding: 0.4rem 0.8rem;
-              border-radius: 6px;
-              font-size: 0.85rem;
-              font-weight: 600;
-            ">
-              ${domain.icon} ${domain.label}
-            </span>
-          </div>
-
-          <div style="padding: 0.75rem; background: #f8f9ff; border-left: 3px solid #667eea; border-radius: 6px; font-size: 0.95rem; color: #555; line-height: 1.5;">
-            <strong>Relevansi SynaWatch:</strong> ${paper.relevanceNote}
-          </div>
-        </div>
-      `;
-    });
-
-    html += '</div>';
-    section.innerHTML = html;
-  },
-
-  /**
-   * Render Research Gap Analysis
-   */
-  renderGapAnalysis: function() {
-    const section = document.getElementById('gapSection');
-    if (!section) return;
-
-    let html = `
-      <h2 style="color: #333; margin-bottom: 1.5rem; font-size: 1.5rem;">⚠️ Analisis Gap Penelitian & Rekomendasi Upgrade</h2>
-
-      <div style="display: grid; gap: 1.5rem;">
-    `;
-
-    this.gaps.forEach(gap => {
-      const priorityColors = {
-        'CRITICAL': { bg: '#fef2f2', border: '#dc2626', text: '#991b1b', label: '🔴 KRITIS' },
-        'HIGH': { bg: '#fef3f2', border: '#f97316', text: '#c2410c', label: '🟠 TINGGI' },
-        'MEDIUM': { bg: '#fffbf0', border: '#f59e0b', text: '#d97706', label: '🟡 SEDANG' }
-      };
-      const priority = priorityColors[gap.priority];
-
-      html += `
-        <div style="
-          background: white;
-          border-radius: 12px;
-          padding: 1.5rem;
-          border-left: 4px solid ${priority.border};
-          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        ">
-
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-            <div>
-              <h3 style="color: #333; margin: 0 0 0.5rem 0; font-size: 1.15rem;">${gap.title}</h3>
-              <span style="
-                display: inline-block;
-                background: ${priority.bg};
-                color: ${priority.text};
-                padding: 0.4rem 0.8rem;
-                border-radius: 6px;
-                font-size: 0.85rem;
-                font-weight: 600;
-              ">
-                ${priority.label}
-              </span>
-            </div>
-          </div>
-
-          <div style="margin-bottom: 1rem;">
-            <div style="font-weight: 600; color: #666; margin-bottom: 0.5rem;">Status Saat Ini:</div>
-            <p style="margin: 0; color: #555; font-size: 0.95rem; line-height: 1.5;">${gap.currentState}</p>
-          </div>
-
-          <div style="margin-bottom: 1rem;">
-            <div style="font-weight: 600; color: #666; margin-bottom: 0.5rem;">Deskripsi Gap:</div>
-            <p style="margin: 0; color: #555; font-size: 0.95rem; line-height: 1.5;">${gap.description}</p>
-          </div>
-
-          <div style="padding: 1rem; background: ${priority.bg}; border-left: 3px solid ${priority.border}; border-radius: 6px;">
-            <div style="font-weight: 600; color: ${priority.text}; margin-bottom: 0.5rem;">💡 Rekomendasi Upgrade:</div>
-            <p style="margin: 0; color: ${priority.text}; font-size: 0.95rem; line-height: 1.5;">${gap.upgrade}</p>
-          </div>
-        </div>
-      `;
-    });
-
-    html += '</div>';
-    section.innerHTML = html;
-  },
-
-  /**
-   * Filter by Domain Handler
-   */
-  filterByDomain: function(domainId) {
-    this.renderPapersByDomain(domainId);
-    // Scroll to papers section
-    const papersSection = document.getElementById('papersSection');
-    if (papersSection) {
-      papersSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  },
-
-  /**
-   * Initialize Research Materials - Load comprehensive HTML page
-   */
-  initResearch: async function() {
-    const contentDiv = document.getElementById('researchContent');
-    const frame = document.getElementById('researchFrame');
-
-    if (!contentDiv || !frame) {
-      console.warn('Research content elements not found');
-      return;
-    }
-
-    try {
-      // Try to load the comprehensive research materials HTML
-      const researchPath = '../../../research-materials.html';
-
-      const response = await fetch(researchPath);
-      if (!response.ok) {
-        throw new Error(`Failed to load: ${response.status}`);
-      }
-
-      const html = await response.text();
-
-      // Inject into iframe for isolation
-      frame.style.display = 'block';
-      const doc = frame.contentDocument || frame.contentWindow.document;
-      doc.open();
-      doc.write(html);
-      doc.close();
-
-      // Hide loading spinner
-      contentDiv.innerHTML = '';
-      contentDiv.style.display = 'none';
-
-      console.log('✅ Research materials loaded successfully');
-    } catch (error) {
-      console.error('Error loading research materials:', error);
-
-      // Fallback: Display basic research summary from existing data
-      this.renderBasicResearch(contentDiv);
-    }
-  },
-
-  /**
-   * Fallback: Render basic research summary if HTML load fails
-   */
-  renderBasicResearch: function(container) {
-    let html = `
-      <div style="padding: 40px 20px; max-width: 1000px; margin: 0 auto;">
-        <div style="text-align: center; margin-bottom: 40px;">
-          <h1 style="font-size: 2.5em; color: #667eea; margin-bottom: 10px;">🧠 SynaWatch Research Materials</h1>
-          <p style="font-size: 1.1em; color: #666; margin-bottom: 20px;">Systematic Literature Review - 50 Peer-Reviewed Papers</p>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
-            <div style="background: #f0f4ff; padding: 20px; border-radius: 10px;">
-              <div style="font-size: 2.5em; font-weight: bold; color: #667eea;">50</div>
-              <div style="color: #666; font-size: 0.9em;">Papers</div>
-            </div>
-            <div style="background: #f0f4ff; padding: 20px; border-radius: 10px;">
-              <div style="font-size: 2.5em; font-weight: bold; color: #667eea;">10</div>
-              <div style="color: #666; font-size: 0.9em;">Domains</div>
-            </div>
-            <div style="background: #f0f4ff; padding: 20px; border-radius: 10px;">
-              <div style="font-size: 2.5em; font-weight: bold; color: #667eea;">7</div>
-              <div style="color: #666; font-size: 0.9em;">Gaps</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 30px;">
-          <h2 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px;">📊 Research Domains</h2>
-    `;
-
-    for (let [key, domain] of Object.entries(this.domains)) {
-      const gapCount = this.papers.filter(p => p.domain == domain.id).length;
-      html += `
-        <div style="background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #667eea;">
-          <div style="font-weight: 600; color: #333;">${domain.icon} ${domain.label}</div>
-          <div style="color: #666; font-size: 0.9em; margin-top: 5px;">${gapCount} papers | Features: ${domain.features.join(', ')}</div>
-        </div>
-      `;
-    }
-
-    html += `
-        </div>
-
-        <div style="margin-bottom: 30px;">
-          <h2 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px;">🔍 Research Gaps</h2>
-    `;
-
-    this.gaps.forEach((gap, idx) => {
-      const priorityColor = gap.priority === 'CRITICAL' ? '#ef4444' : gap.priority === 'HIGH' ? '#f59e0b' : '#3b82f6';
-      html += `
-        <div style="background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid ${priorityColor};">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <div style="font-weight: 600; color: #333;">Gap ${gap.id}: ${gap.title}</div>
-            <span style="background: ${priorityColor}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 600;">${gap.priority}</span>
-          </div>
-          <p style="color: #666; font-size: 0.95em; margin: 5px 0;">${gap.description}</p>
-        </div>
-      `;
-    });
-
-    html += `
-        </div>
-
-        <div style="background: #f0f4ff; padding: 30px; border-radius: 10px; text-align: center;">
-          <p style="color: #666; margin-bottom: 20px;">For comprehensive research materials with detailed diagrams, conceptual frameworks, and DOI-linked references:</p>
-          <a href="../../../research-materials.html" target="_blank" style="background: #667eea; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
-            📖 Open Full Research Materials Page
-          </a>
-        </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin:0;"><i class="fas fa-scroll" style="color:var(--primary-400);margin-right:6px;"></i>${label}</h3>
+        <span style="font-size:0.78rem;color:var(--text-tertiary);font-weight:600;">${filtered.length} paper</span>
       </div>
     `;
 
-    container.innerHTML = html;
+    filtered.forEach(paper => {
+      const domain = this.domains[paper.domain];
+      const citColor = paper.citations >= 200 ? '#DC2626' : paper.citations >= 100 ? '#F59E0B' : paper.citations >= 50 ? '#3B82F6' : '#6B7280';
+
+      html += `
+      <div style="background:white;border-radius:14px;padding:16px;margin-bottom:10px;border:1px solid var(--border-color);transition:box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(124,58,237,0.1)'" onmouseout="this.style.boxShadow='none'">
+        <a href="${paper.url}" target="_blank" rel="noopener" style="text-decoration:none;color:var(--text-primary);font-weight:600;font-size:0.88rem;line-height:1.45;display:block;margin-bottom:8px;">
+          ${paper.title} <i class="fas fa-external-link-alt" style="font-size:0.65rem;color:var(--primary-400);margin-left:4px;"></i>
+        </a>
+
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-size:0.78rem;color:var(--text-tertiary);">
+          <span style="font-weight:600;color:var(--text-secondary);">${paper.authors}</span>
+          <span style="color:var(--border-color);">|</span>
+          <span>${paper.year}</span>
+          <span style="color:var(--border-color);">|</span>
+          <span style="font-style:italic;">${paper.journal}</span>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+          <span style="display:inline-flex;align-items:center;gap:4px;background:${citColor}12;color:${citColor};padding:4px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;">
+            <i class="fas fa-quote-left" style="font-size:0.6rem;"></i> ${paper.citations} sitasi
+          </span>
+          <span style="display:inline-flex;align-items:center;gap:4px;background:${domain.color}12;color:${domain.color};padding:4px 10px;border-radius:8px;font-size:0.72rem;font-weight:600;">
+            <i class="fas ${domain.icon}" style="font-size:0.6rem;"></i> ${domain.label.split('&')[0].trim()}
+          </span>
+        </div>
+
+        <div style="padding:10px 12px;background:var(--bg-secondary);border-radius:10px;font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">
+          <i class="fas fa-link" style="color:var(--primary-400);margin-right:4px;font-size:0.7rem;"></i>
+          <strong style="color:var(--text-primary);">Relevansi:</strong> ${paper.relevanceNote}
+        </div>
+      </div>
+      `;
+    });
+
+    section.innerHTML = html;
+  },
+
+  renderGaps() {
+    const section = document.getElementById('gapSection');
+    if (!section) return;
+
+    const priorityMap = {
+      'CRITICAL': { bg: '#FEF2F2', border: '#EF4444', text: '#991B1B', badge: '#EF4444', label: 'KRITIS', icon: 'fa-circle-exclamation' },
+      'HIGH': { bg: '#FFF7ED', border: '#F97316', text: '#9A3412', badge: '#F97316', label: 'TINGGI', icon: 'fa-triangle-exclamation' },
+      'MEDIUM': { bg: '#FFFBEB', border: '#F59E0B', text: '#92400E', badge: '#F59E0B', label: 'SEDANG', icon: 'fa-circle-info' }
+    };
+
+    let html = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+        <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin:0;"><i class="fas fa-lightbulb" style="color:#F59E0B;margin-right:6px;"></i>Analisis Gap & Inovasi</h3>
+        <span style="background:#10B981;color:white;padding:2px 10px;border-radius:8px;font-size:0.7rem;font-weight:700;">7/7 Implemented</span>
+      </div>
+    `;
+
+    this.gaps.forEach(gap => {
+      const p = priorityMap[gap.priority];
+      const domain = this.domains[gap.domain];
+
+      html += `
+      <div style="background:white;border-radius:14px;padding:16px;margin-bottom:10px;border:1px solid var(--border-color);border-left:4px solid ${p.border};">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+              <span style="font-weight:700;color:var(--text-primary);font-size:0.9rem;">Gap ${gap.id}: ${gap.title}</span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <span style="background:${p.badge};color:white;padding:3px 10px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;">
+                <i class="fas ${p.icon}" style="font-size:0.6rem;"></i> ${p.label}
+              </span>
+              <span style="background:${domain.color}12;color:${domain.color};padding:3px 10px;border-radius:6px;font-size:0.7rem;font-weight:600;display:inline-flex;align-items:center;gap:4px;">
+                <i class="fas ${domain.icon}" style="font-size:0.6rem;"></i> ${domain.label.split('&')[0].trim()}
+              </span>
+              <span style="background:#ECFDF5;color:#059669;padding:3px 10px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;">
+                <i class="fas fa-check-circle" style="font-size:0.6rem;"></i> Implemented
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Status Literatur</div>
+          <p style="margin:0;color:var(--text-secondary);font-size:0.84rem;line-height:1.55;">${gap.currentState}</p>
+        </div>
+
+        <div style="padding:12px;background:${p.bg};border-radius:10px;">
+          <div style="font-size:0.78rem;font-weight:700;color:${p.text};margin-bottom:4px;"><i class="fas fa-wand-magic-sparkles" style="margin-right:4px;"></i>Solusi SynaWatch</div>
+          <p style="margin:0;color:${p.text};font-size:0.84rem;line-height:1.55;">${gap.upgrade}</p>
+        </div>
+      </div>
+      `;
+    });
+
+    section.innerHTML = html;
   }
 };
 
-// Export to global scope
 window.ResearchFoundation = ResearchFoundation;

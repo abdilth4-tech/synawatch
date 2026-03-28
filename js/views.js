@@ -950,15 +950,11 @@ const Views = {
      */
     research() {
         return `
-            <div class="view-container" style="max-width: 1400px; margin: 0 auto; padding: 0;">
-                <div id="researchContent" style="background: white; border-radius: 0;">
-                    <div style="text-align: center; padding: 60px 20px;">
-                        <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
-                        <p style="color: var(--text-tertiary); font-size: 1.1em;">Memuat Halaman Dasar Penelitian Lengkap...</p>
-                        <p style="color: var(--text-secondary); font-size: 0.9em; margin-top: 10px;">50 Papers | 10 Domains | 7 Research Gaps</p>
-                    </div>
+            <div id="researchContent" style="padding:0;">
+                <div style="text-align:center;padding:40px 20px;">
+                    <div class="loading-spinner" style="margin:0 auto 16px;"></div>
+                    <p style="color:var(--text-tertiary);">Memuat Research Foundation...</p>
                 </div>
-                <iframe id="researchFrame" style="width: 100%; height: 100vh; border: none; display: none;"></iframe>
             </div>
         `;
     },

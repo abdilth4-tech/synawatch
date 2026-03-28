@@ -3,7 +3,7 @@
  * PWA Offline Support & Caching Strategy
  */
 
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.6.0';
 const CACHE_NAME = `synawatch-v${APP_VERSION}`;
 const STATIC_CACHE = `synawatch-static-v${APP_VERSION}`;
 const DYNAMIC_CACHE = `synawatch-dynamic-v${APP_VERSION}`;
