@@ -66,7 +66,7 @@ const Views = {
 
                 <!-- Menu Cepat / Quick Menu -->
                 <div style="margin-top: 32px; margin-bottom: 32px;">
-                    <h3 class="section-title" style="margin-bottom: 20px;">Menu Cepat</h3>
+                    <h3 class="section-title" style="margin-bottom: 20px;">${t('dashboard.quick_menu')}</h3>
                     <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
                         <!-- Admin Panel (if admin) -->
                         <div id="adminCardContainer" style="display: none;">
@@ -76,8 +76,8 @@ const Views = {
                                     <i class="fas fa-sliders-h"></i>
                                 </div>
                                 <div class="card-content">
-                                    <h4 class="card-title">Admin Panel</h4>
-                                    <p class="card-subtitle">Kelola Sistem</p>
+                                    <h4 class="card-title">${t('menu.admin')}</h4>
+                                    <p class="card-subtitle">${t('menu.admin_sub')}</p>
                                 </div>
                                 <div class="card-hover-bg"></div>
                             </div>
@@ -90,8 +90,8 @@ const Views = {
                                 <i class="fas fa-list-check"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">Asesmen</h4>
-                                <p class="card-subtitle">PHQ-9 & UCLA</p>
+                                <h4 class="card-title">${t('menu.assessment')}</h4>
+                                <p class="card-subtitle">${t('menu.assessment_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -103,8 +103,8 @@ const Views = {
                                 <i class="fas fa-comments"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">AI Chat</h4>
-                                <p class="card-subtitle">Synachat</p>
+                                <h4 class="card-title">${t('menu.chat')}</h4>
+                                <p class="card-subtitle">${t('menu.chat_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -116,8 +116,8 @@ const Views = {
                                 <i class="fas fa-headset"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">Bantuan Krisis</h4>
-                                <p class="card-subtitle">Hubungi Sekarang</p>
+                                <h4 class="card-title">${t('menu.crisis')}</h4>
+                                <p class="card-subtitle">${t('menu.crisis_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -129,8 +129,8 @@ const Views = {
                                 <i class="fas fa-bed"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">Sleep Lab</h4>
-                                <p class="card-subtitle">Pantau Tidur</p>
+                                <h4 class="card-title">${t('menu.sleep')}</h4>
+                                <p class="card-subtitle">${t('menu.sleep_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -142,8 +142,8 @@ const Views = {
                                 <i class="fas fa-pen-fancy"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">Jurnal</h4>
-                                <p class="card-subtitle">Tulis Harian</p>
+                                <h4 class="card-title">${t('menu.journal')}</h4>
+                                <p class="card-subtitle">${t('menu.journal_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -155,8 +155,8 @@ const Views = {
                                 <i class="fas fa-spa"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">Mindful</h4>
-                                <p class="card-subtitle">Meditasi</p>
+                                <h4 class="card-title">${t('menu.mindful')}</h4>
+                                <p class="card-subtitle">${t('menu.mindful_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -168,8 +168,8 @@ const Views = {
                                 <i class="fas fa-music"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">Mood Booster</h4>
-                                <p class="card-subtitle">Terapi Musik</p>
+                                <h4 class="card-title">${t('menu.mood')}</h4>
+                                <p class="card-subtitle">${t('menu.mood_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -181,8 +181,8 @@ const Views = {
                                 <i class="fas fa-book"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">Academy</h4>
-                                <p class="card-subtitle">Belajar</p>
+                                <h4 class="card-title">${t('menu.academy')}</h4>
+                                <p class="card-subtitle">${t('menu.academy_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -194,8 +194,8 @@ const Views = {
                                 <i class="fas fa-gamepad"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">Games</h4>
-                                <p class="card-subtitle">Stress Relief</p>
+                                <h4 class="card-title">${t('menu.games')}</h4>
+                                <p class="card-subtitle">${t('menu.games_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -207,8 +207,8 @@ const Views = {
                                 <i class="fas fa-spa"></i>
                             </div>
                             <div class="card-content">
-                                <h4 class="card-title">Yoga</h4>
-                                <p class="card-subtitle">Mental Health</p>
+                                <h4 class="card-title">${t('menu.yoga')}</h4>
+                                <p class="card-subtitle">${t('menu.yoga_sub')}</p>
                             </div>
                             <div class="card-hover-bg"></div>
                         </div>
@@ -229,7 +229,7 @@ const Views = {
                 </div>
 
                 <!-- Current Health Metrics -->
-                <h3 class="section-title">Current Health</h3>
+                <h3 class="section-title">${t('dashboard.current_health')}</h3>
                 <div class="card-grid">
                     <!-- Heart Rate -->
                     <div class="card metric-card">
@@ -688,14 +688,31 @@ const Views = {
                     </div>
                 </div>
 
+                <!-- Language Setting -->
+                <div class="card" style="padding: 0; overflow: hidden; margin-bottom: var(--space-6);">
+                    <div class="list-item" onclick="I18n.setLang(I18n.getLang() === 'id' ? 'en' : 'id')" style="border-bottom: none; cursor: pointer;">
+                        <div class="list-item-icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">${t('profile.language')}</div>
+                            <div class="list-item-subtitle">${I18n.getLang() === 'id' ? t('profile.language_id') : t('profile.language_en')}</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2rem;">${I18n.getLang() === 'id' ? '🇮🇩' : '🇺🇸'}</span>
+                            <i class="fas fa-exchange-alt" style="color: var(--text-tertiary); font-size: 0.8rem;"></i>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card" style="padding: 0; overflow: hidden; margin-bottom: var(--space-6);">
                     <div class="list-item" onclick="confirmLogout()" style="border-bottom: none;">
                         <div class="list-item-icon" style="background: rgba(239, 68, 68, 0.15); color: var(--danger-400);">
                             <i class="fas fa-sign-out-alt"></i>
                         </div>
                         <div class="list-item-content">
-                            <div class="list-item-title" style="color: var(--danger-400);">Logout</div>
-                            <div class="list-item-subtitle">Sign out of your account</div>
+                            <div class="list-item-title" style="color: var(--danger-400);">${t('profile.logout')}</div>
+                            <div class="list-item-subtitle">${I18n.getLang() === 'id' ? 'Keluar dari akun Anda' : 'Sign out of your account'}</div>
                         </div>
                     </div>
                 </div>

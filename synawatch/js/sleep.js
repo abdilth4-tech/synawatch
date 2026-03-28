@@ -17,17 +17,17 @@ const SleepLab = {
     },
 
     getScoreLabel(score) {
-        if (score >= 90) return { text: 'Sangat Baik', color: '#10b981', icon: 'fa-star' };
-        if (score >= 75) return { text: 'Baik', color: '#3b82f6', icon: 'fa-thumbs-up' };
-        if (score >= 60) return { text: 'Cukup', color: '#f59e0b', icon: 'fa-minus-circle' };
-        return { text: 'Kurang', color: '#ef4444', icon: 'fa-exclamation-triangle' };
+        if (score >= 90) return { text: t('sleep.score_excellent'), color: '#10b981', icon: 'fa-star' };
+        if (score >= 75) return { text: t('sleep.score_good'), color: '#3b82f6', icon: 'fa-thumbs-up' };
+        if (score >= 60) return { text: t('sleep.score_fair'), color: '#f59e0b', icon: 'fa-minus-circle' };
+        return { text: t('sleep.score_poor'), color: '#ef4444', icon: 'fa-exclamation-triangle' };
     },
 
     getSleepTips(score) {
-        if (score >= 90) return 'Pola tidur Anda sangat baik! Pertahankan rutinitas ini.';
-        if (score >= 75) return 'Tidur Anda cukup baik. Coba kurangi screen time 30 menit sebelum tidur.';
-        if (score >= 60) return 'Perlu perbaikan. Pertimbangkan untuk tidur dan bangun di jam yang sama setiap hari.';
-        return 'Kualitas tidur rendah. Hindari kafein setelah jam 2 siang dan ciptakan lingkungan tidur yang gelap.';
+        if (score >= 90) return t('sleep.tip_excellent');
+        if (score >= 75) return t('sleep.tip_good');
+        if (score >= 60) return t('sleep.tip_fair');
+        return t('sleep.tip_poor');
     },
 
     renderStats() {
